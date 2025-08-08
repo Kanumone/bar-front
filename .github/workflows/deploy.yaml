@@ -1,6 +1,7 @@
 name: Deploy Frontend Build
 
 on:
+  workflow_dispatch: # for manual deploy
   push:
     branches:
       - main
@@ -23,12 +24,13 @@ jobs:
           npm run build
 
       - name: Deploy via SCP
-        uses: pierrickdelrieu/scp-action@v0.1.0
+        uses: appleboy/scp-action@v1
         with:
           host: ${{ secrets.SSH_HOST }}
-          ssh_port: ${{ secrets.SSH_PORT }}
-          ssh_username: ${{ secrets.SSH_USER }}
-          ssh_key: ${{ secrets.SSH_KEY }}
-          source_dir: 'dist'
-          destination_dir: ${{ secrets.TARGET_DIR }}
+          port: ${{ secrets.SSH_PORT }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          source: dist/*
+          target: ${{ secrets.TARGET_DIR }}
           rm: true
+          strip_components: 1
