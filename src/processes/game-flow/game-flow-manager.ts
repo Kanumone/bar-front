@@ -185,6 +185,10 @@ class GameFlowManager {
   showDetectiveGame() {
     useSceneStore.getState().setScene(GameScene.DetectiveGame, null);
   }
+
+  showMoscow() {
+    useSceneStore.getState().setScene(GameScene.Moscow, null);
+  }
 }
 
 export const gameFlowManager = new GameFlowManager();

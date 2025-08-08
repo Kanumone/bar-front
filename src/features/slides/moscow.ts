@@ -4,7 +4,7 @@ import { Episode, type EpisodeConfig } from "./common";
 const moscowSlides: EpisodeConfig[] = [
   {
     slideIndex: 1,
-    filename: "Screen_1.png",
+    filename: "Screen_1.jpg",
     backgroundSound: "moscow-station-ambient.mp3",
     actions: [
       {
@@ -21,7 +21,7 @@ const moscowSlides: EpisodeConfig[] = [
   },
   {
     slideIndex: 2,
-    filename: "Screen_2.png",
+    filename: "Screen_2.jpg",
     actions: [
       {
         type: "speech",
@@ -41,7 +41,7 @@ const moscowSlides: EpisodeConfig[] = [
   },
   {
     slideIndex: 3,
-    filename: "Screen_3.png",
+    filename: "Screen_3.jpg",
     actions: [
       {
         type: "message",
@@ -51,7 +51,7 @@ const moscowSlides: EpisodeConfig[] = [
   },
   {
     slideIndex: 4,
-    filename: "Screen_4.png",
+    filename: "Screen_4.jpg",
     actions: [
       {
         type: "speech",
@@ -80,7 +80,7 @@ const moscowSlides: EpisodeConfig[] = [
   },
   {
     slideIndex: 5,
-    filename: "Screen_5.png",
+    filename: "Screen_5.jpg",
     actions: [
       {
         type: "message",
@@ -90,7 +90,7 @@ const moscowSlides: EpisodeConfig[] = [
   },
   {
     slideIndex: 6,
-    filename: "Screen_6.png",
+    filename: "Screen_6.jpg",
     actions: [
       {
         type: "speech",
@@ -106,7 +106,7 @@ const moscowSlides: EpisodeConfig[] = [
   },
   {
     slideIndex: 7,
-    filename: "Screen_7.png",
+    filename: "Screen_7.jpg",
     actions: [
       {
         type: "speech",
@@ -146,7 +146,7 @@ const moscowSlides: EpisodeConfig[] = [
   },
   {
     slideIndex: 8,
-    filename: "Screen_8.png",
+    filename: "Screen_8.jpg",
     actions: [
       {
         type: "speech",
@@ -176,7 +176,7 @@ const moscowSlides: EpisodeConfig[] = [
   },
   {
     slideIndex: 9,
-    filename: "Screen_9.png",
+    filename: "Screen_9.jpg",
     actions: [
       {
         type: "speech",
@@ -201,7 +201,7 @@ const moscowSlides: EpisodeConfig[] = [
   },
   {
     slideIndex: 10,
-    filename: "Screen_10.png",
+    filename: "Screen_10.jpg",
     actions: [
       {
         type: "speech",
@@ -219,7 +219,7 @@ const moscowSlides: EpisodeConfig[] = [
   },
   {
     slideIndex: 11,
-    filename: "Screen_13.png",
+    filename: "Screen_13.jpg",
     actions: [
       {
         type: "choice",
@@ -234,7 +234,7 @@ const moscowSlides: EpisodeConfig[] = [
   },
   {
     slideIndex: 12,
-    filename: "Screen_14.png",
+    filename: "Screen_14.jpg",
     actions: [
       {
         type: "speech",
@@ -254,7 +254,7 @@ const moscowSlides: EpisodeConfig[] = [
   },
   {
     slideIndex: 13,
-    filename: "Screen_15.png",
+    filename: "Screen_15.jpg",
     actions: [
       {
         type: "speech",
@@ -306,7 +306,7 @@ const moscowSlides: EpisodeConfig[] = [
   },
   {
     slideIndex: 14,
-    filename: "Screen_16.png",
+    filename: "Screen_16.jpg",
     actions: [
       {
         type: "speech",
@@ -362,7 +362,7 @@ const moscowSlides: EpisodeConfig[] = [
   },
   {
     slideIndex: 15,
-    filename: "Screen_17.png",
+    filename: "Screen_17.jpg",
     backgroundSound: "kremlin-bells.mp3",
     actions: [
       {
@@ -392,7 +392,7 @@ const moscowSlides: EpisodeConfig[] = [
   },
   {
     slideIndex: 16,
-    filename: "Screen_18.png",
+    filename: "Screen_18.jpg",
     actions: [
       {
         type: "thoughts",
@@ -412,7 +412,7 @@ const moscowSlides: EpisodeConfig[] = [
   },
   {
     slideIndex: 17,
-    filename: "Screen_19.png",
+    filename: "Screen_19.jpg",
     actions: [
       {
         type: "speech",
@@ -433,7 +433,7 @@ const moscowSlides: EpisodeConfig[] = [
   },
   {
     slideIndex: 18,
-    filename: "Screen_20.png",
+    filename: "Screen_20.jpg",
     actions: [
       {
         type: "message",
@@ -483,7 +483,7 @@ const moscowSlides: EpisodeConfig[] = [
   },
   {
     slideIndex: 19,
-    filename: "Screen_21.png",
+    filename: "Screen_21.jpg",
     actions: [
       {
         type: "speech",
@@ -510,7 +510,7 @@ const moscowSlides: EpisodeConfig[] = [
   },
   {
     slideIndex: 20,
-    filename: "Screen_22.png",
+    filename: "Screen_22.jpg",
     actions: [
       {
         type: "speech",
@@ -521,7 +521,7 @@ const moscowSlides: EpisodeConfig[] = [
   },
   {
     slideIndex: 21,
-    filename: "Screen_23.png",
+    filename: "Screen_23.jpg",
     backgroundSound: "kremlin-interior.mp3",
     actions: [
       {
@@ -558,7 +558,7 @@ const moscowSlides: EpisodeConfig[] = [
   },
   {
     slideIndex: 22,
-    filename: "Screen_24.png",
+    filename: "Screen_24.jpg",
     actions: [
       {
         type: "speech",
@@ -608,7 +608,7 @@ const moscowSlides: EpisodeConfig[] = [
   },
   {
     slideIndex: 23,
-    filename: "Screen_25.png",
+    filename: "Screen_25.jpg",
     actions: [
       {
         type: "speech",
@@ -633,14 +633,14 @@ const moscowSlides: EpisodeConfig[] = [
         type: "button",
         button: {
           text: "В путь",
-          action: () => gameFlowManager.showMoveScene(),
+          action: () => {},
         },
       },
     ],
   },
   {
     slideIndex: 24,
-    filename: "Screen_26.png",
+    filename: "Screen_26.jpg",
     backgroundSound: "vdnh-ambient.mp3",
     actions: [
       {
@@ -672,7 +672,7 @@ const moscowSlides: EpisodeConfig[] = [
   },
   {
     slideIndex: 25,
-    filename: "Screen_27.png",
+    filename: "Screen_27.jpg",
     actions: [
       {
         type: "speech",
@@ -702,7 +702,7 @@ const moscowSlides: EpisodeConfig[] = [
   },
   {
     slideIndex: 26,
-    filename: "Screen_28.png",
+    filename: "Screen_28.jpg",
     actions: [
       {
         type: "speech",
@@ -722,7 +722,7 @@ const moscowSlides: EpisodeConfig[] = [
   },
   {
     slideIndex: 27,
-    filename: "Screen_29.png",
+    filename: "Screen_29.jpg",
     actions: [
       {
         type: "speech",
@@ -752,7 +752,7 @@ const moscowSlides: EpisodeConfig[] = [
   },
   {
     slideIndex: 28,
-    filename: "Screen_30.png",
+    filename: "Screen_30.jpg",
     actions: [
       {
         type: "speech",
@@ -788,7 +788,7 @@ const moscowSlides: EpisodeConfig[] = [
   },
   {
     slideIndex: 29,
-    filename: "Screen_rocket.png",
+    filename: "Screen_rocket.jpg",
     actions: [
       {
         type: "speech",
@@ -810,7 +810,7 @@ const moscowSlides: EpisodeConfig[] = [
   },
   {
     slideIndex: 30,
-    filename: "Screen_31.png",
+    filename: "Screen_31.jpg",
     actions: [
       {
         type: "speech",
@@ -831,14 +831,14 @@ const moscowSlides: EpisodeConfig[] = [
         type: "button",
         button: {
           text: "Продолжить путь",
-          action: () => gameFlowManager.showMoveScene(),
+          action: () => {}
         },
       },
     ],
   },
   {
     slideIndex: 31,
-    filename: "Screen_32.png",
+    filename: "Screen_32.jpg",
     backgroundSound: "tretyakov-ambient.mp3",
     actions: [
       {
@@ -869,7 +869,7 @@ const moscowSlides: EpisodeConfig[] = [
   },
   {
     slideIndex: 32,
-    filename: "Screen_33.png",
+    filename: "Screen_33.jpg",
     actions: [
       {
         type: "choice",
@@ -884,7 +884,7 @@ const moscowSlides: EpisodeConfig[] = [
   },
   {
     slideIndex: 33,
-    filename: "Screen_34.png",
+    filename: "Screen_34.jpg",
     actions: [
       {
         type: "speech",
@@ -935,7 +935,7 @@ const moscowSlides: EpisodeConfig[] = [
   },
   {
     slideIndex: 34,
-    filename: "Screen_35.png",
+    filename: "Screen_35.jpg",
     actions: [
       {
         type: "speech",
@@ -962,7 +962,7 @@ const moscowSlides: EpisodeConfig[] = [
   },
   {
     slideIndex: 35,
-    filename: "Screen_36.png",
+    filename: "Screen_36.jpg",
     actions: [
       {
         type: "thoughts",
@@ -996,7 +996,7 @@ const moscowSlides: EpisodeConfig[] = [
   },
   {
     slideIndex: 36,
-    filename: "Screen_37.png",
+    filename: "Screen_37.jpg",
     actions: [
       {
         type: "speech",
@@ -1031,7 +1031,7 @@ const moscowSlides: EpisodeConfig[] = [
   },
     {
     slideIndex: 37,
-    filename: "Screen_38.png",
+    filename: "Screen_38.jpg",
     actions: [
       {
         type: "speech",
@@ -1052,7 +1052,7 @@ const moscowSlides: EpisodeConfig[] = [
   },
   {
     slideIndex: 38,
-    filename: "Screen_39.png",
+    filename: "Screen_39.jpg",
     backgroundSound: "museum-night-ambient.mp3",
     actions: [
       {
@@ -1094,7 +1094,7 @@ const moscowSlides: EpisodeConfig[] = [
   },
   {
     slideIndex: 39,
-    filename: "Screen_43.png",
+    filename: "Screen_43.jpg",
     actions: [
       {
         type: "speech",
@@ -1105,7 +1105,7 @@ const moscowSlides: EpisodeConfig[] = [
   },
   {
     slideIndex: 40,
-    filename: "Screen_44.png",
+    filename: "Screen_44.jpg",
     backgroundSound: "night-moscow-ambient.mp3",
     actions: [
       {
@@ -1117,7 +1117,7 @@ const moscowSlides: EpisodeConfig[] = [
   },
   {
     slideIndex: 41,
-    filename: "Screen_45.png",
+    filename: "Screen_45.jpg",
     actions: [
       {
         type: "speech",
@@ -1143,7 +1143,7 @@ const moscowSlides: EpisodeConfig[] = [
   },
   {
     slideIndex: 42,
-    filename: "Screen_47.png",
+    filename: "Screen_47.jpg",
     backgroundSound: "morning-moscow-ambient.mp3",
     actions: [
       {
@@ -1167,7 +1167,7 @@ const moscowSlides: EpisodeConfig[] = [
   },
   {
     slideIndex: 43,
-    filename: "Screen_48.png",
+    filename: "Screen_48.jpg",
     actions: [
       {
         type: "choice",
@@ -1186,7 +1186,7 @@ const moscowSlides: EpisodeConfig[] = [
   },
   {
     slideIndex: 44,
-    filename: "Screen_49.png",
+    filename: "Screen_49.jpg",
     actions: [
       {
         type: "message",
@@ -1197,21 +1197,21 @@ const moscowSlides: EpisodeConfig[] = [
         type: "button",
         button: {
           text: "В путь к Казани",
-          action: () => gameFlowManager.showMoveScene(),
+          action: () => {},
         },
       },
     ],
   },
 ];
 
-export const getMoscowSlides = (episode: number): Episode[] => {
+export const getMoscowSlides = (): Episode[] => {
   const episodes: Episode[] = [];
   moscowSlides.forEach((config) => {
     const episode = new Episode({
       ...config,
-      scene: "moscow-move",
+      scene: "moscow-slides",
     });
     episodes.push(episode);
   });
-  return episodes.slice(episode);
+  return episodes;
 }; 

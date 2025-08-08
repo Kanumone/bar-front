@@ -17,7 +17,7 @@ import { FlyingGameSceneWrapper } from "./ui/scenes/flying-game-scene-wrapper";
 import { GameScene } from "@core/types/common-types";
 import { MoveToTrainSceneWrapper } from "./ui/scenes/move-to-train-scene-wrapper";
 import { Layout } from "./ui/layout/";
-import { introSlidesConfig, railwayStationSlidesConfig } from "$features/slides/configs";
+import { introSlidesConfig, railwayStationSlidesConfig, moscowSlidesConfig } from "$features/slides/configs";
 
 export const App: React.FC = () => {
   useAuth();
@@ -35,14 +35,13 @@ export const App: React.FC = () => {
 
   const renderSceneWrapper = useCallback(() => {
     switch (currentScene) {
-      // pages
-      case GameScene.Auth:
-        return <AuthSceneWrapper />;
       // novel slides
       case GameScene.Intro:
         return <SlidesWrapper config={introSlidesConfig} />;
       case GameScene.RailwayStation:
         return <SlidesWrapper config={railwayStationSlidesConfig} />;
+      case GameScene.Moscow:
+        return <SlidesWrapper config={moscowSlidesConfig} />;
       // games
       case GameScene.CookingGame:
         return <GameFoodSceneWrapper />;
@@ -62,7 +61,9 @@ export const App: React.FC = () => {
         return <GameMapSceneWrapper />;
       case GameScene.Game2048:
         return <Game2048SceneWrapper />;
-        
+      case GameScene.Auth:
+        return <AuthSceneWrapper />;
+
       default:
         return null;
     }
