@@ -8,10 +8,10 @@ import {
   GameMapSceneWrapper,
   GameFoodSceneWrapper,
   Game2048SceneWrapper,
-  DetectiveGameSceneWrapper,
   SlidesWrapper,
   MoveAfterTrainWrapper,
 } from "./ui/scenes";
+import { DetectiveGame, TretyakovGame } from "$features/detective-game";
 import { useAuth } from "./core/hooks";
 import { FlyingGameSceneWrapper } from "./ui/scenes/flying-game-scene-wrapper";
 import { GameScene } from "@core/types/common-types";
@@ -48,7 +48,9 @@ export const App: React.FC = () => {
       case GameScene.FlyingGame:
         return <FlyingGameSceneWrapper />;
       case GameScene.DetectiveGame:
-        return <DetectiveGameSceneWrapper />;
+        return <DetectiveGame />;
+      case GameScene.TretyakovGame:
+        return <TretyakovGame />;
 
       // move scenes
       case GameScene.MoveToTrain:

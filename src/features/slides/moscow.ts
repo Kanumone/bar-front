@@ -503,7 +503,7 @@ const moscowSlides: EpisodeConfig[] = [
         type: "button",
         button: {
           text: "Начать игру",
-          action: () => gameFlowManager.showGame2048(),
+          action: () => {},
         },
       },
     ],
@@ -1086,8 +1086,8 @@ const moscowSlides: EpisodeConfig[] = [
       {
         type: "button",
         button: {
-          text: "Начать детектив",
-          action: () => gameFlowManager.showDetectiveGame(),
+          text: "Искать выход",
+          action: () => gameFlowManager.showTretyakovGame(),
         },
       },
     ],

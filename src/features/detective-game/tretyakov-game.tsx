@@ -1,9 +1,9 @@
 import React, { useState, useCallback } from "react";
 import styles from "./detective-game.module.css";
-import { Room } from "./room";
+import { TretyakovRoom } from "./tretyakov-room.tsx";
 import { Button } from "$ui/components/button";
+import { useSceneStore } from "../../core/state";
 import { GameConstants } from "$core/constants/constants";
-import { useSceneStore } from "$core/state";
 
 interface Item {
   id: string;
@@ -17,57 +17,43 @@ const SHOW_MESSAGE_TIMEOUT = GameConstants.SHOW_ITEMS_DESCRIPTION_TIMEOUT;
 
 const ITEMS: Item[] = [
   {
-    id: "metro",
-    name: "Значок метро",
-    description: "Я сам его придумал. И с гордостью ношу.",
-    emoji: "📍",
+    id: "portrait",
+    name: "Портрет",
+    description: "Знаменитая картина, от которой невозможно отвести взгляд. Кажется, будто глаза следят за тобой.",
+    emoji: "🖼️",
     found: false,
   },
   {
-    id: "earpods",
-    name: "Наушники с изолентой",
-    description: "Хрипят, но ближе всех. Как будто шепчут тайны.",
-    emoji: "🎧",
+    id: "vase",
+    name: "Ваза",
+    description: "Старинная ваза с изящным орнаментом. Говорят, она была подарена галерее самим императором.",
+    emoji: "🏺",
     found: false,
   },
   {
-    id: "photo",
-    name: "Открытка от отца",
-    description: "Без текста. Но и так понятно.",
-    emoji: "🎴",
+    id: "lamp",
+    name: "Фонарь",
+    description: "Фонарь, который светит в темноте. Похоже, что он может быть полезен в поисках.",
+    emoji: "🔦",
     found: false,
   },
   {
-    id: "bottle",
-    name: "Бутылка \"Хочу в ...\"",
-    description: "Когда-то хотел в Казань. Потом — не знаю куда. Может, просто на диван.",
-    emoji: "🧃",
+    id: "key",
+    name: "Ключ",
+    description: "Ключ от камеры хранения. Похоже, что он открывает камеру хранения.",
+    emoji: "🔑",
     found: false,
   },
   {
-    id: "cassette",
-    name: "Кассета деда",
-    description: "Всё важное всегда звучало не в словах, а между.",
-    emoji: "📹",
-    found: false,
-  },
-  {
-    id: "book",
-    name: "Книга \"Путь\"",
-    description: "Я не знаю, кто её написал. Но каждый раз, как открываю — попадаю в точку.",
-    emoji: "📖",
-    found: false,
-  },
-  {
-    id: "diary",
-    name: "Блокнот",
-    description: "Когда не знаешь, что делать — записывай кадры или хотя бы странные мысли.",
-    emoji: "📓",
+    id: "books",
+    name: "Книги",
+    description: "Старинные фолианты с историей искусства. В них хранятся секреты великих мастеров.",
+    emoji: "📚",
     found: false,
   },
 ];
 
-export const DetectiveGame: React.FC = () => {
+export const TretyakovGame: React.FC = () => {
   const [items, setItems] = useState<Item[]>(ITEMS);
   const [showInventory, setShowInventory] = useState(false);
   const [foundItem, setFoundItem] = useState<Item | null>(null);
@@ -84,7 +70,7 @@ export const DetectiveGame: React.FC = () => {
 
     if (clickedItem) {
       clickedItem.found = true;
-      setItems(items);
+      setItems([...items]);
       setFoundItem(clickedItem);
       setShowFoundMessage(true);
 
@@ -111,7 +97,7 @@ export const DetectiveGame: React.FC = () => {
         className={styles.inventoryButton}
         onClick={() => setShowInventory(!showInventory)}
       >
-        📋 Список предметов ({foundCount}/{totalItems})
+        📋 Список экспонатов ({foundCount}/{totalItems})
       </button>
 
       {/* Инвентарь */}
@@ -137,7 +123,7 @@ export const DetectiveGame: React.FC = () => {
       <div className={styles.roomContainer}>
         <div
           className={styles.svgContainer}
-        ><Room handleClick={handleItemClick} /></div>
+        ><TretyakovRoom handleClick={handleItemClick} /></div>
       </div>
 
       {/* Сообщение о найденном предмете */}
@@ -156,14 +142,12 @@ export const DetectiveGame: React.FC = () => {
         {foundCount === totalItems && (
           <>
             <div className={styles.completionMessage}>
-              🎉 Поздравляем! Вы нашли все предметы!
+              🎉 Поздравляем! Вы нашли все экспонаты!
             </div>
-            <div style={{
-              marginTop: "5%",
+            <div style={{ marginTop: "5%",
               display: "flex",
-              justifyContent: "center"
-            }}>
-              <Button text="Застегнуть рюкзак" onClick={() => handleNext()} />
+              justifyContent: "center" }}>
+              <Button text="К выходу" onClick={() => handleNext()} />
             </div>
           </>
         )}

@@ -35,6 +35,7 @@ export interface SceneDataMap {
   Game2048: null;
   MoveToTrain: MoveSceneData | null;
   DetectiveGame: null;
+  TretyakovGame: null;
   RailwayStation: null;
   CookingGame: null;
   MoveAfterTrain: null;
@@ -57,6 +58,7 @@ export const GameScene = {
   // games
   FlyingGame: "FlyingGame",
   DetectiveGame: "DetectiveGame",
+  TretyakovGame: "TretyakovGame",
   CookingGame: "CookingGame",
   Game2048: "Game2048",
 

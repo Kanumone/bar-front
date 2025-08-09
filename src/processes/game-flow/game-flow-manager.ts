@@ -189,6 +189,10 @@ class GameFlowManager {
   showMoscow() {
     useSceneStore.getState().setScene(GameScene.Moscow, null);
   }
+
+  showTretyakovGame() {
+    useSceneStore.getState().setScene(GameScene.TretyakovGame, null);
+  }
 }
 
 export const gameFlowManager = new GameFlowManager();
