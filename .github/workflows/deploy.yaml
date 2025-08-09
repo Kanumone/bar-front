@@ -4,7 +4,7 @@ on:
   workflow_dispatch: # for manual deploy
   push:
     branches:
-      - main
+      - master
 
 jobs:
   deploy:

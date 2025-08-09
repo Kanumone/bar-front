@@ -67,7 +67,16 @@
   gap: 16px;
   width: 100%;
   max-width: 400px;
-  margin-bottom: 32px;
+  flex: 1;
+  align-content: start;
+}
+
+.navigationArea {
+  height: 64px; /* Резервируем фиксированную высоту для навигации */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 }
 
 .indicatorBar {
@@ -92,6 +101,10 @@
   .recipesGrid {
     gap: 12px;
     max-width: 360px;
+  }
+  
+  .navigationArea {
+    height: 56px;
   }
   
   .decorationCircle1 {
@@ -126,6 +139,10 @@
   .recipesGrid {
     gap: 8px;
     max-width: 320px;
+  }
+  
+  .navigationArea {
+    height: 48px;
   }
   
   .indicatorBar {
@@ -169,3 +186,34 @@
     padding: 48px 32px;
   }
 } 
+
+.backButton {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+
+.backButton:hover {
+  background: linear-gradient(135deg, #F57C00 0%, #E65100 100%);
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.backArrow {
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 1;
+}

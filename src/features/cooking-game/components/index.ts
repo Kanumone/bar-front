@@ -17,5 +17,3 @@ export { RecipeCard } from "./recipe-card.tsx";
 export { RecipeNavigation } from "./recipe-navigation.tsx";
 
 export { RecipeSelector } from "./recipe-selector.tsx";
-
-export { RecipeSelectorExample } from "./recipe-selector-example.tsx";

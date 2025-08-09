@@ -140,30 +140,6 @@ const { state } = useGameContext();
 const { goToRecipeBook, goToTetris, goToShop } = useGameNavigation();
 ```
 
-### Навигация между экранами
-
-```typescript
-const renderCurrentScreen = () => {
-  switch (state.currentScreen) {
-    case "tetris":
-      return <TetrisGame />;
-    case "recipe-book":
-      return (
-        <div className={styles.recipeBookContainer}>
-          <RecipeSelectorExample />
-          <button onClick={goToTetris} className={styles.backButton}>
-            Вернуться к игре
-          </button>
-        </div>
-      );
-    case "shop":
-      return <Shop />;
-    default:
-      return <TetrisGame />;
-  }
-};
-```
-
 ## 3. Игра полета
 
 ### Phaser архитектура

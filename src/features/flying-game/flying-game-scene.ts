@@ -1,6 +1,7 @@
 import { Scene } from "phaser";
 import { getAssetsPathByType } from "../../utils/get-assets-path";
 import { usePlayerState } from "../../core/state";
+import { GameScene } from "$core/types/common-types";
 
 const PLAYER_SIZE = 60;
 const PLAYER_BODY_W = PLAYER_SIZE;
@@ -21,7 +22,6 @@ const MAX_TILT_ANGLE = 25;
 const TILT_SPEED_PX = 15;
 const ROTATION_LERP = 0.15;
 
-const WORLD_HALF = 100_000; // мир от –100 000 до +100 000 по X
 const SIDE_BUFFER_SCREENS = 1;
 
 const DRAG_DEADZONE_PX = 30;
@@ -58,7 +58,9 @@ export class FlyingGameScene extends Scene {
   private prevX = 0;
   private currentAngle = 0;
 
-  constructor() { super("FlyingGameScene"); }
+  private worldSize = 0;
+
+  constructor() { super(GameScene.FlyingGame); }
 
   preload(): void {
     this.load.svg("flying-player", getAssetsPathByType({ type: "images",
@@ -78,26 +80,27 @@ export class FlyingGameScene extends Scene {
         scene: "flying",
         filename: `cloud-${i}.svg` }));
     }
+    this.worldSize = this.scale.width * 3;
   }
 
   /* ──────────────────────────────── CREATE ──────────────────────────────── */
   create(): void {
     /* Мир и камера */
-    this.physics.world.setBounds(-WORLD_HALF, 0, WORLD_HALF * 2, this.scale.height);
-    this.cameras.main.setBounds(-WORLD_HALF, 0, WORLD_HALF * 2, this.scale.height);
+    this.physics.world.setBounds(-this.worldSize, 0, this.worldSize * 2, this.scale.height);
+    this.cameras.main.setBounds(-this.worldSize, 0, this.worldSize * 2, this.scale.height);
     this.cameras.main.roundPixels = true;
 
     /* однотонный фон */
-    this.add.rectangle(-WORLD_HALF, 0, WORLD_HALF * 2, this.scale.height, 0x33a700)
+    this.add.rectangle(-this.worldSize, 0, this.worldSize * 2, this.scale.height, 0x33a700)
       .setOrigin(0, 0)
       .setAlpha(0.5)
       .setScrollFactor(0)
       .setDepth(-20);
 
     /* земля (трава), закрывает весь мир по X */
-    this.grass = this.add.tileSprite(-WORLD_HALF, 0, WORLD_HALF * 2, this.scale.height, "grass")
-      .setOrigin(0, 0)
-      .setTileScale(0.2)
+    this.grass = this.add.tileSprite(-this.worldSize, 0, this.worldSize * 2, this.scale.height, "grass")
+      .setOrigin(0.5, 0)
+      .setTileScale(0.2, 0.2)
       .setScrollFactor(1, 0)
       .setDepth(-10);
 
@@ -190,8 +193,9 @@ export class FlyingGameScene extends Scene {
     this.player.setAngle(this.currentAngle);
     this.prevX = this.player.x;
 
-    /* земля идёт вниз вместе со скалами */
+    /* земля идёт вниз вместе со скалами и следует за игроком по X */
     const dt = this.game.loop.delta;
+    this.grass.x = this.player.x; // позиционируем траву по центру игрока
     this.grass.tilePositionY -= (OBJECT_SPEED * dt) / (1000 * this.grass.tileScaleY);
 
     /* скалы / овцы падают */
@@ -231,7 +235,7 @@ export class FlyingGameScene extends Scene {
       (this.player.body as Phaser.Physics.Arcade.Body).setVelocityX(0);
     } else {
       this.isDraggingPlayer = false;
-      this.tapTargetX = Phaser.Math.Clamp(p.worldX, -WORLD_HALF + PLAYER_SIZE / 2, WORLD_HALF - PLAYER_SIZE / 2);
+      this.tapTargetX = Phaser.Math.Clamp(p.worldX, -this.worldSize + PLAYER_SIZE / 2, this.worldSize - PLAYER_SIZE / 2);
     }
   };
   private onPointerMove = (p: Phaser.Input.Pointer): void => {

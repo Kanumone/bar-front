@@ -1,0 +1,108 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.3);
+  transition: opacity 0.3s ease-in-out;
+}
+
+.overlay.visible {
+  opacity: 1;
+}
+
+.overlay.hidden {
+  opacity: 0;
+}
+
+.notification {
+  background: linear-gradient(135deg, #4CAF50, #45a049);
+  color: white;
+  padding: 2rem 3rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  font-family: "Ruslan Display", serif;
+  transform: scale(0.8);
+  animation: bounceIn 0.6s ease-out forwards;
+  border: 3px solid #fff;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.energyDisplay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.energyIcon {
+  font-size: 2.2rem;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.energyText {
+  color: #FFE082;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) translateY(-100px);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05) translateY(0);
+  }
+  70% {
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+/* Мобильная адаптация */
+@media (max-width: 768px) {
+  .notification {
+    padding: 1.5rem 2rem;
+    margin: 0 1rem;
+  }
+  
+  .title {
+    font-size: 2rem;
+  }
+  
+  .energyDisplay {
+    font-size: 1.5rem;
+  }
+  
+  .energyIcon {
+    font-size: 1.8rem;
+  }
+}

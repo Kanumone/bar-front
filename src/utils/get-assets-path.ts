@@ -1,7 +1,7 @@
 export const getAssetsPath = (filename?: string) => {
-  const basePath = `${import.meta.env.BASE_URL}assets/`;
+  const basePath = `${import.meta.env.BASE_URL}assets`;
 
-  return filename ? `${basePath}${filename}` : basePath;
+  return filename ? `${basePath}/${filename}` : basePath;
 };
 
 export function getAssetsPathByType({
@@ -13,9 +13,9 @@ export function getAssetsPathByType({
   filename: string;
   scene?: string;
 }) {
-  const scenePath = scene ? `scenes/${scene}/` : "";
+  const scenePath = scene ? `scenes/${scene}` : "";
 
-  return `${getAssetsPath()}${type}/${scenePath}/${filename}`;
+  return `${getAssetsPath()}/${type}/${scenePath}/${filename}`;
 }
 
 // Функция для получения пути к изображению овоща

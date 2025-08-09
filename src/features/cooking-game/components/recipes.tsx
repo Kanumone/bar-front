@@ -1,0 +1,79 @@
+import { getIngredientImage } from "$/utils";
+import type { Recipe } from "$features/cooking-game/types";
+
+export const recipes: Recipe[] = [
+  {
+    id: "stolichniy_salad",
+    title: "Салат «Столичный»",
+    energy: 5,
+    imageSrc: getIngredientImage("куриное филе"),
+    ingredients: [
+      { id: "chicken", imageSrc: getIngredientImage("куриное филе"), count: 1, color: "#8D6E63" },
+      { id: "potato", imageSrc: getIngredientImage("картофель"), count: 2, color: "#8D6E63" },
+      { id: "egg", imageSrc: getIngredientImage("яйцо"), count: 1, color: "#FFC107" },
+      { id: "cucumber_fresh", imageSrc: getIngredientImage("огурцы"), count: 1, color: "#4CAF50" },
+      { id: "apple", imageSrc: getIngredientImage("яблоко"), count: 1, color: "#F44336" },
+      { id: "mayonnaise", imageSrc: getIngredientImage("майонез"), count: 1, color: "#FFEB3B" }
+    ],
+    isAvailable: false // будет определяться динамически
+  },
+  {
+    id: "simple_soup",
+    title: "Простой суп",
+    energy: 3,
+    imageSrc: getIngredientImage("суп"),
+    ingredients: [
+      { id: "potato", imageSrc: getIngredientImage("картофель"), count: 1, color: "#8D6E63" },
+      { id: "carrot", imageSrc: getIngredientImage("морковь"), count: 1, color: "#FF5722" },
+      { id: "onion", imageSrc: getIngredientImage("лук"), count: 1, color: "#795548" }
+    ],
+    isAvailable: false
+  },
+  {
+    id: "fried_eggs",
+    title: "Яичница",
+    energy: 2,
+    imageSrc: getIngredientImage("яйцо"),
+    ingredients: [
+      { id: "egg", imageSrc: getIngredientImage("яйцо"), count: 2, color: "#FFC107" },
+      { id: "butter", imageSrc: getIngredientImage("масло сливочное"), count: 1, color: "#FFEB3B" }
+    ],
+    isAvailable: false
+  },
+  {
+    id: "simple_salad",
+    title: "Простой салат",
+    energy: 2,
+    imageSrc: getIngredientImage("огурцы"),
+    ingredients: [
+      { id: "cucumber_fresh", imageSrc: getIngredientImage("огурцы"), count: 1, color: "#4CAF50" },
+      { id: "tomato", imageSrc: getIngredientImage("помидор"), count: 1, color: "#F44336" },
+      { id: "herbs", imageSrc: getIngredientImage("зелень"), count: 1, color: "#8BC34A" }
+    ],
+    isAvailable: false
+  },
+  {
+    id: "rice_dish",
+    title: "Рис с овощами",
+    energy: 4,
+    imageSrc: getIngredientImage("рис"),
+    ingredients: [
+      { id: "rice", imageSrc: getIngredientImage("рис"), count: 1, color: "#F5F5F5" },
+      { id: "carrot", imageSrc: getIngredientImage("морковь"), count: 1, color: "#FF5722" },
+      { id: "onion", imageSrc: getIngredientImage("лук"), count: 1, color: "#795548" },
+      { id: "vegetable_oil", imageSrc: getIngredientImage("масло растительное"), count: 1, color: "#FFC107" }
+    ],
+    isAvailable: false
+  },
+  {
+    id: "sandwich",
+    title: "Бутерброд",
+    energy: 1,
+    imageSrc: getIngredientImage("хлеб белый"),
+    ingredients: [
+      { id: "white_bread", imageSrc: getIngredientImage("хлеб белый"), count: 1, color: "#D7CCC8" },
+      { id: "butter", imageSrc: getIngredientImage("масло сливочное"), count: 1, color: "#FFEB3B" }
+    ],
+    isAvailable: false
+  }
+];

@@ -14,6 +14,7 @@ import { GameBoard } from "./game-board.tsx";
 import { NextPiece } from "./next-piece.tsx";
 import { DraggedPiece } from "./dragged-piece.tsx";
 import styles from "./game-content.module.css";
+import { usePlayerState } from "$/core/state";
 
 // Константы
 const BOARD_SIZE = 8;
@@ -56,6 +57,7 @@ const PieceUtils = {
 
 export function TetrisGame() {
   const { state, dispatch } = useGameContext();
+  const { addMoney } = usePlayerState();
   const [dragState, setDragState] = useState<DragState>({
     piece: null,
     previewPosition: null,
@@ -67,6 +69,14 @@ export function TetrisGame() {
   useEffect(() => {
     checkGameOver();
   }, [availablePieces]);
+
+  // Функция для добавления денег при заработке очков
+  const addMoneyForPoints = useCallback((points: number) => {
+    const moneyEarned = Math.floor(points / 10); // 10 очков = 1 рубль
+    if (moneyEarned > 0) {
+      addMoney(moneyEarned);
+    }
+  }, [addMoney]);
 
   // Проверка возможности размещения фигуры
   const canPlacePiece = useCallback((piece: VegetablePiece, position: Position): boolean => {
@@ -217,6 +227,9 @@ export function TetrisGame() {
     if (linesCleared > 0) {
       const points = linesCleared * POINTS_PER_LINE;
 
+      // Добавляем деньги за заработанные очки
+      addMoneyForPoints(points);
+
       // Запускаем анимацию
       dispatch({
         type: "START_CLEAR_ANIMATION",
@@ -250,7 +263,7 @@ export function TetrisGame() {
         });
       }, 800); // Время анимации
     }
-  }, []);
+  }, [addMoneyForPoints]);
 
   // Проверка окончания игры
   const checkGameOver = useCallback(() => {

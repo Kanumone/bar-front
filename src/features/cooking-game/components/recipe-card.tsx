@@ -1,16 +1,12 @@
 import clsx from "clsx";
+import type { Ingredient } from "../types";
 import styles from "./recipe-card.module.css";
-
-interface Ingredient {
-  imageSrc: string;
-  count: number;
-  color: string;
-}
 
 interface RecipeCardProps {
   title: string;
   ingredients: Ingredient[];
   isAvailable: boolean;
+  energy: number;
   onCook: () => void;
   className?: string;
 }
@@ -19,6 +15,7 @@ export const RecipeCard = ({
   title, 
   ingredients, 
   isAvailable, 
+  energy,
   onCook, 
   className 
 }: RecipeCardProps) => {
@@ -42,11 +39,16 @@ export const RecipeCard = ({
           </div>
         </div>
         
+        <div className={styles.energyInfo}>
+          <span className={styles.energyIcon}>⚡</span>
+          <span className={styles.energyValue}>+{energy} энергии</span>
+        </div>
+        
         <p className={styles.ingredientsLabel}>Ингредиенты:</p>
         
         <div className={styles.ingredientsList}>
           {ingredients.map((ingredient, index) => (
-            <div key={index} className={styles.ingredientItem}>
+            <div key={ingredient.id || index} className={styles.ingredientItem}>
               <div 
                 className={styles.ingredientIcon}
                 style={{ backgroundColor: ingredient.color }}

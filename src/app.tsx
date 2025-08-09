@@ -10,6 +10,7 @@ import {
   Game2048SceneWrapper,
   SlidesWrapper,
   MoveAfterTrainWrapper,
+  CookingGameSceneWrapper,
 } from "./ui/scenes";
 import { DetectiveGame, TretyakovGame } from "$features/detective-game";
 import { useAuth } from "./core/hooks";
@@ -44,7 +45,7 @@ export const App: React.FC = () => {
         return <SlidesWrapper config={moscowSlidesConfig} />;
       // games
       case GameScene.CookingGame:
-        return <GameFoodSceneWrapper />;
+        return <CookingGameSceneWrapper />;
       case GameScene.FlyingGame:
         return <FlyingGameSceneWrapper />;
       case GameScene.DetectiveGame:

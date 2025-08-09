@@ -1,16 +1,17 @@
 import { Score } from "./score";
 import { TetrisGame } from "./tetris-game";
-import { RecipeSelectorExample } from "./recipe-selector-example";
+import { RecipeSelector } from "./recipe-selector";
 import styles from "./game-content.module.css";
 import { useGameContext, useGameNavigation } from "./game-provider";
 import shopIcon from "$/assets/images/scenes/cooking/icons/shop.png";
 import bookIcon from "$/assets/images/scenes/cooking/icons/book.png";
 import { Shop } from "./shop";
+import { recipes } from "./recipes.tsx";
 
 export function GameContent() {
   const { state } = useGameContext();
   const { goToRecipeBook, goToTetris, goToShop } = useGameNavigation();
-  
+
   const renderCurrentScreen = () => {
     switch (state.currentScreen) {
       case "tetris":
@@ -18,14 +19,18 @@ export function GameContent() {
       case "recipe-book":
         return (
           <div className={styles.recipeBookContainer}>
-            <RecipeSelectorExample />
-            <button onClick={goToTetris} className={styles.backButton}>
-              Вернуться к игре
-            </button>
+            <RecipeSelector
+              recipes={recipes}
+              back={goToTetris}
+            />
           </div>
         );
       case "shop":
-        return <Shop />;
+        return (
+          <>
+            <Shop back={goToTetris} />
+          </>
+        );
       default:
         return <TetrisGame />;
     }

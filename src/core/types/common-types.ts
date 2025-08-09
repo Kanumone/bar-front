@@ -122,3 +122,11 @@ export interface SlidesConfig {
   getSlides: () => Episode[]// - будет импортирован в конкретных файлах
   sceneConfig: SlidesSceneConfig;
 }
+
+// ✅ Типы для системы инвентаря
+export interface InventoryItem {
+  id: string;
+  name: string;
+  quantity: number;
+  image: string;
+}

@@ -179,6 +179,7 @@ class GameFlowManager {
   }
 
   showGameCooking() {
+    console.log("showGameCooking");
     useSceneStore.getState().setScene(GameScene.CookingGame, null);
   }
 
