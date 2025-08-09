@@ -1,0 +1,95 @@
+## Проект
+Интерактивная визуальная новелла с мини-играми на React + TypeScript + Phaser 3
+
+## Архитектура
+- **Feature-Based**: каждая игровая функция = отдельная папка в `features/`
+- **React + Phaser**: UI управляется React, игровые сцены — Phaser
+- **Zustand**: единственный источник глобального состояния
+- **Clean Architecture**: четкое разделение слоев
+
+## Ключевые принципы
+
+### Типизация
+- Строгий TypeScript, без `any`
+- Все состояния сцен типизированы через `SceneDataMap`
+- API типы автогенерируются из OpenAPI
+
+### State Management
+- Zustand stores: `sceneStore`, `playerStore`, `authStore`, `moveSceneStore`
+- Селекторы вместо прямого доступа к store
+- Автосохранение критических изменений
+
+### Компоненты
+- Feature компоненты в `features/[name]/components/`
+- UI компоненты в `ui/components/`
+- Scene Wrappers для интеграции React-Phaser
+
+### Файловая структура
+```
+features/[name]/
+├── components/          # React компоненты
+├── [name]-game.tsx     # Основной компонент
+└── index.ts            # Экспорты
+
+ui/scenes/
+├── [name]-scene-wrapper.tsx
+└── [name]-scene-wrapper.module.css
+```
+
+## Стандарты кода
+
+### Именование
+- Components: `PascalCase`
+- Files: `kebab-case.tsx`
+- CSS Modules: `camelCase`
+- Stores: `useNameStore`
+
+### Импорты
+Абсолютные импорты через алиасы
+`import { Button } from "$ui/components/button";`
+
+### React Components
+- Functional components с TypeScript
+- Props интерфейсы в том же файле
+- Мемоизация для оптимизации
+- CSS Modules для стилей
+
+### Phaser Scenes
+- Класс наследует `Scene`
+- Методы: `preload()`, `create()`, `update()`
+- Интеграция с React через events/stores
+- Object pooling для производительности
+
+## Специфика проекта
+
+### Слайды (Visual Novel)
+- Конфигурация в `features/slides/configs.ts`
+- Episode = один слайд с действиями
+- Actions: `message`, `thoughts`, `choice`, `button`
+
+### Сцены движения
+- Одна Phaser сцена (`MovePhaserScene`) для всех типов
+- Конфигурации в `MoveSceneMapper`
+
+### Мини-игры
+- Автономные, но интегрированные с общим состоянием
+- Возврат через `useSceneStore.getState().backToPrevScene()`
+- Результаты влияют на `playerStore`
+
+### API интеграция
+- Централизованное логирование через `logActivity()`
+- Регулярное автосохранение состояния игрока
+- При запуске игры подгрузка состояния игрока
+
+## Запрещено
+- Прямые мутации Zustand state
+- Логика в UI компонентах
+- Hardcoded пути к ассетам (используй `getAssetsPathByType`)
+- CSS вне модулей для компонентов
+
+## Обязательно
+- Error boundaries для Phaser интеграции
+- Типизация всех props и state
+- Логирование пользовательских действий
+- Оптимизация изображений перед добавлением
+- Тестирование на мобильных устройствах
