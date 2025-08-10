@@ -58,8 +58,10 @@ export const useStoryStore = create<StoryState>((set, get) => ({
     if (slides.length === 0) return;
     
     const { slidesScene, slideIndex } = get();
+    console.log("slideScene", slidesScene);
+    console.log("sceneName", sceneName);
     
-    if (slidesScene && slidesScene === sceneName) {
+    if (slidesScene === sceneName) {
       const safeSlideIndex = Math.min(Math.max(slideIndex, 0), slides.length - 1);
       const currentSlide = slides[safeSlideIndex];
       set({
@@ -115,13 +117,13 @@ export const useStoryStore = create<StoryState>((set, get) => ({
   },
   
   handleActionButtonClick: (action, playSceneSound) => {
-    const { slideIndex, processUpdate } = get();
+    const { processUpdate } = get();
     
     if (action.button?.sound) playSceneSound(action.button.sound);
     action.button?.action?.();
     
     const scene = useSceneStore.getState().currentScene;
-    usePlayerState.getState().setProgress(scene, slideIndex + 1);
+    usePlayerState.getState().setProgress(scene);
     
     processUpdate(playSceneSound);
   },

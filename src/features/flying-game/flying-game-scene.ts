@@ -33,6 +33,8 @@ const DRAG_MAX_SPEED = 400;
 const CLOUD_MIN_FACTOR_Y = 0.3; // 30 % скорости скал
 const CLOUD_MAX_FACTOR_Y = 0.6; // 60 %
 
+const MAP_SCALE_FACTOR = 10;
+
 interface PooledObject extends Phaser.Physics.Arcade.Sprite { body: Phaser.Physics.Arcade.Body; }
 interface CloudImage extends Phaser.GameObjects.Image { speedY: number; }
 type PhysicsCallbackObject =
@@ -80,7 +82,7 @@ export class FlyingGameScene extends Scene {
         scene: "flying",
         filename: `cloud-${i}.svg` }));
     }
-    this.worldSize = this.scale.width * 3;
+    this.worldSize = this.scale.width * MAP_SCALE_FACTOR;
   }
 
   /* ──────────────────────────────── CREATE ──────────────────────────────── */
