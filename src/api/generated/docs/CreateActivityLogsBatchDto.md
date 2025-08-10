@@ -1,19 +1,19 @@
-# CreateGameProgressDto
+# CreateActivityLogsBatchDto
 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**currentScene** | **string** | Текущая сцена | [default to undefined]
+**logs** | [**Array&lt;CreateActivityLogItemDto&gt;**](CreateActivityLogItemDto.md) |  | [default to undefined]
 
 ## Example
 
 ```typescript
-import { CreateGameProgressDto } from './api';
+import { CreateActivityLogsBatchDto } from './api';
 
-const instance: CreateGameProgressDto = {
-    currentScene,
+const instance: CreateActivityLogsBatchDto = {
+    logs,
 };
 ```
 

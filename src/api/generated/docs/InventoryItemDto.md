@@ -1,19 +1,21 @@
-# CreateGameProgressDto
+# InventoryItemDto
 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**currentScene** | **string** | Текущая сцена | [default to undefined]
+**name** | **string** | Название предмета | [default to undefined]
+**quantity** | **number** | Количество | [default to undefined]
 
 ## Example
 
 ```typescript
-import { CreateGameProgressDto } from './api';
+import { InventoryItemDto } from './api';
 
-const instance: CreateGameProgressDto = {
-    currentScene,
+const instance: InventoryItemDto = {
+    name,
+    quantity,
 };
 ```
 

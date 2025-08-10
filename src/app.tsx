@@ -6,7 +6,6 @@ import { initDebugStores } from "./utils/debug-stores";
 import {
   AuthSceneWrapper,
   GameMapSceneWrapper,
-  GameFoodSceneWrapper,
   Game2048SceneWrapper,
   SlidesWrapper,
   MoveAfterTrainWrapper,

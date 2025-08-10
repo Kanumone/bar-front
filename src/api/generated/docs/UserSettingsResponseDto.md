@@ -1,19 +1,21 @@
-# CreateGameProgressDto
+# UserSettingsResponseDto
 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**currentScene** | **string** | Текущая сцена | [default to undefined]
+**isSoundEnabled** | **boolean** |  | [default to undefined]
+**updatedAt** | **string** |  | [default to undefined]
 
 ## Example
 
 ```typescript
-import { CreateGameProgressDto } from './api';
+import { UserSettingsResponseDto } from './api';
 
-const instance: CreateGameProgressDto = {
-    currentScene,
+const instance: UserSettingsResponseDto = {
+    isSoundEnabled,
+    updatedAt,
 };
 ```
 

@@ -1,25 +1,25 @@
-# CreateActivityLogDto
+# CreateActivityLogItemDto
 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**userId** | **number** | ID пользователя | [default to undefined]
 **action** | **string** | Действие | [default to undefined]
 **details** | **object** | Детали действия | [optional] [default to undefined]
-**sessionId** | **string** | ID сессии | [optional] [default to undefined]
+**sceneName** | **string** | Имя сцены | [optional] [default to undefined]
+**timestamp** | **string** | Время события на клиенте | [optional] [default to undefined]
 
 ## Example
 
 ```typescript
-import { CreateActivityLogDto } from './api';
+import { CreateActivityLogItemDto } from './api';
 
-const instance: CreateActivityLogDto = {
-    userId,
+const instance: CreateActivityLogItemDto = {
     action,
     details,
-    sessionId,
+    sceneName,
+    timestamp,
 };
 ```
 

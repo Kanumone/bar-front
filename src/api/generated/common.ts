@@ -2,7 +2,7 @@
 /* eslint-disable */
 /**
  * Telegram Games API
- * API для авторизации и игр (2048, Food Game)
+ * API для игры ветви и корни
  *
  * The version of the OpenAPI document: 1.0
  * 

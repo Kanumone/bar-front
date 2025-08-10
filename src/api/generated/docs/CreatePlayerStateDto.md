@@ -5,9 +5,10 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**hunger** | **number** | Текущее здоровье игрока | [default to undefined]
+**hunger** | **number** | Текущий уровень голода игрока | [default to undefined]
 **energy** | **number** | Текущая энергия игрока | [default to undefined]
-**inventory** | **Array&lt;object&gt;** | Инвентарь игрока (JSONB) | [default to undefined]
+**money** | **number** | Деньги игрока | [default to undefined]
+**inventory** | [**Array&lt;InventoryItemDto&gt;**](InventoryItemDto.md) | Инвентарь игрока | [default to undefined]
 **data** | **object** | Дополнительные данные состояния игрока (JSONB) | [default to undefined]
 
 ## Example
@@ -18,6 +19,7 @@ import { CreatePlayerStateDto } from './api';
 const instance: CreatePlayerStateDto = {
     hunger,
     energy,
+    money,
     inventory,
     data,
 };

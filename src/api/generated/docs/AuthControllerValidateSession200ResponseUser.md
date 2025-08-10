@@ -1,18 +1,19 @@
-# CreateGameProgressDtoCurrentEpisode
+# AuthControllerValidateSession200ResponseUser
 
-Текущий эпизод
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**id** | **number** |  | [optional] [default to undefined]
 
 ## Example
 
 ```typescript
-import { CreateGameProgressDtoCurrentEpisode } from './api';
+import { AuthControllerValidateSession200ResponseUser } from './api';
 
-const instance: CreateGameProgressDtoCurrentEpisode = {
+const instance: AuthControllerValidateSession200ResponseUser = {
+    id,
 };
 ```
 

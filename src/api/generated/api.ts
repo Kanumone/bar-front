@@ -2,7 +2,7 @@
 /* eslint-disable */
 /**
  * Telegram Games API
- * API для авторизации и игр (2048, Food Game)
+ * API для игры ветви и корни
  *
  * The version of the OpenAPI document: 1.0
  * 
@@ -69,58 +69,115 @@ export interface ActivityLogResponseDto {
 /**
  * 
  * @export
- * @interface AuthResponseDto
+ * @interface AuthControllerGetUserInfo200Response
  */
-export interface AuthResponseDto {
+export interface AuthControllerGetUserInfo200Response {
     /**
-     * Токен доступа для аутентифицированного пользователя
+     * 
+     * @type {number}
+     * @memberof AuthControllerGetUserInfo200Response
+     */
+    'id'?: number;
+    /**
+     * 
      * @type {string}
-     * @memberof AuthResponseDto
+     * @memberof AuthControllerGetUserInfo200Response
      */
-    'accessToken': string;
+    'firstName'?: string;
     /**
-     * Базовая информация об аутентифицированном пользователе
-     * @type {UserInfoDto}
-     * @memberof AuthResponseDto
-     */
-    'user': UserInfoDto;
-    /**
-     * Идентификатор текущей сессии
+     * 
      * @type {string}
-     * @memberof AuthResponseDto
+     * @memberof AuthControllerGetUserInfo200Response
      */
-    'sessionId': string;
+    'lastName'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof AuthControllerGetUserInfo200Response
+     */
+    'username'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof AuthControllerGetUserInfo200Response
+     */
+    'role'?: string;
 }
 /**
  * 
  * @export
- * @interface CreateActivityLogDto
+ * @interface AuthControllerValidateSession200Response
  */
-export interface CreateActivityLogDto {
+export interface AuthControllerValidateSession200Response {
     /**
-     * ID пользователя
-     * @type {number}
-     * @memberof CreateActivityLogDto
+     * 
+     * @type {boolean}
+     * @memberof AuthControllerValidateSession200Response
      */
-    'userId': number;
+    'valid'?: boolean;
+    /**
+     * 
+     * @type {AuthControllerValidateSession200ResponseUser}
+     * @memberof AuthControllerValidateSession200Response
+     */
+    'user'?: AuthControllerValidateSession200ResponseUser;
+}
+/**
+ * 
+ * @export
+ * @interface AuthControllerValidateSession200ResponseUser
+ */
+export interface AuthControllerValidateSession200ResponseUser {
+    /**
+     * 
+     * @type {number}
+     * @memberof AuthControllerValidateSession200ResponseUser
+     */
+    'id'?: number;
+}
+/**
+ * 
+ * @export
+ * @interface CreateActivityLogItemDto
+ */
+export interface CreateActivityLogItemDto {
     /**
      * Действие
      * @type {string}
-     * @memberof CreateActivityLogDto
+     * @memberof CreateActivityLogItemDto
      */
     'action': string;
     /**
      * Детали действия
      * @type {object}
-     * @memberof CreateActivityLogDto
+     * @memberof CreateActivityLogItemDto
      */
     'details'?: object;
     /**
-     * ID сессии
+     * Имя сцены
      * @type {string}
-     * @memberof CreateActivityLogDto
+     * @memberof CreateActivityLogItemDto
      */
-    'sessionId'?: string | null;
+    'sceneName'?: string;
+    /**
+     * Время события на клиенте
+     * @type {string}
+     * @memberof CreateActivityLogItemDto
+     */
+    'timestamp'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface CreateActivityLogsBatchDto
+ */
+export interface CreateActivityLogsBatchDto {
+    /**
+     * 
+     * @type {Array<CreateActivityLogItemDto>}
+     * @memberof CreateActivityLogsBatchDto
+     */
+    'logs': Array<CreateActivityLogItemDto>;
 }
 /**
  * 
@@ -129,48 +186,20 @@ export interface CreateActivityLogDto {
  */
 export interface CreateGameProgressDto {
     /**
-     * Текущий счет игры
-     * @type {number}
-     * @memberof CreateGameProgressDto
-     */
-    'score': number;
-    /**
      * Текущая сцена
      * @type {string}
      * @memberof CreateGameProgressDto
      */
-    'currentScene': string;
-    /**
-     * Дата последнего обновления прогресса
-     * @type {string}
-     * @memberof CreateGameProgressDto
-     */
-    'lastPlayed': string;
-    /**
-     * Скрытые сцены
-     * @type {Array<string>}
-     * @memberof CreateGameProgressDto
-     */
-    'hiddenScenes'?: Array<string>;
-    /**
-     * 
-     * @type {CreateGameProgressDtoCurrentEpisode}
-     * @memberof CreateGameProgressDto
-     */
-    'currentEpisode'?: CreateGameProgressDtoCurrentEpisode;
-    /**
-     * Дополнительные данные прогресса игры (JSONB)
-     * @type {object}
-     * @memberof CreateGameProgressDto
-     */
-    'data': object;
+    'currentScene': CreateGameProgressDtoCurrentSceneEnum;
 }
-/**
- * @type CreateGameProgressDtoCurrentEpisode
- * Текущий эпизод
- * @export
- */
-export type CreateGameProgressDtoCurrentEpisode = number | string;
+
+export const CreateGameProgressDtoCurrentSceneEnum = {
+    Intro: 'intro',
+    Moscow: 'moscow',
+    Kazan: 'kazan'
+} as const;
+
+export type CreateGameProgressDtoCurrentSceneEnum = typeof CreateGameProgressDtoCurrentSceneEnum[keyof typeof CreateGameProgressDtoCurrentSceneEnum];
 
 /**
  * 
@@ -179,7 +208,7 @@ export type CreateGameProgressDtoCurrentEpisode = number | string;
  */
 export interface CreatePlayerStateDto {
     /**
-     * Текущее здоровье игрока
+     * Текущий уровень голода игрока
      * @type {number}
      * @memberof CreatePlayerStateDto
      */
@@ -191,11 +220,17 @@ export interface CreatePlayerStateDto {
      */
     'energy': number;
     /**
-     * Инвентарь игрока (JSONB)
-     * @type {Array<object>}
+     * Деньги игрока
+     * @type {number}
      * @memberof CreatePlayerStateDto
      */
-    'inventory': Array<object>;
+    'money': number;
+    /**
+     * Инвентарь игрока
+     * @type {Array<InventoryItemDto>}
+     * @memberof CreatePlayerStateDto
+     */
+    'inventory': Array<InventoryItemDto>;
     /**
      * Дополнительные данные состояния игрока (JSONB)
      * @type {object}
@@ -231,6 +266,49 @@ export interface CreateQuizAnswerDto {
 /**
  * 
  * @export
+ * @interface CreateSessionDto
+ */
+export interface CreateSessionDto {
+    /**
+     * Telegram ID пользователя
+     * @type {string}
+     * @memberof CreateSessionDto
+     */
+    'telegramId': string;
+    /**
+     * Username в Telegram
+     * @type {string}
+     * @memberof CreateSessionDto
+     */
+    'username'?: string;
+    /**
+     * Имя
+     * @type {string}
+     * @memberof CreateSessionDto
+     */
+    'firstName'?: string;
+    /**
+     * Фамилия
+     * @type {string}
+     * @memberof CreateSessionDto
+     */
+    'lastName'?: string;
+    /**
+     * User-Agent клиента
+     * @type {string}
+     * @memberof CreateSessionDto
+     */
+    'userAgent'?: string;
+    /**
+     * Версия Telegram
+     * @type {string}
+     * @memberof CreateSessionDto
+     */
+    'telegramVersion'?: string;
+}
+/**
+ * 
+ * @export
  * @interface GameProgressResponseDto
  */
 export interface GameProgressResponseDto {
@@ -253,23 +331,30 @@ export interface GameProgressResponseDto {
      */
     'currentScene': string;
     /**
-     * Текущий эпизод
-     * @type {string}
-     * @memberof GameProgressResponseDto
-     */
-    'currentEpisode'?: string | null;
-    /**
-     * Список скрытых сцен
-     * @type {Array<string>}
-     * @memberof GameProgressResponseDto
-     */
-    'hiddenScenes': Array<string>;
-    /**
      * Информация о пользователе
      * @type {UserResponseDto}
      * @memberof GameProgressResponseDto
      */
     'user': UserResponseDto;
+}
+/**
+ * 
+ * @export
+ * @interface InventoryItemDto
+ */
+export interface InventoryItemDto {
+    /**
+     * Название предмета
+     * @type {string}
+     * @memberof InventoryItemDto
+     */
+    'name': string;
+    /**
+     * Количество
+     * @type {number}
+     * @memberof InventoryItemDto
+     */
+    'quantity': number;
 }
 /**
  * 
@@ -295,6 +380,18 @@ export interface PlayerStateResponseDto {
      * @memberof PlayerStateResponseDto
      */
     'energy': number;
+    /**
+     * Деньги игрока
+     * @type {number}
+     * @memberof PlayerStateResponseDto
+     */
+    'money': number;
+    /**
+     * Инвентарь
+     * @type {Array<InventoryItemDto>}
+     * @memberof PlayerStateResponseDto
+     */
+    'inventory': Array<InventoryItemDto>;
     /**
      * Дата и время последнего обновления
      * @type {string}
@@ -354,46 +451,50 @@ export interface QuizAnswerResponseDto {
 /**
  * 
  * @export
+ * @interface SessionResponseDto
+ */
+export interface SessionResponseDto {
+    /**
+     * Идентификатор сессии
+     * @type {string}
+     * @memberof SessionResponseDto
+     */
+    'sessionId': string;
+    /**
+     * Время истечения сессии (скользящее окно +30 мин)
+     * @type {string}
+     * @memberof SessionResponseDto
+     */
+    'expiresAt': string;
+    /**
+     * ID пользователя
+     * @type {object}
+     * @memberof SessionResponseDto
+     */
+    'user': object;
+}
+/**
+ * 
+ * @export
  * @interface UpdateGameProgressDto
  */
 export interface UpdateGameProgressDto {
     /**
-     * Текущий счет игры
-     * @type {number}
-     * @memberof UpdateGameProgressDto
-     */
-    'score'?: number;
-    /**
-     * Текущая сцена
-     * @type {string}
-     * @memberof UpdateGameProgressDto
-     */
-    'currentScene'?: string;
-    /**
-     * Дата последнего обновления прогресса
-     * @type {string}
-     * @memberof UpdateGameProgressDto
-     */
-    'lastPlayed'?: string;
-    /**
-     * Скрытые сцены
-     * @type {Array<string>}
-     * @memberof UpdateGameProgressDto
-     */
-    'hiddenScenes'?: Array<string>;
-    /**
      * 
-     * @type {CreateGameProgressDtoCurrentEpisode}
+     * @type {string}
      * @memberof UpdateGameProgressDto
      */
-    'currentEpisode'?: CreateGameProgressDtoCurrentEpisode;
-    /**
-     * Дополнительные данные прогресса игры (JSONB)
-     * @type {object}
-     * @memberof UpdateGameProgressDto
-     */
-    'data'?: object;
+    'currentScene'?: UpdateGameProgressDtoCurrentSceneEnum;
 }
+
+export const UpdateGameProgressDtoCurrentSceneEnum = {
+    Intro: 'intro',
+    Moscow: 'moscow',
+    Kazan: 'kazan'
+} as const;
+
+export type UpdateGameProgressDtoCurrentSceneEnum = typeof UpdateGameProgressDtoCurrentSceneEnum[keyof typeof UpdateGameProgressDtoCurrentSceneEnum];
+
 /**
  * 
  * @export
@@ -401,81 +502,43 @@ export interface UpdateGameProgressDto {
  */
 export interface UpdatePlayerStateDto {
     /**
-     * Текущее здоровье игрока
+     * 
      * @type {number}
      * @memberof UpdatePlayerStateDto
      */
     'hunger'?: number;
     /**
-     * Текущая энергия игрока
+     * 
      * @type {number}
      * @memberof UpdatePlayerStateDto
      */
     'energy'?: number;
     /**
-     * Инвентарь игрока (JSONB)
-     * @type {Array<object>}
+     * 
+     * @type {number}
      * @memberof UpdatePlayerStateDto
      */
-    'inventory'?: Array<object>;
+    'money'?: number;
     /**
-     * Дополнительные данные состояния игрока (JSONB)
-     * @type {object}
+     * 
+     * @type {Array<InventoryItemDto>}
      * @memberof UpdatePlayerStateDto
      */
-    'data'?: object;
+    'inventory'?: Array<InventoryItemDto>;
 }
 /**
  * 
  * @export
- * @interface UserInfoDto
+ * @interface UpdateUserSettingsDto
  */
-export interface UserInfoDto {
+export interface UpdateUserSettingsDto {
     /**
-     * ID пользователя в системе
-     * @type {number}
-     * @memberof UserInfoDto
+     * 
+     * @type {boolean}
+     * @memberof UpdateUserSettingsDto
      */
-    'id': number;
-    /**
-     * Имя пользователя
-     * @type {string}
-     * @memberof UserInfoDto
-     */
-    'firstName': string;
-    /**
-     * Фамилия пользователя (опционально)
-     * @type {object}
-     * @memberof UserInfoDto
-     */
-    'lastName'?: object | null;
-    /**
-     * Username в Telegram (опционально)
-     * @type {object}
-     * @memberof UserInfoDto
-     */
-    'username'?: object | null;
-    /**
-     * Роль пользователя
-     * @type {string}
-     * @memberof UserInfoDto
-     */
-    'role': UserInfoDtoRoleEnum;
-    /**
-     * Идентификатор текущей сессии
-     * @type {string}
-     * @memberof UserInfoDto
-     */
-    'sessionId'?: string;
+    'isSoundEnabled': boolean;
 }
-
-export const UserInfoDtoRoleEnum = {
-    User: 'user',
-    Admin: 'admin'
-} as const;
-
-export type UserInfoDtoRoleEnum = typeof UserInfoDtoRoleEnum[keyof typeof UserInfoDtoRoleEnum];
-
 /**
  * 
  * @export
@@ -539,6 +602,25 @@ export const UserResponseDtoRoleEnum = {
 
 export type UserResponseDtoRoleEnum = typeof UserResponseDtoRoleEnum[keyof typeof UserResponseDtoRoleEnum];
 
+/**
+ * 
+ * @export
+ * @interface UserSettingsResponseDto
+ */
+export interface UserSettingsResponseDto {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof UserSettingsResponseDto
+     */
+    'isSoundEnabled': boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserSettingsResponseDto
+     */
+    'updatedAt': string;
+}
 
 /**
  * ActivityLogsApi - axios parameter creator
@@ -548,15 +630,15 @@ export const ActivityLogsApiAxiosParamCreator = function (configuration?: Config
     return {
         /**
          * 
-         * @summary Записать новое действие пользователя
-         * @param {CreateActivityLogDto} createActivityLogDto 
+         * @summary Записать батч действий пользователя
+         * @param {CreateActivityLogsBatchDto} createActivityLogsBatchDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        activityLogControllerCreate: async (createActivityLogDto: CreateActivityLogDto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'createActivityLogDto' is not null or undefined
-            assertParamExists('activityLogControllerCreate', 'createActivityLogDto', createActivityLogDto)
-            const localVarPath = `/activity-logs`;
+        activityLogControllerCreateBatch: async (createActivityLogsBatchDto: CreateActivityLogsBatchDto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'createActivityLogsBatchDto' is not null or undefined
+            assertParamExists('activityLogControllerCreateBatch', 'createActivityLogsBatchDto', createActivityLogsBatchDto)
+            const localVarPath = `/api/activity-logs/batch`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -568,9 +650,8 @@ export const ActivityLogsApiAxiosParamCreator = function (configuration?: Config
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication bearer required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+            // authentication session required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Session-Id", configuration)
 
 
     
@@ -579,7 +660,7 @@ export const ActivityLogsApiAxiosParamCreator = function (configuration?: Config
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(createActivityLogDto, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(createActivityLogsBatchDto, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -596,7 +677,7 @@ export const ActivityLogsApiAxiosParamCreator = function (configuration?: Config
         activityLogControllerFindAll: async (userId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'userId' is not null or undefined
             assertParamExists('activityLogControllerFindAll', 'userId', userId)
-            const localVarPath = `/activity-logs`;
+            const localVarPath = `/api/activity-logs`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -608,9 +689,8 @@ export const ActivityLogsApiAxiosParamCreator = function (configuration?: Config
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication bearer required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+            // authentication session required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Session-Id", configuration)
 
             if (userId !== undefined) {
                 localVarQueryParameter['userId'] = userId;
@@ -637,7 +717,7 @@ export const ActivityLogsApiAxiosParamCreator = function (configuration?: Config
         activityLogControllerFindBySession: async (sessionId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'sessionId' is not null or undefined
             assertParamExists('activityLogControllerFindBySession', 'sessionId', sessionId)
-            const localVarPath = `/activity-logs/session/{sessionId}`
+            const localVarPath = `/api/activity-logs/session/{sessionId}`
                 .replace(`{${"sessionId"}}`, encodeURIComponent(String(sessionId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -650,9 +730,8 @@ export const ActivityLogsApiAxiosParamCreator = function (configuration?: Config
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication bearer required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+            // authentication session required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Session-Id", configuration)
 
 
     
@@ -675,7 +754,7 @@ export const ActivityLogsApiAxiosParamCreator = function (configuration?: Config
         activityLogControllerFindOne: async (id: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('activityLogControllerFindOne', 'id', id)
-            const localVarPath = `/activity-logs/{id}`
+            const localVarPath = `/api/activity-logs/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -688,9 +767,8 @@ export const ActivityLogsApiAxiosParamCreator = function (configuration?: Config
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication bearer required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+            // authentication session required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Session-Id", configuration)
 
 
     
@@ -715,15 +793,15 @@ export const ActivityLogsApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
-         * @summary Записать новое действие пользователя
-         * @param {CreateActivityLogDto} createActivityLogDto 
+         * @summary Записать батч действий пользователя
+         * @param {CreateActivityLogsBatchDto} createActivityLogsBatchDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async activityLogControllerCreate(createActivityLogDto: CreateActivityLogDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ActivityLogResponseDto>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.activityLogControllerCreate(createActivityLogDto, options);
+        async activityLogControllerCreateBatch(createActivityLogsBatchDto: CreateActivityLogsBatchDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.activityLogControllerCreateBatch(createActivityLogsBatchDto, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ActivityLogsApi.activityLogControllerCreate']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['ActivityLogsApi.activityLogControllerCreateBatch']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -777,13 +855,13 @@ export const ActivityLogsApiFactory = function (configuration?: Configuration, b
     return {
         /**
          * 
-         * @summary Записать новое действие пользователя
-         * @param {CreateActivityLogDto} createActivityLogDto 
+         * @summary Записать батч действий пользователя
+         * @param {CreateActivityLogsBatchDto} createActivityLogsBatchDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        activityLogControllerCreate(createActivityLogDto: CreateActivityLogDto, options?: RawAxiosRequestConfig): AxiosPromise<ActivityLogResponseDto> {
-            return localVarFp.activityLogControllerCreate(createActivityLogDto, options).then((request) => request(axios, basePath));
+        activityLogControllerCreateBatch(createActivityLogsBatchDto: CreateActivityLogsBatchDto, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.activityLogControllerCreateBatch(createActivityLogsBatchDto, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -827,14 +905,14 @@ export const ActivityLogsApiFactory = function (configuration?: Configuration, b
 export class ActivityLogsApi extends BaseAPI {
     /**
      * 
-     * @summary Записать новое действие пользователя
-     * @param {CreateActivityLogDto} createActivityLogDto 
+     * @summary Записать батч действий пользователя
+     * @param {CreateActivityLogsBatchDto} createActivityLogsBatchDto 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ActivityLogsApi
      */
-    public activityLogControllerCreate(createActivityLogDto: CreateActivityLogDto, options?: RawAxiosRequestConfig) {
-        return ActivityLogsApiFp(this.configuration).activityLogControllerCreate(createActivityLogDto, options).then((request) => request(this.axios, this.basePath));
+    public activityLogControllerCreateBatch(createActivityLogsBatchDto: CreateActivityLogsBatchDto, options?: RawAxiosRequestConfig) {
+        return ActivityLogsApiFp(this.configuration).activityLogControllerCreateBatch(createActivityLogsBatchDto, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -883,16 +961,16 @@ export class ActivityLogsApi extends BaseAPI {
 export const AuthApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         * Аутентификация пользователя через данные инициализации Telegram Mini App (initData).
-         * @summary Вход через Telegram Mini App
-         * @param {object} body Объект с initData из Telegram WebApp
+         * 
+         * @summary Создать/обновить сессию по Telegram ID
+         * @param {CreateSessionDto} createSessionDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        authControllerLogin: async (body: object, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'body' is not null or undefined
-            assertParamExists('authControllerLogin', 'body', body)
-            const localVarPath = `/auth/telegram`;
+        authControllerCreateSession: async (createSessionDto: CreateSessionDto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'createSessionDto' is not null or undefined
+            assertParamExists('authControllerCreateSession', 'createSessionDto', createSessionDto)
+            const localVarPath = `/api/auth/session`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -904,9 +982,8 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication bearer required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+            // authentication session required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Session-Id", configuration)
 
 
     
@@ -915,7 +992,124 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(createSessionDto, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Получить профиль пользователя по session-id
+         * @param {string} xSessionId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        authControllerGetUserInfo: async (xSessionId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'xSessionId' is not null or undefined
+            assertParamExists('authControllerGetUserInfo', 'xSessionId', xSessionId)
+            const localVarPath = `/api/auth/user`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication session required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Session-Id", configuration)
+
+
+    
+            if (xSessionId != null) {
+                localVarHeaderParameter['x-session-id'] = String(xSessionId);
+            }
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Выйти из сессии
+         * @param {string} xSessionId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        authControllerLogout: async (xSessionId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'xSessionId' is not null or undefined
+            assertParamExists('authControllerLogout', 'xSessionId', xSessionId)
+            const localVarPath = `/api/auth/logout`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication session required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Session-Id", configuration)
+
+
+    
+            if (xSessionId != null) {
+                localVarHeaderParameter['x-session-id'] = String(xSessionId);
+            }
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Проверить валидность session-id
+         * @param {string} xSessionId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        authControllerValidateSession: async (xSessionId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'xSessionId' is not null or undefined
+            assertParamExists('authControllerValidateSession', 'xSessionId', xSessionId)
+            const localVarPath = `/api/auth/validate`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication session required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Session-Id", configuration)
+
+
+    
+            if (xSessionId != null) {
+                localVarHeaderParameter['x-session-id'] = String(xSessionId);
+            }
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -933,16 +1127,55 @@ export const AuthApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = AuthApiAxiosParamCreator(configuration)
     return {
         /**
-         * Аутентификация пользователя через данные инициализации Telegram Mini App (initData).
-         * @summary Вход через Telegram Mini App
-         * @param {object} body Объект с initData из Telegram WebApp
+         * 
+         * @summary Создать/обновить сессию по Telegram ID
+         * @param {CreateSessionDto} createSessionDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async authControllerLogin(body: object, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AuthResponseDto>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.authControllerLogin(body, options);
+        async authControllerCreateSession(createSessionDto: CreateSessionDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SessionResponseDto>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.authControllerCreateSession(createSessionDto, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['AuthApi.authControllerLogin']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['AuthApi.authControllerCreateSession']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Получить профиль пользователя по session-id
+         * @param {string} xSessionId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async authControllerGetUserInfo(xSessionId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AuthControllerGetUserInfo200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.authControllerGetUserInfo(xSessionId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AuthApi.authControllerGetUserInfo']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Выйти из сессии
+         * @param {string} xSessionId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async authControllerLogout(xSessionId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.authControllerLogout(xSessionId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AuthApi.authControllerLogout']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Проверить валидность session-id
+         * @param {string} xSessionId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async authControllerValidateSession(xSessionId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AuthControllerValidateSession200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.authControllerValidateSession(xSessionId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AuthApi.authControllerValidateSession']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
@@ -956,14 +1189,44 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
     const localVarFp = AuthApiFp(configuration)
     return {
         /**
-         * Аутентификация пользователя через данные инициализации Telegram Mini App (initData).
-         * @summary Вход через Telegram Mini App
-         * @param {object} body Объект с initData из Telegram WebApp
+         * 
+         * @summary Создать/обновить сессию по Telegram ID
+         * @param {CreateSessionDto} createSessionDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        authControllerLogin(body: object, options?: RawAxiosRequestConfig): AxiosPromise<AuthResponseDto> {
-            return localVarFp.authControllerLogin(body, options).then((request) => request(axios, basePath));
+        authControllerCreateSession(createSessionDto: CreateSessionDto, options?: RawAxiosRequestConfig): AxiosPromise<SessionResponseDto> {
+            return localVarFp.authControllerCreateSession(createSessionDto, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Получить профиль пользователя по session-id
+         * @param {string} xSessionId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        authControllerGetUserInfo(xSessionId: string, options?: RawAxiosRequestConfig): AxiosPromise<AuthControllerGetUserInfo200Response> {
+            return localVarFp.authControllerGetUserInfo(xSessionId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Выйти из сессии
+         * @param {string} xSessionId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        authControllerLogout(xSessionId: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.authControllerLogout(xSessionId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Проверить валидность session-id
+         * @param {string} xSessionId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        authControllerValidateSession(xSessionId: string, options?: RawAxiosRequestConfig): AxiosPromise<AuthControllerValidateSession200Response> {
+            return localVarFp.authControllerValidateSession(xSessionId, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -976,15 +1239,51 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
  */
 export class AuthApi extends BaseAPI {
     /**
-     * Аутентификация пользователя через данные инициализации Telegram Mini App (initData).
-     * @summary Вход через Telegram Mini App
-     * @param {object} body Объект с initData из Telegram WebApp
+     * 
+     * @summary Создать/обновить сессию по Telegram ID
+     * @param {CreateSessionDto} createSessionDto 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuthApi
      */
-    public authControllerLogin(body: object, options?: RawAxiosRequestConfig) {
-        return AuthApiFp(this.configuration).authControllerLogin(body, options).then((request) => request(this.axios, this.basePath));
+    public authControllerCreateSession(createSessionDto: CreateSessionDto, options?: RawAxiosRequestConfig) {
+        return AuthApiFp(this.configuration).authControllerCreateSession(createSessionDto, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Получить профиль пользователя по session-id
+     * @param {string} xSessionId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApi
+     */
+    public authControllerGetUserInfo(xSessionId: string, options?: RawAxiosRequestConfig) {
+        return AuthApiFp(this.configuration).authControllerGetUserInfo(xSessionId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Выйти из сессии
+     * @param {string} xSessionId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApi
+     */
+    public authControllerLogout(xSessionId: string, options?: RawAxiosRequestConfig) {
+        return AuthApiFp(this.configuration).authControllerLogout(xSessionId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Проверить валидность session-id
+     * @param {string} xSessionId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApi
+     */
+    public authControllerValidateSession(xSessionId: string, options?: RawAxiosRequestConfig) {
+        return AuthApiFp(this.configuration).authControllerValidateSession(xSessionId, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -998,92 +1297,12 @@ export const GameStateApiAxiosParamCreator = function (configuration?: Configura
     return {
         /**
          * 
-         * @summary Создать или обновить прогресс игры
-         * @param {CreateGameProgressDto} createGameProgressDto 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        gameStateControllerCreateOrUpdateGameProgress: async (createGameProgressDto: CreateGameProgressDto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'createGameProgressDto' is not null or undefined
-            assertParamExists('gameStateControllerCreateOrUpdateGameProgress', 'createGameProgressDto', createGameProgressDto)
-            const localVarPath = `/game-state/game-progress`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication bearer required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(createGameProgressDto, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Создать или обновить состояние игрока
-         * @param {CreatePlayerStateDto} createPlayerStateDto 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        gameStateControllerCreateOrUpdatePlayerState: async (createPlayerStateDto: CreatePlayerStateDto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'createPlayerStateDto' is not null or undefined
-            assertParamExists('gameStateControllerCreateOrUpdatePlayerState', 'createPlayerStateDto', createPlayerStateDto)
-            const localVarPath = `/game-state/player-state`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication bearer required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(createPlayerStateDto, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
          * @summary Удалить прогресс игры
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
         gameStateControllerDeleteGameProgress: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/game-state/game-progress`;
+            const localVarPath = `/api/game-state/progress`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1095,9 +1314,8 @@ export const GameStateApiAxiosParamCreator = function (configuration?: Configura
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication bearer required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+            // authentication session required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Session-Id", configuration)
 
 
     
@@ -1117,7 +1335,7 @@ export const GameStateApiAxiosParamCreator = function (configuration?: Configura
          * @throws {RequiredError}
          */
         gameStateControllerDeletePlayerState: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/game-state/player-state`;
+            const localVarPath = `/api/game-state/player`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1129,9 +1347,8 @@ export const GameStateApiAxiosParamCreator = function (configuration?: Configura
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication bearer required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+            // authentication session required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Session-Id", configuration)
 
 
     
@@ -1151,7 +1368,7 @@ export const GameStateApiAxiosParamCreator = function (configuration?: Configura
          * @throws {RequiredError}
          */
         gameStateControllerGetGameProgress: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/game-state/game-progress`;
+            const localVarPath = `/api/game-state/progress`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1163,9 +1380,8 @@ export const GameStateApiAxiosParamCreator = function (configuration?: Configura
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication bearer required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+            // authentication session required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Session-Id", configuration)
 
 
     
@@ -1185,7 +1401,7 @@ export const GameStateApiAxiosParamCreator = function (configuration?: Configura
          * @throws {RequiredError}
          */
         gameStateControllerGetPlayerState: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/game-state/player-state`;
+            const localVarPath = `/api/game-state/player`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1197,9 +1413,8 @@ export const GameStateApiAxiosParamCreator = function (configuration?: Configura
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication bearer required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+            // authentication session required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Session-Id", configuration)
 
 
     
@@ -1214,7 +1429,7 @@ export const GameStateApiAxiosParamCreator = function (configuration?: Configura
         },
         /**
          * 
-         * @summary Обновить прогресс игры
+         * @summary Upsert прогресса игры
          * @param {UpdateGameProgressDto} updateGameProgressDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1222,7 +1437,7 @@ export const GameStateApiAxiosParamCreator = function (configuration?: Configura
         gameStateControllerUpdateGameProgress: async (updateGameProgressDto: UpdateGameProgressDto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'updateGameProgressDto' is not null or undefined
             assertParamExists('gameStateControllerUpdateGameProgress', 'updateGameProgressDto', updateGameProgressDto)
-            const localVarPath = `/game-state/game-progress`;
+            const localVarPath = `/api/game-state/progress`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1230,13 +1445,12 @@ export const GameStateApiAxiosParamCreator = function (configuration?: Configura
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication bearer required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+            // authentication session required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Session-Id", configuration)
 
 
     
@@ -1254,7 +1468,7 @@ export const GameStateApiAxiosParamCreator = function (configuration?: Configura
         },
         /**
          * 
-         * @summary Обновить состояние игрока
+         * @summary Upsert состояния игрока
          * @param {UpdatePlayerStateDto} updatePlayerStateDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1262,7 +1476,7 @@ export const GameStateApiAxiosParamCreator = function (configuration?: Configura
         gameStateControllerUpdatePlayerState: async (updatePlayerStateDto: UpdatePlayerStateDto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'updatePlayerStateDto' is not null or undefined
             assertParamExists('gameStateControllerUpdatePlayerState', 'updatePlayerStateDto', updatePlayerStateDto)
-            const localVarPath = `/game-state/player-state`;
+            const localVarPath = `/api/game-state/player`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1270,13 +1484,12 @@ export const GameStateApiAxiosParamCreator = function (configuration?: Configura
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication bearer required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+            // authentication session required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Session-Id", configuration)
 
 
     
@@ -1302,32 +1515,6 @@ export const GameStateApiAxiosParamCreator = function (configuration?: Configura
 export const GameStateApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = GameStateApiAxiosParamCreator(configuration)
     return {
-        /**
-         * 
-         * @summary Создать или обновить прогресс игры
-         * @param {CreateGameProgressDto} createGameProgressDto 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async gameStateControllerCreateOrUpdateGameProgress(createGameProgressDto: CreateGameProgressDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GameProgressResponseDto>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.gameStateControllerCreateOrUpdateGameProgress(createGameProgressDto, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['GameStateApi.gameStateControllerCreateOrUpdateGameProgress']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
-         * @summary Создать или обновить состояние игрока
-         * @param {CreatePlayerStateDto} createPlayerStateDto 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async gameStateControllerCreateOrUpdatePlayerState(createPlayerStateDto: CreatePlayerStateDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PlayerStateResponseDto>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.gameStateControllerCreateOrUpdatePlayerState(createPlayerStateDto, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['GameStateApi.gameStateControllerCreateOrUpdatePlayerState']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
         /**
          * 
          * @summary Удалить прогресс игры
@@ -1378,7 +1565,7 @@ export const GameStateApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Обновить прогресс игры
+         * @summary Upsert прогресса игры
          * @param {UpdateGameProgressDto} updateGameProgressDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1391,7 +1578,7 @@ export const GameStateApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Обновить состояние игрока
+         * @summary Upsert состояния игрока
          * @param {UpdatePlayerStateDto} updatePlayerStateDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1412,26 +1599,6 @@ export const GameStateApiFp = function(configuration?: Configuration) {
 export const GameStateApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = GameStateApiFp(configuration)
     return {
-        /**
-         * 
-         * @summary Создать или обновить прогресс игры
-         * @param {CreateGameProgressDto} createGameProgressDto 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        gameStateControllerCreateOrUpdateGameProgress(createGameProgressDto: CreateGameProgressDto, options?: RawAxiosRequestConfig): AxiosPromise<GameProgressResponseDto> {
-            return localVarFp.gameStateControllerCreateOrUpdateGameProgress(createGameProgressDto, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Создать или обновить состояние игрока
-         * @param {CreatePlayerStateDto} createPlayerStateDto 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        gameStateControllerCreateOrUpdatePlayerState(createPlayerStateDto: CreatePlayerStateDto, options?: RawAxiosRequestConfig): AxiosPromise<PlayerStateResponseDto> {
-            return localVarFp.gameStateControllerCreateOrUpdatePlayerState(createPlayerStateDto, options).then((request) => request(axios, basePath));
-        },
         /**
          * 
          * @summary Удалить прогресс игры
@@ -1470,7 +1637,7 @@ export const GameStateApiFactory = function (configuration?: Configuration, base
         },
         /**
          * 
-         * @summary Обновить прогресс игры
+         * @summary Upsert прогресса игры
          * @param {UpdateGameProgressDto} updateGameProgressDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1480,7 +1647,7 @@ export const GameStateApiFactory = function (configuration?: Configuration, base
         },
         /**
          * 
-         * @summary Обновить состояние игрока
+         * @summary Upsert состояния игрока
          * @param {UpdatePlayerStateDto} updatePlayerStateDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1498,30 +1665,6 @@ export const GameStateApiFactory = function (configuration?: Configuration, base
  * @extends {BaseAPI}
  */
 export class GameStateApi extends BaseAPI {
-    /**
-     * 
-     * @summary Создать или обновить прогресс игры
-     * @param {CreateGameProgressDto} createGameProgressDto 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof GameStateApi
-     */
-    public gameStateControllerCreateOrUpdateGameProgress(createGameProgressDto: CreateGameProgressDto, options?: RawAxiosRequestConfig) {
-        return GameStateApiFp(this.configuration).gameStateControllerCreateOrUpdateGameProgress(createGameProgressDto, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Создать или обновить состояние игрока
-     * @param {CreatePlayerStateDto} createPlayerStateDto 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof GameStateApi
-     */
-    public gameStateControllerCreateOrUpdatePlayerState(createPlayerStateDto: CreatePlayerStateDto, options?: RawAxiosRequestConfig) {
-        return GameStateApiFp(this.configuration).gameStateControllerCreateOrUpdatePlayerState(createPlayerStateDto, options).then((request) => request(this.axios, this.basePath));
-    }
-
     /**
      * 
      * @summary Удалить прогресс игры
@@ -1568,7 +1711,7 @@ export class GameStateApi extends BaseAPI {
 
     /**
      * 
-     * @summary Обновить прогресс игры
+     * @summary Upsert прогресса игры
      * @param {UpdateGameProgressDto} updateGameProgressDto 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -1580,7 +1723,7 @@ export class GameStateApi extends BaseAPI {
 
     /**
      * 
-     * @summary Обновить состояние игрока
+     * @summary Upsert состояния игрока
      * @param {UpdatePlayerStateDto} updatePlayerStateDto 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -1609,7 +1752,7 @@ export const QuizAnswersApiAxiosParamCreator = function (configuration?: Configu
         quizAnswerControllerCreate: async (createQuizAnswerDto: CreateQuizAnswerDto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'createQuizAnswerDto' is not null or undefined
             assertParamExists('quizAnswerControllerCreate', 'createQuizAnswerDto', createQuizAnswerDto)
-            const localVarPath = `/quiz-answers`;
+            const localVarPath = `/api/quiz/answers`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1621,9 +1764,8 @@ export const QuizAnswersApiAxiosParamCreator = function (configuration?: Configu
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication bearer required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+            // authentication session required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Session-Id", configuration)
 
 
     
@@ -1646,7 +1788,7 @@ export const QuizAnswersApiAxiosParamCreator = function (configuration?: Configu
          * @throws {RequiredError}
          */
         quizAnswerControllerFindAll: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/quiz-answers`;
+            const localVarPath = `/api/quiz/answers`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1658,9 +1800,8 @@ export const QuizAnswersApiAxiosParamCreator = function (configuration?: Configu
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication bearer required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+            // authentication session required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Session-Id", configuration)
 
 
     
@@ -1680,7 +1821,7 @@ export const QuizAnswersApiAxiosParamCreator = function (configuration?: Configu
          * @throws {RequiredError}
          */
         quizAnswerControllerFindMyAnswers: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/quiz-answers/me`;
+            const localVarPath = `/api/quiz/answers/me`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1692,9 +1833,8 @@ export const QuizAnswersApiAxiosParamCreator = function (configuration?: Configu
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication bearer required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+            // authentication session required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Session-Id", configuration)
 
 
     
@@ -1724,7 +1864,7 @@ export const QuizAnswersApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async quizAnswerControllerCreate(createQuizAnswerDto: CreateQuizAnswerDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<QuizAnswerResponseDto>> {
+        async quizAnswerControllerCreate(createQuizAnswerDto: CreateQuizAnswerDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.quizAnswerControllerCreate(createQuizAnswerDto, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['QuizAnswersApi.quizAnswerControllerCreate']?.[localVarOperationServerIndex]?.url;
@@ -1771,7 +1911,7 @@ export const QuizAnswersApiFactory = function (configuration?: Configuration, ba
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        quizAnswerControllerCreate(createQuizAnswerDto: CreateQuizAnswerDto, options?: RawAxiosRequestConfig): AxiosPromise<QuizAnswerResponseDto> {
+        quizAnswerControllerCreate(createQuizAnswerDto: CreateQuizAnswerDto, options?: RawAxiosRequestConfig): AxiosPromise<void> {
             return localVarFp.quizAnswerControllerCreate(createQuizAnswerDto, options).then((request) => request(axios, basePath));
         },
         /**
@@ -1834,6 +1974,184 @@ export class QuizAnswersApi extends BaseAPI {
      */
     public quizAnswerControllerFindMyAnswers(options?: RawAxiosRequestConfig) {
         return QuizAnswersApiFp(this.configuration).quizAnswerControllerFindMyAnswers(options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * UserSettingsApi - axios parameter creator
+ * @export
+ */
+export const UserSettingsApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary Получить настройки пользователя
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        userSettingsControllerGet: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/user-settings`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication session required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Session-Id", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Обновить настройки пользователя
+         * @param {UpdateUserSettingsDto} updateUserSettingsDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        userSettingsControllerUpdate: async (updateUserSettingsDto: UpdateUserSettingsDto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'updateUserSettingsDto' is not null or undefined
+            assertParamExists('userSettingsControllerUpdate', 'updateUserSettingsDto', updateUserSettingsDto)
+            const localVarPath = `/api/user-settings`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication session required
+            await setApiKeyToObject(localVarHeaderParameter, "X-Session-Id", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(updateUserSettingsDto, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * UserSettingsApi - functional programming interface
+ * @export
+ */
+export const UserSettingsApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = UserSettingsApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @summary Получить настройки пользователя
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async userSettingsControllerGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserSettingsResponseDto>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.userSettingsControllerGet(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['UserSettingsApi.userSettingsControllerGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Обновить настройки пользователя
+         * @param {UpdateUserSettingsDto} updateUserSettingsDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async userSettingsControllerUpdate(updateUserSettingsDto: UpdateUserSettingsDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserSettingsResponseDto>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.userSettingsControllerUpdate(updateUserSettingsDto, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['UserSettingsApi.userSettingsControllerUpdate']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * UserSettingsApi - factory interface
+ * @export
+ */
+export const UserSettingsApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = UserSettingsApiFp(configuration)
+    return {
+        /**
+         * 
+         * @summary Получить настройки пользователя
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        userSettingsControllerGet(options?: RawAxiosRequestConfig): AxiosPromise<UserSettingsResponseDto> {
+            return localVarFp.userSettingsControllerGet(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Обновить настройки пользователя
+         * @param {UpdateUserSettingsDto} updateUserSettingsDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        userSettingsControllerUpdate(updateUserSettingsDto: UpdateUserSettingsDto, options?: RawAxiosRequestConfig): AxiosPromise<UserSettingsResponseDto> {
+            return localVarFp.userSettingsControllerUpdate(updateUserSettingsDto, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * UserSettingsApi - object-oriented interface
+ * @export
+ * @class UserSettingsApi
+ * @extends {BaseAPI}
+ */
+export class UserSettingsApi extends BaseAPI {
+    /**
+     * 
+     * @summary Получить настройки пользователя
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserSettingsApi
+     */
+    public userSettingsControllerGet(options?: RawAxiosRequestConfig) {
+        return UserSettingsApiFp(this.configuration).userSettingsControllerGet(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Обновить настройки пользователя
+     * @param {UpdateUserSettingsDto} updateUserSettingsDto 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserSettingsApi
+     */
+    public userSettingsControllerUpdate(updateUserSettingsDto: UpdateUserSettingsDto, options?: RawAxiosRequestConfig) {
+        return UserSettingsApiFp(this.configuration).userSettingsControllerUpdate(updateUserSettingsDto, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

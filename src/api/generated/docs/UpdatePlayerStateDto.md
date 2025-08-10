@@ -5,10 +5,10 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**hunger** | **number** | Текущее здоровье игрока | [optional] [default to undefined]
-**energy** | **number** | Текущая энергия игрока | [optional] [default to undefined]
-**inventory** | **Array&lt;object&gt;** | Инвентарь игрока (JSONB) | [optional] [default to undefined]
-**data** | **object** | Дополнительные данные состояния игрока (JSONB) | [optional] [default to undefined]
+**hunger** | **number** |  | [optional] [default to undefined]
+**energy** | **number** |  | [optional] [default to undefined]
+**money** | **number** |  | [optional] [default to undefined]
+**inventory** | [**Array&lt;InventoryItemDto&gt;**](InventoryItemDto.md) |  | [optional] [default to undefined]
 
 ## Example
 
@@ -18,8 +18,8 @@ import { UpdatePlayerStateDto } from './api';
 const instance: UpdatePlayerStateDto = {
     hunger,
     energy,
+    money,
     inventory,
-    data,
 };
 ```
 

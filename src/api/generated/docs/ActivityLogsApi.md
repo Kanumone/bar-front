@@ -4,13 +4,13 @@ All URIs are relative to *http://localhost*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
-|[**activityLogControllerCreate**](#activitylogcontrollercreate) | **POST** /activity-logs | Записать новое действие пользователя|
-|[**activityLogControllerFindAll**](#activitylogcontrollerfindall) | **GET** /activity-logs | Получить все логи активности (с фильтрацией по пользователю)|
-|[**activityLogControllerFindBySession**](#activitylogcontrollerfindbysession) | **GET** /activity-logs/session/{sessionId} | Получить все логи по session_id|
-|[**activityLogControllerFindOne**](#activitylogcontrollerfindone) | **GET** /activity-logs/{id} | Получить лог активности по ID|
+|[**activityLogControllerCreateBatch**](#activitylogcontrollercreatebatch) | **POST** /api/activity-logs/batch | Записать батч действий пользователя|
+|[**activityLogControllerFindAll**](#activitylogcontrollerfindall) | **GET** /api/activity-logs | Получить все логи активности (с фильтрацией по пользователю)|
+|[**activityLogControllerFindBySession**](#activitylogcontrollerfindbysession) | **GET** /api/activity-logs/session/{sessionId} | Получить все логи по session_id|
+|[**activityLogControllerFindOne**](#activitylogcontrollerfindone) | **GET** /api/activity-logs/{id} | Получить лог активности по ID|
 
-# **activityLogControllerCreate**
-> ActivityLogResponseDto activityLogControllerCreate(createActivityLogDto)
+# **activityLogControllerCreateBatch**
+> activityLogControllerCreateBatch(createActivityLogsBatchDto)
 
 
 ### Example
@@ -19,16 +19,16 @@ All URIs are relative to *http://localhost*
 import {
     ActivityLogsApi,
     Configuration,
-    CreateActivityLogDto
+    CreateActivityLogsBatchDto
 } from './api';
 
 const configuration = new Configuration();
 const apiInstance = new ActivityLogsApi(configuration);
 
-let createActivityLogDto: CreateActivityLogDto; //
+let createActivityLogsBatchDto: CreateActivityLogsBatchDto; //
 
-const { status, data } = await apiInstance.activityLogControllerCreate(
-    createActivityLogDto
+const { status, data } = await apiInstance.activityLogControllerCreateBatch(
+    createActivityLogsBatchDto
 );
 ```
 
@@ -36,27 +36,27 @@ const { status, data } = await apiInstance.activityLogControllerCreate(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **createActivityLogDto** | **CreateActivityLogDto**|  | |
+| **createActivityLogsBatchDto** | **CreateActivityLogsBatchDto**|  | |
 
 
 ### Return type
 
-**ActivityLogResponseDto**
+void (empty response body)
 
 ### Authorization
 
-[bearer](../README.md#bearer)
+[session](../README.md#session)
 
 ### HTTP request headers
 
  - **Content-Type**: application/json
- - **Accept**: application/json
+ - **Accept**: Not defined
 
 
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-|**201** | Действие успешно записано |  -  |
+|**202** | Батч принят |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -95,7 +95,7 @@ const { status, data } = await apiInstance.activityLogControllerFindAll(
 
 ### Authorization
 
-[bearer](../README.md#bearer)
+[session](../README.md#session)
 
 ### HTTP request headers
 
@@ -145,7 +145,7 @@ const { status, data } = await apiInstance.activityLogControllerFindBySession(
 
 ### Authorization
 
-[bearer](../README.md#bearer)
+[session](../README.md#session)
 
 ### HTTP request headers
 
@@ -195,7 +195,7 @@ const { status, data } = await apiInstance.activityLogControllerFindOne(
 
 ### Authorization
 
-[bearer](../README.md#bearer)
+[session](../README.md#session)
 
 ### HTTP request headers
 

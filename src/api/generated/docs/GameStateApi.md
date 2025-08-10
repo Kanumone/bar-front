@@ -4,116 +4,12 @@ All URIs are relative to *http://localhost*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
-|[**gameStateControllerCreateOrUpdateGameProgress**](#gamestatecontrollercreateorupdategameprogress) | **POST** /game-state/game-progress | Создать или обновить прогресс игры|
-|[**gameStateControllerCreateOrUpdatePlayerState**](#gamestatecontrollercreateorupdateplayerstate) | **POST** /game-state/player-state | Создать или обновить состояние игрока|
-|[**gameStateControllerDeleteGameProgress**](#gamestatecontrollerdeletegameprogress) | **DELETE** /game-state/game-progress | Удалить прогресс игры|
-|[**gameStateControllerDeletePlayerState**](#gamestatecontrollerdeleteplayerstate) | **DELETE** /game-state/player-state | Удалить состояние игрока|
-|[**gameStateControllerGetGameProgress**](#gamestatecontrollergetgameprogress) | **GET** /game-state/game-progress | Получить прогресс игры|
-|[**gameStateControllerGetPlayerState**](#gamestatecontrollergetplayerstate) | **GET** /game-state/player-state | Получить состояние игрока|
-|[**gameStateControllerUpdateGameProgress**](#gamestatecontrollerupdategameprogress) | **PATCH** /game-state/game-progress | Обновить прогресс игры|
-|[**gameStateControllerUpdatePlayerState**](#gamestatecontrollerupdateplayerstate) | **PATCH** /game-state/player-state | Обновить состояние игрока|
-
-# **gameStateControllerCreateOrUpdateGameProgress**
-> GameProgressResponseDto gameStateControllerCreateOrUpdateGameProgress(createGameProgressDto)
-
-
-### Example
-
-```typescript
-import {
-    GameStateApi,
-    Configuration,
-    CreateGameProgressDto
-} from './api';
-
-const configuration = new Configuration();
-const apiInstance = new GameStateApi(configuration);
-
-let createGameProgressDto: CreateGameProgressDto; //
-
-const { status, data } = await apiInstance.gameStateControllerCreateOrUpdateGameProgress(
-    createGameProgressDto
-);
-```
-
-### Parameters
-
-|Name | Type | Description  | Notes|
-|------------- | ------------- | ------------- | -------------|
-| **createGameProgressDto** | **CreateGameProgressDto**|  | |
-
-
-### Return type
-
-**GameProgressResponseDto**
-
-### Authorization
-
-[bearer](../README.md#bearer)
-
-### HTTP request headers
-
- - **Content-Type**: application/json
- - **Accept**: application/json
-
-
-### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-|**201** | Прогресс игры успешно создан/обновлен. |  -  |
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-# **gameStateControllerCreateOrUpdatePlayerState**
-> PlayerStateResponseDto gameStateControllerCreateOrUpdatePlayerState(createPlayerStateDto)
-
-
-### Example
-
-```typescript
-import {
-    GameStateApi,
-    Configuration,
-    CreatePlayerStateDto
-} from './api';
-
-const configuration = new Configuration();
-const apiInstance = new GameStateApi(configuration);
-
-let createPlayerStateDto: CreatePlayerStateDto; //
-
-const { status, data } = await apiInstance.gameStateControllerCreateOrUpdatePlayerState(
-    createPlayerStateDto
-);
-```
-
-### Parameters
-
-|Name | Type | Description  | Notes|
-|------------- | ------------- | ------------- | -------------|
-| **createPlayerStateDto** | **CreatePlayerStateDto**|  | |
-
-
-### Return type
-
-**PlayerStateResponseDto**
-
-### Authorization
-
-[bearer](../README.md#bearer)
-
-### HTTP request headers
-
- - **Content-Type**: application/json
- - **Accept**: application/json
-
-
-### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-|**201** | Состояние игрока успешно создано/обновлено. |  -  |
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+|[**gameStateControllerDeleteGameProgress**](#gamestatecontrollerdeletegameprogress) | **DELETE** /api/game-state/progress | Удалить прогресс игры|
+|[**gameStateControllerDeletePlayerState**](#gamestatecontrollerdeleteplayerstate) | **DELETE** /api/game-state/player | Удалить состояние игрока|
+|[**gameStateControllerGetGameProgress**](#gamestatecontrollergetgameprogress) | **GET** /api/game-state/progress | Получить прогресс игры|
+|[**gameStateControllerGetPlayerState**](#gamestatecontrollergetplayerstate) | **GET** /api/game-state/player | Получить состояние игрока|
+|[**gameStateControllerUpdateGameProgress**](#gamestatecontrollerupdategameprogress) | **PUT** /api/game-state/progress | Upsert прогресса игры|
+|[**gameStateControllerUpdatePlayerState**](#gamestatecontrollerupdateplayerstate) | **PUT** /api/game-state/player | Upsert состояния игрока|
 
 # **gameStateControllerDeleteGameProgress**
 > gameStateControllerDeleteGameProgress()
@@ -143,7 +39,7 @@ void (empty response body)
 
 ### Authorization
 
-[bearer](../README.md#bearer)
+[session](../README.md#session)
 
 ### HTTP request headers
 
@@ -186,7 +82,7 @@ void (empty response body)
 
 ### Authorization
 
-[bearer](../README.md#bearer)
+[session](../README.md#session)
 
 ### HTTP request headers
 
@@ -229,7 +125,7 @@ This endpoint does not have any parameters.
 
 ### Authorization
 
-[bearer](../README.md#bearer)
+[session](../README.md#session)
 
 ### HTTP request headers
 
@@ -273,7 +169,7 @@ This endpoint does not have any parameters.
 
 ### Authorization
 
-[bearer](../README.md#bearer)
+[session](../README.md#session)
 
 ### HTTP request headers
 
@@ -325,7 +221,7 @@ const { status, data } = await apiInstance.gameStateControllerUpdateGameProgress
 
 ### Authorization
 
-[bearer](../README.md#bearer)
+[session](../README.md#session)
 
 ### HTTP request headers
 
@@ -377,7 +273,7 @@ const { status, data } = await apiInstance.gameStateControllerUpdatePlayerState(
 
 ### Authorization
 
-[bearer](../README.md#bearer)
+[session](../README.md#session)
 
 ### HTTP request headers
 

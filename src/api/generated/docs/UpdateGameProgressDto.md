@@ -5,12 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**score** | **number** | Текущий счет игры | [optional] [default to undefined]
-**currentScene** | **string** | Текущая сцена | [optional] [default to undefined]
-**lastPlayed** | **string** | Дата последнего обновления прогресса | [optional] [default to undefined]
-**hiddenScenes** | **Array&lt;string&gt;** | Скрытые сцены | [optional] [default to undefined]
-**currentEpisode** | [**CreateGameProgressDtoCurrentEpisode**](CreateGameProgressDtoCurrentEpisode.md) |  | [optional] [default to undefined]
-**data** | **object** | Дополнительные данные прогресса игры (JSONB) | [optional] [default to undefined]
+**currentScene** | **string** |  | [optional] [default to undefined]
 
 ## Example
 
@@ -18,12 +13,7 @@ Name | Type | Description | Notes
 import { UpdateGameProgressDto } from './api';
 
 const instance: UpdateGameProgressDto = {
-    score,
     currentScene,
-    lastPlayed,
-    hiddenScenes,
-    currentEpisode,
-    data,
 };
 ```
 

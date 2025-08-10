@@ -8,6 +8,8 @@ Name | Type | Description | Notes
 **id** | **number** | ID состояния игрока | [default to undefined]
 **hunger** | **number** | Голод игрока | [default to undefined]
 **energy** | **number** | Энергия игрока | [default to undefined]
+**money** | **number** | Деньги игрока | [default to undefined]
+**inventory** | [**Array&lt;InventoryItemDto&gt;**](InventoryItemDto.md) | Инвентарь | [default to undefined]
 **updatedAt** | **string** | Дата и время последнего обновления | [default to undefined]
 **user** | [**UserResponseDto**](UserResponseDto.md) | Информация о пользователе | [default to undefined]
 
@@ -20,6 +22,8 @@ const instance: PlayerStateResponseDto = {
     id,
     hunger,
     energy,
+    money,
+    inventory,
     updatedAt,
     user,
 };

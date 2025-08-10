@@ -4,12 +4,12 @@ All URIs are relative to *http://localhost*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
-|[**quizAnswerControllerCreate**](#quizanswercontrollercreate) | **POST** /quiz-answers | Отправить ответ на вопрос викторины|
-|[**quizAnswerControllerFindAll**](#quizanswercontrollerfindall) | **GET** /quiz-answers | Получить все ответы игроков|
-|[**quizAnswerControllerFindMyAnswers**](#quizanswercontrollerfindmyanswers) | **GET** /quiz-answers/me | Получить ответы текущего игрока|
+|[**quizAnswerControllerCreate**](#quizanswercontrollercreate) | **POST** /api/quiz/answers | Отправить ответ на вопрос викторины|
+|[**quizAnswerControllerFindAll**](#quizanswercontrollerfindall) | **GET** /api/quiz/answers | Получить все ответы игроков|
+|[**quizAnswerControllerFindMyAnswers**](#quizanswercontrollerfindmyanswers) | **GET** /api/quiz/answers/me | Получить ответы текущего игрока|
 
 # **quizAnswerControllerCreate**
-> QuizAnswerResponseDto quizAnswerControllerCreate(createQuizAnswerDto)
+> quizAnswerControllerCreate(createQuizAnswerDto)
 
 Принимает ID вопроса, выбранный ответ и (опционально) сцену, сохраняет их в базе.
 
@@ -41,22 +41,22 @@ const { status, data } = await apiInstance.quizAnswerControllerCreate(
 
 ### Return type
 
-**QuizAnswerResponseDto**
+void (empty response body)
 
 ### Authorization
 
-[bearer](../README.md#bearer)
+[session](../README.md#session)
 
 ### HTTP request headers
 
  - **Content-Type**: application/json
- - **Accept**: application/json
+ - **Accept**: Not defined
 
 
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-|**201** | Ответ сохранён |  -  |
+|**200** | Ответ принят |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -89,7 +89,7 @@ This endpoint does not have any parameters.
 
 ### Authorization
 
-[bearer](../README.md#bearer)
+[session](../README.md#session)
 
 ### HTTP request headers
 
@@ -133,7 +133,7 @@ This endpoint does not have any parameters.
 
 ### Authorization
 
-[bearer](../README.md#bearer)
+[session](../README.md#session)
 
 ### HTTP request headers
 
