@@ -14,14 +14,17 @@ import {
 } from "./ui/scenes";
 import { DetectiveGame, TretyakovGame } from "$features/detective-game";
 import { useAuth } from "./core/hooks";
+import { useDebug } from "./core/hooks/use-debug";
 import { FlyingGameSceneWrapper } from "./ui/scenes/flying-game-scene-wrapper";
 import { GameScene } from "@core/types/common-types";
 import { MoveToTrainSceneWrapper } from "./ui/scenes/move-to-train-scene-wrapper";
 import { Layout } from "./ui/layout/";
+import { DebugPanel } from "./ui/components/debug-panel";
 import { introSlidesConfig, railwayStationSlidesConfig, moscowSlidesConfig } from "$features/slides/configs";
 
 export const App: React.FC = () => {
   useAuth();
+  const { isDebugOpen, closeDebug } = useDebug();
   const phaserCanvasRef = useRef<HTMLDivElement>(null);
   const currentScene = useSceneStore((state) => state.currentScene);
 
@@ -78,6 +81,9 @@ export const App: React.FC = () => {
     <div id="game-container" ref={phaserCanvasRef}>
       {/* ✅ Оборачиваем сцену в Layout, кроме Auth */}
       {currentScene === GameScene.Auth ? scene : <Layout>{scene}</Layout>}
+      
+      {/* Дебаг панель (только в режиме разработки) */}
+      {isDebugOpen && <DebugPanel onClose={closeDebug} />}
     </div>
   );
 };

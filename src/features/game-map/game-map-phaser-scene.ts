@@ -2,7 +2,7 @@ import { Scene } from "phaser";
 import {  getAssetsPathByType } from "@utils/get-assets-path";
 import { GameScene } from "@core/types/common-types";
 import { logActivity } from "$/api/log-activity";
-import { usePlayerState, useSceneStore } from "../../core/state";
+import { useSceneStore } from "../../core/state";
 
 const CITY_RADIUS = 100;
 const TAP_THRESHOLD = 10;

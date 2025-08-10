@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { gameFlowManager } from "@processes/game-flow/game-flow-manager";
 import { GameScene, type QuizItem } from "@core/types/common-types";
-import { usePlayerState } from "./player-store"; // ✅
 import { apiClient } from "../../api";
 import { useSceneStore } from "./scene-store";
 import { GameConstants } from "$/core/constants/constants";

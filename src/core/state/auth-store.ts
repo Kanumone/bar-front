@@ -84,7 +84,16 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
       // ✅ после успешной аутентификации загружаем состояние игрока
       try {
-        await usePlayerState.getState().loadPlayerState();
+        // Сначала загружаем из localStorage
+        usePlayerState.getState().loadPlayerStateFromLocal();
+        
+        // Затем загружаем с сервера и запускаем автосинхронизацию
+        await usePlayerState.getState().loadPlayerStateFromServer();
+        usePlayerState.getState().startAutoSync();
+        
+        // Отправляем накопленные логи
+        const { LoggingService } = await import("$/services/logging-service");
+        LoggingService.sendPendingLogs();
       } catch (loadError: unknown) {
         logAppError("LoadPlayerState", loadError);
       }
@@ -100,6 +109,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   logout: () => {
+    // Останавливаем автосинхронизацию при выходе
+    usePlayerState.getState().stopAutoSync();
+    
     set({ token: null,
       user: null,
       sessionId: null,

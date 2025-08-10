@@ -2,6 +2,8 @@ import { create } from "zustand";
 import { apiClient } from "$/api";
 import type { SceneName, InventoryItem } from "@core/types/common-types";
 import { logAppError } from "@utils/log-app-error";
+import { LocalStorageService } from "$/services/local-storage-service";
+import { syncService } from "$/services/sync-service";
 
 interface PlayerState {
   playerName: string;
@@ -33,12 +35,21 @@ interface PlayerState {
   getInventoryItemQuantity: (itemId: string) => number;
   setInventory: (items: InventoryItem[]) => void;
 
-  setProgress: (scene: SceneName, episode: number) => void;
+  setProgress: (checkPoint: string) => void;
 
-  loadPlayerState: () => Promise<void>;
-  savePlayerState: () => Promise<void>;
-  saveGameProgress: () => Promise<void>;
+  // Методы для работы с localStorage
+  loadPlayerStateFromLocal: () => void;
+  savePlayerStateToLocal: () => void;
+  saveGameProgressToLocal: () => void;
+
+  // Методы для работы с backend (загрузка и сброс)
+  loadPlayerStateFromServer: () => Promise<void>;
   resetProgress: () => Promise<void>;
+  
+  // Управление синхронизацией
+  startAutoSync: () => void;
+  stopAutoSync: () => void;
+  forceSync: () => Promise<boolean>;
 }
 
 export const usePlayerState = create<PlayerState>((set, get) => ({
@@ -55,23 +66,20 @@ export const usePlayerState = create<PlayerState>((set, get) => ({
 
   setEnergy: (value) => {
     set({ energy: value });
-    get().savePlayerState()
-      .catch((err) => logAppError("autoSaveEnergy", err));
+    get().savePlayerStateToLocal();
   },
 
   increaseEnergy() {
     if (get().energy < 20) {
       set((state) => ({ energy: state.energy + 1 }));
-      get().savePlayerState()
-        .catch((err) => logAppError("autoSaveEnergy", err));
+      get().savePlayerStateToLocal();
     }
   },
 
   decreaseEnergy() {
     if (get().energy > 1) {
       set((state) => ({ energy: state.energy - 1 }));
-      get().savePlayerState()
-        .catch((err) => logAppError("autoSaveEnergy", err));
+      get().savePlayerStateToLocal();
     }
   },
 
@@ -80,27 +88,23 @@ export const usePlayerState = create<PlayerState>((set, get) => ({
     set((state) => ({ 
       energy: Math.min(maxEnergy, state.energy + amount) 
     }));
-    get().savePlayerState()
-      .catch((err) => logAppError("autoSaveEnergy", err));
+    get().savePlayerStateToLocal();
   },
 
   setHunger: (value) => {
     set({ hunger: value });
-    get().savePlayerState()
-      .catch((err) => logAppError("autoSaveHunger", err));
+    get().savePlayerStateToLocal();
   },
 
   setMoney: (value) => {
     set({ money: Math.max(0, value) });
-    get().savePlayerState()
-      .catch((err) => logAppError("autoSaveMoney", err));
+    get().savePlayerStateToLocal();
   },
 
   addMoney: (amount) => {
     if (amount > 0) {
       set((state) => ({ money: state.money + amount }));
-      get().savePlayerState()
-        .catch((err) => logAppError("autoSaveMoney", err));
+      get().savePlayerStateToLocal();
     }
   },
 
@@ -108,8 +112,7 @@ export const usePlayerState = create<PlayerState>((set, get) => ({
     const currentMoney = get().money;
     if (currentMoney >= amount && amount > 0) {
       set({ money: currentMoney - amount });
-      get().savePlayerState()
-        .catch((err) => logAppError("autoSaveMoney", err));
+      get().savePlayerStateToLocal();
       return true;
     }
     return false;
@@ -137,8 +140,7 @@ export const usePlayerState = create<PlayerState>((set, get) => ({
       set({ inventory: [...currentInventory, newItem] });
     }
     
-    get().savePlayerState()
-      .catch((err) => logAppError("autoSaveInventory", err));
+    get().savePlayerStateToLocal();
   },
 
   removeFromInventory: (itemId, quantity = 1) => {
@@ -161,8 +163,7 @@ export const usePlayerState = create<PlayerState>((set, get) => ({
       }
       
       set({ inventory: newInventory });
-      get().savePlayerState()
-        .catch((err) => logAppError("autoSaveInventory", err));
+      get().savePlayerStateToLocal();
     }
   },
 
@@ -177,18 +178,70 @@ export const usePlayerState = create<PlayerState>((set, get) => ({
 
   setInventory: (items) => {
     set({ inventory: items });
-    get().savePlayerState()
-      .catch((err) => logAppError("autoSaveInventory", err));
+    get().savePlayerStateToLocal();
   },
 
   setProgress: (checkPoint) => {
     set({ checkPoint });
-    get().saveGameProgress()
-      .catch((err) => logAppError("autoSaveProgress", err));
+    get().saveGameProgressToLocal();
+  },
+
+  // Загрузка состояния из localStorage
+  loadPlayerStateFromLocal: () => {
+    try {
+      const localState = LocalStorageService.getPlayerState();
+      const localProgress = LocalStorageService.getGameProgress();
+
+      if (localState) {
+        set({
+          playerName: localState.playerName,
+          playerGender: localState.playerGender,
+          energy: localState.energy,
+          hunger: localState.hunger,
+          money: localState.money,
+          inventory: localState.inventory,
+          checkPoint: localState.checkPoint,
+        });
+      }
+
+      if (localProgress) {
+        set({ checkPoint: localProgress.checkPoint });
+      }
+    } catch (err) {
+      logAppError("loadPlayerStateFromLocal", err);
+    }
+  },
+
+  // Сохранение состояния в localStorage
+  savePlayerStateToLocal: () => {
+    try {
+      const currentState = get();
+      LocalStorageService.savePlayerState({
+        playerName: currentState.playerName,
+        playerGender: currentState.playerGender,
+        energy: currentState.energy,
+        hunger: currentState.hunger,
+        money: currentState.money,
+        inventory: currentState.inventory,
+        checkPoint: currentState.checkPoint,
+      });
+    } catch (err) {
+      logAppError("savePlayerStateToLocal", err);
+    }
+  },
+
+  // Сохранение прогресса в localStorage
+  saveGameProgressToLocal: () => {
+    try {
+      const { checkPoint } = get();
+      LocalStorageService.saveGameProgress(checkPoint);
+    } catch (err) {
+      logAppError("saveGameProgressToLocal", err);
+    }
   },
 
   /** 🔹 Загрузка состояния игрока с сервера */
-  loadPlayerState: async () => {
+  loadPlayerStateFromServer: async () => {
     try {
       const [playerRes, progressRes] = await Promise.all([
         apiClient.gameState.gameStateControllerGetPlayerState(),
@@ -209,38 +262,25 @@ export const usePlayerState = create<PlayerState>((set, get) => ({
         inventory: [], // // TODO: реализовать поддержку money в API
         checkPoint: progress.currentScene as SceneName || null,
       });
+
+      // Сохраняем загруженное состояние в localStorage
+      get().savePlayerStateToLocal();
     } catch (err) {
-      logAppError("loadPlayerState", err);
+      logAppError("loadPlayerStateFromServer", err);
     }
   },
 
-  /** 🔹 Сохранение состояния игрока */
-  savePlayerState: async () => {
-    try {
-      const { energy, hunger, money, inventory } = get();
-      await apiClient.gameState.gameStateControllerUpdatePlayerState({ 
-        energy,
-        hunger,
-        data: { 
-          money, // TODO: перенести в отдельное поле когда API будет поддерживать
-          inventory 
-        }
-      });
-    } catch (err) {
-      logAppError("savePlayerState", err);
-    }
+  // Управление синхронизацией
+  startAutoSync: () => {
+    syncService.start();
   },
 
-  /** 🔹 Сохранение прогресса игры */
-  saveGameProgress: async () => {
-    try {
-      const { checkPoint } = get();
-      await apiClient.gameState.gameStateControllerUpdateGameProgress({
-        currentScene: checkPoint || "",
-      });
-    } catch (err) {
-      logAppError("saveGameProgress", err);
-    }
+  stopAutoSync: () => {
+    syncService.stop();
+  },
+
+  forceSync: async () => {
+    return syncService.forcSync();
   },
 
   /** 🔹 Дев-функция сброса прогресса */
@@ -250,8 +290,15 @@ export const usePlayerState = create<PlayerState>((set, get) => ({
         apiClient.gameState.gameStateControllerDeletePlayerState(),
         apiClient.gameState.gameStateControllerDeleteGameProgress(),
       ]);
+      
+      // Очищаем localStorage
+      LocalStorageService.clearGameData();
+      
+      // Сбрасываем состояние
       set({
-        energy: 100,
+        playerName: "",
+        playerGender: null,
+        energy: 20,
         hunger: 0,
         money: 0,
         inventory: [],
