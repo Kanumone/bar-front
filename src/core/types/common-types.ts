@@ -1,6 +1,12 @@
 import type { Episode } from "../../features/slides";
 
-export type MoveScene = typeof GameScene.MoveToTrain | typeof GameScene.MoveAfterTrain | typeof GameScene.Move;
+export type MoveScene =
+  | typeof GameScene.MoveToTrain
+  | typeof GameScene.MoveAfterTrain
+  | typeof GameScene.MoveToVdnh
+  | typeof GameScene.MoveToGallery
+  | typeof GameScene.MoveToKazan
+  | typeof GameScene.Move;
 
 export interface MoveSceneData {
   scenePrefix?: MoveScene;
@@ -34,6 +40,9 @@ export interface SceneDataMap {
   GameMap: GameMapSceneData;
   Game2048: null;
   MoveToTrain: MoveSceneData | null;
+  MoveToVdnh: MoveSceneData | null;
+  MoveToGallery: MoveSceneData | null;
+  MoveToKazan: MoveSceneData | null;
   DetectiveGame: null;
   TretyakovGame: null;
   RailwayStation: null;
@@ -66,6 +75,9 @@ export const GameScene = {
   Move: "Move",
   MoveToTrain: "MoveToTrain",
   MoveAfterTrain: "MoveAfterTrain",
+  MoveToVdnh: "MoveToVdnh",
+  MoveToGallery: "MoveToGallery",
+  MoveToKazan: "MoveToKazan",
 
   // others
   Auth: "Auth",

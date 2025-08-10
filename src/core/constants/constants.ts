@@ -4,7 +4,7 @@ function seconds(sec: number) {
 
 export const GameConstants = {
   SLIDE_TIMEOUT: 0,
-  TIMEOUT_FOR_QUESTION: 1,
+  TIMEOUT_FOR_QUESTION: 10000,
   SHOW_ITEMS_DESCRIPTION_TIMEOUT: 5000,
 
   // system

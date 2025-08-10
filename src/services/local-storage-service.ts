@@ -1,5 +1,5 @@
 import { logAppError } from "@utils/log-app-error";
-import type { InventoryItem, SceneName } from "@core/types/common-types";
+import type { InventoryItem } from "@core/types/common-types";
 
 /**
  * Интерфейс для состояния игрока в localStorage

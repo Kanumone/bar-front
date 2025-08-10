@@ -17,6 +17,8 @@ import { useDebug } from "./core/hooks/use-debug";
 import { FlyingGameSceneWrapper } from "./ui/scenes/flying-game-scene-wrapper";
 import { GameScene } from "@core/types/common-types";
 import { MoveToTrainSceneWrapper } from "./ui/scenes/move-to-train-scene-wrapper";
+import { MoveToVdnhSceneWrapper } from "./ui/scenes/move-to-vdnh-wrapper";
+import { MoveToGallerySceneWrapper } from "./ui/scenes/move-to-gallery-wrapper";
 import { Layout } from "./ui/layout/";
 import { DebugPanel } from "./ui/components/debug-panel";
 import { introSlidesConfig, railwayStationSlidesConfig, moscowSlidesConfig } from "$features/slides/configs";
@@ -60,6 +62,10 @@ export const App: React.FC = () => {
         return <MoveToTrainSceneWrapper />;
       case GameScene.MoveAfterTrain:
         return <MoveAfterTrainWrapper />;
+      case GameScene.MoveToVdnh:
+        return <MoveToVdnhSceneWrapper />;
+      case GameScene.MoveToGallery:
+        return <MoveToGallerySceneWrapper />;
 
       // others
       case GameScene.GameMap:

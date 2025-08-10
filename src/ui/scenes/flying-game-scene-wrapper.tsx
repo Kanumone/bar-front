@@ -8,7 +8,7 @@ export const FlyingGameSceneWrapper: React.FC = () => {
   const sceneStore = useSceneStore.getState();
 
   useEffect(() => {
-    void sceneStore.setScene(GameScene.FlyingGame, {});
+    void sceneStore.setScene(GameScene.FlyingGame, null);
   }, [sceneStore]);
 
   useEffect(() => {

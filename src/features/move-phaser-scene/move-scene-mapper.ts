@@ -45,7 +45,7 @@ export class MoveSceneMapper {
                 background: getAssetsPathByType({
                     type: "images",
                     scene: "moscow-move",
-                    filename: "khimki.svg",
+                    filename: "khimki.png",
                 }),
                 preBackground: null,
                 light: null,
@@ -54,6 +54,63 @@ export class MoveSceneMapper {
             },
             playerSpeed: 150,
             targetY: 500,
+        },
+        [GameScene.MoveToVdnh]: {
+            backgroundLayers: {
+                preBackground: getAssetsPathByType({
+                    type: "images",
+                    scene: "moscow-move",
+                    filename: "moscow_up_background.png",
+                }),
+                background: getAssetsPathByType({
+                    type: "images",
+                    scene: "moscow-move",
+                    filename: "moscow_down_background.png",
+                }),
+                light: null,
+                front: null,
+                ground: getAssetsPath("images/platform.png"),
+            },
+            playerSpeed: 150,
+            targetX: 100,
+        },
+        [GameScene.MoveToGallery]: {
+            backgroundLayers: {
+                preBackground: getAssetsPathByType({
+                    type: "images",
+                    scene: "moscow-move",
+                    filename: "moscow_up_background.png",
+                }),
+                background: getAssetsPathByType({
+                    type: "images",
+                    scene: "moscow-move",
+                    filename: "moscow_down_background.png",
+                }),
+                front: null,
+                light: null,
+                ground: getAssetsPath("images/platform.png"),
+            },
+            playerSpeed: 150,
+            targetX: 100,
+        },
+        [GameScene.MoveToKazan]: {
+            backgroundLayers: {
+                preBackground: getAssetsPathByType({
+                    type: "images",
+                    scene: "moscow-move",
+                    filename: "park_up_background.png",
+                }),
+                background: getAssetsPathByType({
+                    type: "images",
+                    scene: "moscow-move",
+                    filename: "park_down_background.png",
+                }),
+                light: null,
+                front: null,
+                ground: getAssetsPath("images/platform.png"),
+            },
+            playerSpeed: 150,
+            targetX: 100,
         },
 
         // Сцена движения по городу

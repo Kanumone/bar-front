@@ -21,6 +21,9 @@ class GameFlowManager {
     [GameScene.FlyingGame]: GameScene.FlyingGame,
     [GameScene.MoveToTrain]: GameScene.Move,
     [GameScene.MoveAfterTrain]: GameScene.Move,
+    [GameScene.MoveToVdnh]: GameScene.Move,
+    [GameScene.MoveToGallery]: GameScene.Move,
+    [GameScene.MoveToKazan]: GameScene.Move,
   };
 
   async initializeGame(parent: string | HTMLElement) {
@@ -143,6 +146,60 @@ class GameFlowManager {
     this.game.scene.start(GameScene.Move, sceneData);
 
     console.log("▶️ Запущена логическая сцена MoveToTrain (Phaser: Move)", sceneData);
+  }
+
+  // ✅ Новая сцена: движение к ВДНХ
+  showMoveToVdnh(data?: Omit<MoveSceneData, "backgroundLayers">) {
+    if (!this.game) return;
+
+    const sceneData = MoveSceneMapper.createSceneData("MoveToVdnh", data);
+
+    useSceneStore.setState({
+      currentScene: GameScene.MoveToVdnh,
+      sceneData: sceneData,
+      backgroundLayers: sceneData.backgroundLayers,
+    });
+
+    this.stopActiveScenes();
+    this.game.scene.start(GameScene.Move, sceneData);
+
+    console.log("▶️ Запущена логическая сцена MoveToVdnh (Phaser: Move)", sceneData);
+  }
+
+  // ✅ Новая сцена: движение к Галерее
+  showMoveToGallery(data?: Omit<MoveSceneData, "backgroundLayers">) {
+    if (!this.game) return;
+
+    const sceneData = MoveSceneMapper.createSceneData("MoveToGallery", data);
+
+    useSceneStore.setState({
+      currentScene: GameScene.MoveToGallery,
+      sceneData: sceneData,
+      backgroundLayers: sceneData.backgroundLayers,
+    });
+
+    this.stopActiveScenes();
+    this.game.scene.start(GameScene.Move, sceneData);
+
+    console.log("▶️ Запущена логическая сцена MoveToGallery (Phaser: Move)", sceneData);
+  }
+
+  // ✅ Новая сцена: движение к Казани
+  showMoveToKazan(data?: Omit<MoveSceneData, "backgroundLayers">) {
+    if (!this.game) return;
+
+    const sceneData = MoveSceneMapper.createSceneData("MoveToKazan", data);
+
+    useSceneStore.setState({
+      currentScene: GameScene.MoveToKazan,
+      sceneData: sceneData,
+      backgroundLayers: sceneData.backgroundLayers,
+    });
+
+    this.stopActiveScenes();
+    this.game.scene.start(GameScene.Move, sceneData);
+
+    console.log("▶️ Запущена логическая сцена MoveToKazan (Phaser: Move)", sceneData);
   }
 
   // ✅ Новый метод для переключения сцены во время работы

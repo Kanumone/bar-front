@@ -88,7 +88,7 @@ export class MovePhaserScene extends Scene {
       this.backgroundLayers = newConfig.backgroundLayers;
 
       // Обновляем фоновые слои
-      this.updateBackgroundLayers(newConfig.backgroundLayers);
+      this.updateBackgroundLayers();
       
       // Обновляем позицию игрока если нужно
       if (this.player && newConfig.targetX !== undefined) {
@@ -102,7 +102,7 @@ export class MovePhaserScene extends Scene {
   }
 
   // ✅ Метод для обновления фоновых слоев
-  private updateBackgroundLayers(layers: SceneBackground): void {
+  private updateBackgroundLayers(): void {
     // Очищаем старые слои
     this.clearParallaxLayers();
     
