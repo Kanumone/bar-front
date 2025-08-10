@@ -5,13 +5,13 @@ import { useTelegram } from "../use-telegram";
 export const useAuth = () => {
   const { webApp: { initData } } = useTelegram();
 
-  const { isAuthenticated, token, authenticateUser } = useAuthStore();
+  const { sessionId, authenticateUser } = useAuthStore();
 
   useEffect(() => {
-    if (!isAuthenticated && initData) {
+    if (initData) {
       void authenticateUser();
     }
-  }, [isAuthenticated, authenticateUser, initData]);
+  }, [authenticateUser, initData]);
 
-  return token;
+  return sessionId;
 };

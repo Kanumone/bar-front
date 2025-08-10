@@ -1,19 +1,17 @@
 import { create } from "zustand";
 import WebApp from "@twa-dev/sdk";
-import { type UserInfoDto, apiClient } from "$/api";
+import { type AuthControllerGetUserInfo200Response, apiClient } from "$/api";
 import { logAppError } from "@utils/log-app-error";
 import { logActivity } from "../../api/log-activity";
 import { usePlayerState } from "./player-store"; // ✅ добавлено
 
 interface AuthState {
   isTelegram: boolean | null;
-  token: string | null;
-  user: UserInfoDto | null;
+  user: AuthControllerGetUserInfo200Response | null;
   sessionId: string | null;
   isAuthenticated: boolean;
   isVerifying: boolean;
-  setToken: (token: string) => void;
-  setUser: (user: UserInfoDto) => void;
+  setUser: (user: AuthControllerGetUserInfo200Response) => void;
   setSessionId: (sessionId: string) => void;
   authenticateUser: () => Promise<void>;
   logout: () => void;
@@ -21,23 +19,17 @@ interface AuthState {
 
 export const useAuthStore = create<AuthState>((set, get) => ({
   isTelegram: null,
-  token: localStorage.getItem("token") || null,
-  user: JSON.parse(localStorage.getItem("user") || "null") as UserInfoDto | null,
+  user: JSON.parse(localStorage.getItem("user") || "null") as AuthControllerGetUserInfo200Response | null,
   sessionId: localStorage.getItem("sessionId") || null,
-  isAuthenticated: false,
+  isAuthenticated: !!localStorage.getItem("sessionId"),
   isVerifying: false,
 
-  setToken: (token) => {
-    set({ token,
-      isAuthenticated: !!token });
-    localStorage.setItem("token", token);
-  },
   setUser: (user) => {
     set({ user });
     localStorage.setItem("user", JSON.stringify(user));
   },
   setSessionId: (sessionId) => {
-    set({ sessionId });
+    set({ sessionId, isAuthenticated: !!sessionId });
     localStorage.setItem("sessionId", sessionId);
   },
 
@@ -57,22 +49,48 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ isVerifying: true });
 
     try {
-      const authResponse = await apiClient.auth.authControllerLogin({
-        initData: WebApp.initData,
-      });
+      const existingSessionId = get().sessionId;
 
-      const { accessToken, user, sessionId } = authResponse.data;
+      if (existingSessionId) {
+        // Валидация текущей сессии
+        const { data: validation } = await apiClient.auth.authControllerValidateSession(existingSessionId);
+        if (!validation.valid) {
+          // Не валидна — создаем новую
+          set({ sessionId: null, isAuthenticated: false });
+        }
+      }
 
-      get().setToken(accessToken);
-      get().setUser(user);
-      get().setSessionId(sessionId);
+      let sessionId = get().sessionId;
+
+      if (!sessionId) {
+        const tgUser = WebApp.initDataUnsafe.user;
+        if (!tgUser) {
+          throw new Error("Telegram user is not available in initDataUnsafe");
+        }
+
+        const { data: sessionResp } = await apiClient.auth.authControllerCreateSession({
+          telegramId: String(tgUser.id),
+          username: tgUser.username,
+          firstName: tgUser.first_name,
+          lastName: tgUser.last_name,
+          userAgent: navigator.userAgent,
+          telegramVersion: WebApp.version,
+        });
+
+        sessionId = sessionResp.sessionId;
+        get().setSessionId(sessionId);
+      }
+
+      // Получаем профиль пользователя по sessionId
+      const { data: userInfo } = await apiClient.auth.authControllerGetUserInfo(sessionId!);
+      get().setUser(userInfo);
 
       try {
         const details: Record<string, string> = {
           userAgent: navigator.userAgent,
-          userId: String(user.id),
+          userId: String(userInfo.id ?? "unknown"),
           telegramVersion: WebApp.version,
-          sessionId,
+          sessionId: sessionId!,
         };
 
         await logActivity("user_authenticated", details, "Auth");
@@ -112,11 +130,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     // Останавливаем автосинхронизацию при выходе
     usePlayerState.getState().stopAutoSync();
     
-    set({ token: null,
-      user: null,
+    set({ user: null,
       sessionId: null,
       isAuthenticated: false });
-    localStorage.removeItem("token");
     localStorage.removeItem("user");
     localStorage.removeItem("sessionId");
   },

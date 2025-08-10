@@ -39,15 +39,10 @@ class GameFlowManager {
         console.log("Phaser Game Ready");
       });
 
-      // ✅ загружаем состояние игрока
-      try {
-        await usePlayerState.getState().loadPlayerState();
-      } catch (err) {
-        console.error("Failed to load player state on init", err);
-      }
+      // ✅ загрузка будет выполнена после аутентификации через useAuth
 
-      const { isAuthenticated } = useAuthStore.getState();
-      if (!isAuthenticated) {
+      const { sessionId } = useAuthStore.getState();
+      if (!sessionId) {
         this.showAuth();
         return;
       }

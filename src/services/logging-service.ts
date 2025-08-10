@@ -43,8 +43,8 @@ export class LoggingService {
       },
       sceneName,
       timestamp: Date.now(),
-      userId: user?.id,
-      sessionId,
+      userId: user?.id != null ? String(user.id) : undefined,
+      sessionId: sessionId || undefined,
     };
 
     // Если пользователь не авторизован, сохраняем лог локально для отправки позже
@@ -55,12 +55,16 @@ export class LoggingService {
     }
 
     try {
-      // Пытаемся отправить лог немедленно
-      await apiClient.activityLogs.activityLogControllerCreate({
-        userId: user.id,
-        action: action,
-        details: logEntry.details,
-        sessionId: sessionId,
+      // Пытаемся отправить лог немедленно (batch с одним элементом)
+      await apiClient.activityLogs.activityLogControllerCreateBatch({
+        logs: [
+          {
+            action,
+            details: logEntry.details,
+            sceneName,
+            timestamp: new Date(logEntry.timestamp).toISOString(),
+          },
+        ],
       });
 
       console.log(`[Activity Logged - ${sceneName}]: ${action}`, details);
@@ -128,31 +132,21 @@ export class LoggingService {
 
     console.log(`[Logging]: Sending ${pendingLogs.length} pending logs...`);
 
-    const successfulLogs: string[] = [];
-
-    for (const log of pendingLogs) {
-      try {
-        await apiClient.activityLogs.activityLogControllerCreate({
-          userId: log.userId || user.id,
+    try {
+      await apiClient.activityLogs.activityLogControllerCreateBatch({
+        logs: pendingLogs.map((log) => ({
           action: log.action,
           details: log.details,
-          sessionId: log.sessionId || sessionId,
-        });
+          sceneName: log.sceneName,
+          timestamp: new Date(log.timestamp).toISOString(),
+        })),
+      });
 
-        successfulLogs.push(log.id);
-        console.log(`[Logging]: Sent pending log - ${log.sceneName}: ${log.action}`);
-      } catch (error) {
-        console.warn(`[Logging]: Failed to send pending log ${log.id}:`, error);
-        // Прерываем отправку при первой ошибке, чтобы не перегружать сервер
-        break;
-      }
-    }
-
-    // Удаляем успешно отправленные логи
-    if (successfulLogs.length > 0) {
-      const remainingLogs = pendingLogs.filter(log => !successfulLogs.includes(log.id));
-      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(remainingLogs));
-      console.log(`[Logging]: Successfully sent ${successfulLogs.length} pending logs`);
+      // Очистим локальные логи после успешной отправки
+      localStorage.setItem(this.STORAGE_KEY, JSON.stringify([]));
+      console.log(`[Logging]: Successfully sent ${pendingLogs.length} pending logs`);
+    } catch (error) {
+      console.warn(`[Logging]: Failed to send pending logs batch:`, error);
     }
   }
 

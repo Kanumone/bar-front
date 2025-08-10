@@ -36,9 +36,9 @@ export const useSceneStore = create<SceneState>((set, get) => ({
     });
     
     try {
-      const { user, sessionId, token } = useAuthStore.getState();
+      const { user, sessionId } = useAuthStore.getState();
 
-      if (user?.id && sessionId && token) {
+      if (user?.id && sessionId) {
         await logActivity("scene_change", {
           userId: user.id,
           sessionId,
@@ -50,7 +50,7 @@ export const useSceneStore = create<SceneState>((set, get) => ({
 
         console.log(`[Scene Change]: ${prevScene} → ${scene}`);
       } else {
-        console.warn("[Scene Change]: Activity not logged (no user/session/token).");
+        console.warn("[Scene Change]: Activity not logged (no user/session).");
       }
     } catch (err: unknown) {
       logAppError("Scene Change Logging", err);

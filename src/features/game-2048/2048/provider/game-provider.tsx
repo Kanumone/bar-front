@@ -283,7 +283,7 @@ class Game implements GameInterface {
 }
 
 export const GameProvider = ({ children }: PropsWithChildren) => {
-  const token = useAuth();
+  const sessionId = useAuth();
   const gameRef = useRef<GameInterface | null>(null);
 
   if (!gameRef.current) {
@@ -294,32 +294,32 @@ export const GameProvider = ({ children }: PropsWithChildren) => {
 
   // Загрузка рекорда
   useEffect(() => {
-    if (!token) return;
+    if (!sessionId) return;
 
     const loadHighScore = /* async */ () => {
-      const highScore = 0; // await get2048HighScore(token);
+      const highScore = 0; // await get2048HighScore(sessionId);
       if (gameRef.current && highScore > gameRef.current.state.highScore) {
         gameRef.current.state.highScore = highScore;
       }
     };
 
     void loadHighScore();
-  }, [token]);
+  }, [sessionId]);
 
   // Обновление рекорда
   useEffect(() => {
     const game = gameRef.current;
-    if (!game || !token) return;
+    if (!game || !sessionId) return;
 
     const listener = (state: GameState) => {
       if (state.score > state.highScore) {
-        // void update2048HighScore(token, state.score);
+        // void update2048HighScore(sessionId, state.score);
       }
     };
 
     game.subscribe(listener);
     return () => game.unsubscribe(listener);
-  }, [token]);
+  }, [sessionId]);
 
   return (
     <Game2048Context value={gameRef.current}>

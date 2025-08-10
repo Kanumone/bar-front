@@ -1,4 +1,4 @@
-import { apiClient } from "$/api";
+import { apiClient, UpdateGameProgressDtoCurrentSceneEnum } from "$/api";
 import { LocalStorageService } from "./local-storage-service";
 import { logAppError } from "@utils/log-app-error";
 import { useAuthStore } from "@core/state";
@@ -76,8 +76,8 @@ export class SyncService {
   private async performSync(): Promise<boolean> {
     try {
       // Проверяем, авторизован ли пользователь
-      const { user, sessionId, token } = useAuthStore.getState();
-      if (!user?.id || !sessionId || !token) {
+      const { user, sessionId } = useAuthStore.getState();
+      if (!user?.id || !sessionId) {
         console.log('[SyncService]: Skipping sync - user not authenticated');
         return false;
       }
@@ -147,12 +147,8 @@ export class SyncService {
       await apiClient.gameState.gameStateControllerUpdatePlayerState({
         energy: playerState.energy,
         hunger: playerState.hunger,
-        data: {
-          money: playerState.money,
-          inventory: playerState.inventory,
-          playerName: playerState.playerName,
-          playerGender: playerState.playerGender,
-        }
+        money: playerState.money,
+        inventory: playerState.inventory,
       });
     } catch (error) {
       throw new Error(`Failed to sync player state: ${error}`);
@@ -164,8 +160,19 @@ export class SyncService {
    */
   private async syncGameProgress(checkPoint: string | null): Promise<void> {
     try {
+      const sceneValue: UpdateGameProgressDtoCurrentSceneEnum | undefined = (() => {
+        switch (checkPoint) {
+          case UpdateGameProgressDtoCurrentSceneEnum.Intro:
+          case UpdateGameProgressDtoCurrentSceneEnum.Moscow:
+          case UpdateGameProgressDtoCurrentSceneEnum.Kazan:
+            return checkPoint as UpdateGameProgressDtoCurrentSceneEnum;
+          default:
+            return UpdateGameProgressDtoCurrentSceneEnum.Intro;
+        }
+      })();
+
       await apiClient.gameState.gameStateControllerUpdateGameProgress({
-        currentScene: checkPoint || "",
+        currentScene: sceneValue,
       });
     } catch (error) {
       throw new Error(`Failed to sync game progress: ${error}`);
