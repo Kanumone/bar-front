@@ -1,4 +1,4 @@
-import { gameFlowManager } from "$processes/game-flow/game-flow-manager";
+import { gameFlowManager } from "$services/game-flow";
 import type { EpisodeConfig } from "./common";
 import { Episode } from "./common";
 

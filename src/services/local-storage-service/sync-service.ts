@@ -1,7 +1,7 @@
 import { apiClient, UpdateGameProgressDtoCurrentSceneEnum } from "$/api";
 import { LocalStorageService } from "./local-storage-service";
-import { logAppError } from "@utils/log-app-error";
-import { useAuthStore } from "@core/state";
+import { logAppError } from "$utils/log-app-error";
+import { useAuthStore } from "$core/state";
 import { GameConstants } from "$core/constants/constants";
 
 /**

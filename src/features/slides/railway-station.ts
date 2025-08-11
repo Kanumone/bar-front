@@ -1,4 +1,4 @@
-import { gameFlowManager } from "$processes";
+import { gameFlowManager } from "$services/game-flow";
 import { Episode, type EpisodeConfig } from "./common";
 
 const railwayStationSlides: EpisodeConfig[] = [

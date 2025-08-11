@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { gameFlowManager } from "@processes/game-flow/game-flow-manager";
+import { gameFlowManager } from "$services/game-flow";
 import { useSceneStore } from "@core/state";
 import { GoButton } from "@ui/components/go-button";
 import { logActivity } from "$/api/log-activity"; // Импортируем logActivity

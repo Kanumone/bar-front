@@ -1,96 +1,79 @@
 import { create } from "zustand";
 import WebApp from "@twa-dev/sdk";
-import { type AuthControllerGetUserInfo200Response, apiClient } from "$/api";
+import { type AuthControllerGetUserInfo200Response, type CreateSessionDto, apiClient } from "$/api";
 import { logAppError } from "@utils/log-app-error";
 import { logActivity } from "../../api/log-activity";
 import { usePlayerState } from "./player-store"; // ✅ добавлено
+import { GameConstants } from "$core/constants/constants";
 
 interface AuthState {
   isTelegram: boolean | null;
+  userID: string | null;
   user: AuthControllerGetUserInfo200Response | null;
   sessionId: string | null;
   isAuthenticated: boolean;
-  isVerifying: boolean;
   setUser: (user: AuthControllerGetUserInfo200Response) => void;
   setSessionId: (sessionId: string) => void;
   authenticateUser: () => Promise<void>;
+  requestSession: () => Promise<string>;
   logout: () => void;
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
   isTelegram: null,
-  user: JSON.parse(localStorage.getItem("user") || "null") as AuthControllerGetUserInfo200Response | null,
+  user: null,
+  userID: localStorage.getItem("userID") || null,
   sessionId: localStorage.getItem("sessionId") || null,
-  isAuthenticated: !!localStorage.getItem("sessionId"),
-  isVerifying: false,
+  isAuthenticated: false,
 
   setUser: (user) => {
     set({ user });
     localStorage.setItem("user", JSON.stringify(user));
   },
+
   setSessionId: (sessionId) => {
     set({ sessionId, isAuthenticated: !!sessionId });
     localStorage.setItem("sessionId", sessionId);
   },
 
   authenticateUser: async () => {
-    let isTelegram = get().isTelegram;
-    if (isTelegram === null && !WebApp.initData) {
-      isTelegram = false;
-      set({ isTelegram });
-      console.error("Telegram initData not available");
-      return;
+    if (!WebApp.initData) {
+      if (!GameConstants.DEBUG_MODE) {
+        set({ isTelegram: false });
+        console.error("Telegram initData not available");
+        return;
+      }
     }
+    console.log("authenticateUser", get().userID);
 
     set({ isTelegram: true });
 
-    if (get().isVerifying) return;
-
-    set({ isVerifying: true });
+    if (!get().userID) {
+      set({ userID: String(WebApp.initDataUnsafe.user?.id) });
+    }
 
     try {
       const existingSessionId = get().sessionId;
+      let sessionId = '';
 
       if (existingSessionId) {
-        // Валидация текущей сессии
         const { data: validation } = await apiClient.auth.authControllerValidateSession(existingSessionId);
         if (!validation.valid) {
-          // Не валидна — создаем новую
-          set({ sessionId: null, isAuthenticated: false });
+          sessionId = await get().requestSession();
         }
+      } else {
+        sessionId = await get().requestSession();
       }
+      console.log("sessionId", sessionId);
 
-      let sessionId = get().sessionId;
 
-      if (!sessionId) {
-        const tgUser = WebApp.initDataUnsafe.user;
-        if (!tgUser) {
-          throw new Error("Telegram user is not available in initDataUnsafe");
-        }
-
-        const { data: sessionResp } = await apiClient.auth.authControllerCreateSession({
-          telegramId: String(tgUser.id),
-          username: tgUser.username,
-          firstName: tgUser.first_name,
-          lastName: tgUser.last_name,
-          userAgent: navigator.userAgent,
-          telegramVersion: WebApp.version,
-        });
-
-        sessionId = sessionResp.sessionId;
-        get().setSessionId(sessionId);
-      }
-
-      // Получаем профиль пользователя по sessionId
-      const { data: userInfo } = await apiClient.auth.authControllerGetUserInfo(sessionId!);
-      get().setUser(userInfo);
 
       try {
         const details: Record<string, string> = {
           userAgent: navigator.userAgent,
-          userId: String(userInfo.id ?? "unknown"),
+          userId: String(get().userID ?? "unknown"),
           telegramVersion: WebApp.version,
-          sessionId: sessionId!,
+          sessionId: sessionId,
         };
 
         await logActivity("user_authenticated", details, "Auth");
@@ -104,35 +87,64 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       try {
         // Сначала загружаем из localStorage
         usePlayerState.getState().loadPlayerStateFromLocal();
-        
+
         // Затем загружаем с сервера и запускаем автосинхронизацию
         await usePlayerState.getState().loadPlayerStateFromServer();
         usePlayerState.getState().startAutoSync();
-        
+
         // Отправляем накопленные логи
-        const { LoggingService } = await import("$/services/logging-service");
+        const { LoggingService } = await import("$services/local-storage-service/logging-service");
         LoggingService.sendPendingLogs();
       } catch (loadError: unknown) {
         logAppError("LoadPlayerState", loadError);
       }
-
-      set({ isVerifying: false });
     } catch (error: unknown) {
       logAppError("Authentication", error);
       get().logout();
-      throw error;
-    } finally {
-      set({ isVerifying: false });
     }
+  },
+
+  requestSession: async () => {
+    const userID = get().userID;
+    if (!userID) {
+      throw new Error("User ID is not set");
+    }
+    let request: CreateSessionDto = {
+      telegramId: userID,
+    };
+    if (WebApp.initDataUnsafe.user) {
+      request = {
+        ...request,
+        username: WebApp.initDataUnsafe.user.username,
+        firstName: WebApp.initDataUnsafe.user.first_name,
+        lastName: WebApp.initDataUnsafe.user.last_name,
+        userAgent: navigator.userAgent,
+        telegramVersion: WebApp.version,
+      };
+    }
+
+    const { data: sessionResp } = await apiClient.auth.authControllerCreateSession(request);
+
+    const sessionId = sessionResp.sessionId;
+    get().setSessionId(sessionId);
+
+
+    // Получаем профиль пользователя по sessionId
+    const { data: userInfo } = await apiClient.auth.authControllerGetUserInfo(sessionId!);
+    get().setUser(userInfo);
+
+    return sessionId;
   },
 
   logout: () => {
     // Останавливаем автосинхронизацию при выходе
     usePlayerState.getState().stopAutoSync();
-    
-    set({ user: null,
+
+    set({
+      user: null,
       sessionId: null,
-      isAuthenticated: false });
+      isAuthenticated: false
+    });
     localStorage.removeItem("user");
     localStorage.removeItem("sessionId");
   },

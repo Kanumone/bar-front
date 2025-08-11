@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import { gameFlowManager } from "@processes/game-flow/game-flow-manager";
+import { gameFlowManager } from "$services/game-flow";
 import { getAssetsPath } from "@utils/get-assets-path";
 import { setBackground } from "@utils/set-background";
 

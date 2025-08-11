@@ -7,8 +7,17 @@ export const GameConstants = {
   TIMEOUT_FOR_QUESTION: 10000,
   SHOW_ITEMS_DESCRIPTION_TIMEOUT: 5000,
 
+  // player stats
+  MAX_ENERGY: 100,
+  MAX_HUNGER: 50,
+  
+  ENERGY_POINTS_PER_SECOND: 1,
+  HUNGER_POINTS_PER_SECOND: 1,
+
   // system
   SYNC_INTERVAL: seconds(60), // Интервал синхронизации данных на сервер
   MAX_RETRY_ATTEMPTS: 3, // Максимальное количество попыток синхронизации при ошибке
   RETRY_DELAY: seconds(5), // Задержка между попытками при ошибке
+
+  DEBUG_MODE: true,
 };

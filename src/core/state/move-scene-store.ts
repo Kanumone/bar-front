@@ -1,9 +1,10 @@
 import { create } from "zustand";
-import { gameFlowManager } from "@processes/game-flow/game-flow-manager";
+import { gameFlowManager } from "$services/game-flow";
 import { GameScene, type QuizItem } from "@core/types/common-types";
 import { apiClient } from "../../api";
 import { useSceneStore } from "./scene-store";
 import { GameConstants } from "$/core/constants/constants";
+import { usePlayerState } from "./player-store";
 
 const TIMEOUT_FOR_QUESTION = GameConstants.TIMEOUT_FOR_QUESTION;
 
@@ -29,6 +30,7 @@ interface MoveSceneState {
   timerId: number | null;
   isMoving: boolean;
   backgroundMusic: string | null;
+  consumptionTimerId: number | null;
   setQuestions: (questions: QuizItem[]) => void;
   startQuizCycle: () => void;
   openQuiz: (index: number) => void;
@@ -40,6 +42,8 @@ interface MoveSceneState {
   pauseTimer: () => void;
   resumeTimer: () => void;
   setMoving: (moving: boolean) => void;
+  startMovementConsumption: () => void;
+  stopMovementConsumption: () => void;
 }
 
 export const useMoveSceneStore = create<MoveSceneState>((set, get) => ({
@@ -53,6 +57,7 @@ export const useMoveSceneStore = create<MoveSceneState>((set, get) => ({
   timerId: null,
   isMoving: false,
   backgroundMusic: null,
+  consumptionTimerId: null,
 
   setBackgroundMusic: (music: string) => set({ backgroundMusic: music }),
 
@@ -62,12 +67,50 @@ export const useMoveSceneStore = create<MoveSceneState>((set, get) => ({
     set({ isMoving: moving });
     const { isQuizVisible } = get();
 
+    // Всегда управляем потреблением ресурсов в зависимости от движения
+    if (moving) {
+      get().startMovementConsumption();
+    } else {
+      get().stopMovementConsumption();
+    }
+
+    // Таймер вопроса управляется только когда квиз скрыт
     if (!isQuizVisible) {
       if (moving) {
         get().resumeTimer();
       } else {
         get().pauseTimer();
       }
+    }
+  },
+
+  startMovementConsumption: () => {
+    const { consumptionTimerId } = get();
+    if (consumptionTimerId) {
+      clearInterval(consumptionTimerId);
+      set({ consumptionTimerId: null });
+    }
+    if (!get().isMoving) return;
+    const intervalMs = 1000; // шаг 1 сек
+    const timerId = setInterval(() => {
+      if (!get().isMoving) {
+        get().stopMovementConsumption();
+        return;
+      }
+      const energyDelta = -GameConstants.ENERGY_POINTS_PER_SECOND;
+      const hungerDelta = GameConstants.HUNGER_POINTS_PER_SECOND;
+      const { addHunger, setEnergy, energy } = usePlayerState.getState();
+      addHunger(hungerDelta);
+      setEnergy(energy + energyDelta);
+    }, intervalMs) as unknown as number;
+    set({ consumptionTimerId: timerId });
+  },
+
+  stopMovementConsumption: () => {
+    const { consumptionTimerId } = get();
+    if (consumptionTimerId) {
+      clearInterval(consumptionTimerId);
+      set({ consumptionTimerId: null });
     }
   },
 

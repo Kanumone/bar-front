@@ -41,9 +41,7 @@
       "@features/*": [
         "./features/*"
       ],
-      "@processes/*": [
-        "./processes/*"
-      ],
+
       "@ui/*": [
         "./ui/*"
       ],

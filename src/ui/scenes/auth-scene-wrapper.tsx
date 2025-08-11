@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, type PropsWithChildren } from "react";
-import { gameFlowManager } from "@processes/game-flow/game-flow-manager";
+import { gameFlowManager } from "$services/game-flow";
 import { usePlayerState } from "@core/state/player-store";
 import styles from "./auth-scene-wrapper.module.css";
 import { useAuthStore } from "../../core/state";

@@ -1,5 +1,5 @@
 import React from "react";
-import { gameFlowManager } from "@processes/game-flow/game-flow-manager";
+import { gameFlowManager } from "$services/game-flow";
 import { useSceneStore } from "@core/state/scene-store";
 import type { GameFoodLevelData } from "@core/types/common-types";
 

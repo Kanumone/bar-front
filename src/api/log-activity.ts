@@ -1,4 +1,4 @@
-import { LoggingService } from "$/services/logging-service";
+import { LoggingService } from "$services/local-storage-service/logging-service";
 
 /**
  * Отправляет лог активности на сервер с резервным сохранением в localStorage.

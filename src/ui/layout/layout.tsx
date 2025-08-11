@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { getAssetsPath } from "../../utils";
-import { gameFlowManager } from "../../processes";
+import { gameFlowManager } from "$services/game-flow";
 import { SlidingPanel } from "../components/sliding-panel";
 import { PanelStack } from "../components/panel-stack";
 import { GameMenu } from "../components/game-menu";
-import { usePlayerState, useSettingsStore } from "../../core/state";
-import { MenuButton } from "../components/menu-button";
+import { usePlayerState, useSceneStore, useSettingsStore } from "$core/state";
+import { MenuButton } from "$ui/components/menu-button";
+import { GameConstants } from "$core/constants/constants";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -19,6 +20,8 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const energy = usePlayerState((state) => state.energy);
 
   const onToggleSound = () => useSettingsStore.getState().toggleSound();
+
+  const scene = useSceneStore.getState().currentScene;
 
   useEffect(() => {
     document.documentElement.style.setProperty("--tg-safe-top", "70px");
@@ -45,14 +48,14 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         <SlidingPanel
           buttonText="СТРЯПАТЬ"
           buttonAction={() => gameFlowManager.showGameCooking()}
-          infoText={`Голод: ${hunger}/20`}
+          infoText={`Голод: ${hunger}/${GameConstants.MAX_HUNGER}`}
           iconSrc={getAssetsPath("images/ui/hunger-icon.png")}
         />
 
         <SlidingPanel
           buttonText="СПАТЬ"
           buttonAction={() => gameFlowManager.showFlyingGame()}
-          infoText={`Энергия: ${energy}/20`}
+          infoText={`Энергия: ${energy}/${GameConstants.MAX_ENERGY}`}
           iconSrc={getAssetsPath("images/ui/energy-icon.png")}
         />
       </PanelStack>

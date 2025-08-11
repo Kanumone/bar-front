@@ -8,9 +8,8 @@ export const useAuth = () => {
   const { sessionId, authenticateUser } = useAuthStore();
 
   useEffect(() => {
-    if (initData) {
-      void authenticateUser();
-    }
+    void authenticateUser();
+
   }, [authenticateUser, initData]);
 
   return sessionId;

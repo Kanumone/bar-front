@@ -1,5 +1,5 @@
 import React from "react";
-import { gameFlowManager } from "@processes/game-flow/game-flow-manager";
+import { gameFlowManager } from "$services/game-flow";
 
 export const Game2048SceneWrapper: React.FC = () => {
   const handleGoToMap = () => {

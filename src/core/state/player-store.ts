@@ -3,7 +3,8 @@ import { apiClient } from "$/api";
 import type { SceneName, InventoryItem } from "@core/types/common-types";
 import { logAppError } from "@utils/log-app-error";
 import { LocalStorageService } from "$/services/local-storage-service";
-import { syncService } from "$/services/sync-service";
+import { syncService } from "$services/local-storage-service/sync-service";
+import { GameConstants } from "$/core/constants/constants";
 
 interface PlayerState {
   playerName: string;
@@ -19,6 +20,7 @@ interface PlayerState {
 
   setEnergy: (value: number) => void;
   setHunger: (value: number) => void;
+  addHunger: (amount: number) => void;
 
   increaseEnergy: () => void;
   decreaseEnergy: () => void;
@@ -65,34 +67,42 @@ export const usePlayerState = create<PlayerState>((set, get) => ({
   setPlayerGender: (gender) => set({ playerGender: gender }),
 
   setEnergy: (value) => {
-    set({ energy: value });
+    const clamped = Math.max(0, Math.min(GameConstants.MAX_ENERGY, value));
+    set({ energy: clamped });
     get().savePlayerStateToLocal();
   },
 
   increaseEnergy() {
-    if (get().energy < 20) {
-      set((state) => ({ energy: state.energy + 1 }));
+    if (get().energy < GameConstants.MAX_ENERGY) {
+      set((state) => ({ energy: Math.min(GameConstants.MAX_ENERGY, state.energy + 1) }));
       get().savePlayerStateToLocal();
     }
   },
 
   decreaseEnergy() {
-    if (get().energy > 1) {
-      set((state) => ({ energy: state.energy - 1 }));
+    if (get().energy > 0) {
+      set((state) => ({ energy: Math.max(0, state.energy - 1) }));
       get().savePlayerStateToLocal();
     }
   },
 
   addEnergy(amount) {
-    const maxEnergy = 20;
-    set((state) => ({ 
-      energy: Math.min(maxEnergy, state.energy + amount) 
+    set((state) => ({
+      energy: Math.min(GameConstants.MAX_ENERGY, state.energy + amount)
     }));
     get().savePlayerStateToLocal();
   },
 
   setHunger: (value) => {
-    set({ hunger: value });
+    const clamped = Math.max(0, Math.min(GameConstants.MAX_HUNGER, value));
+    set({ hunger: clamped });
+    get().savePlayerStateToLocal();
+  },
+
+  addHunger: (amount) => {
+    set((state) => ({
+      hunger: Math.max(0, Math.min(GameConstants.MAX_HUNGER, state.hunger + amount))
+    }));
     get().savePlayerStateToLocal();
   },
 

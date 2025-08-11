@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { usePlayerState } from '@core/state';
-import { LocalStorageService, syncService, LoggingService } from '$/services';
+import { LocalStorageService, syncService, LoggingService } from '$services/local-storage-service';
 import { logActivity } from '$/api/log-activity';
 
 import styles from './debug-panel.module.css';
