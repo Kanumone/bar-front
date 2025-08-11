@@ -29,12 +29,12 @@ export class SyncService {
    */
   start(): void {
     if (this.isRunning) {
-      console.warn('[SyncService]: Already running');
+      console.warn("[SyncService]: Already running");
       return;
     }
 
     this.isRunning = true;
-    console.log('[SyncService]: Starting automatic sync every', GameConstants.SYNC_INTERVAL / 1000, 'seconds');
+    console.log("[SyncService]: Starting automatic sync every", GameConstants.SYNC_INTERVAL / 1000, "seconds");
 
     // Запускаем первую синхронизацию сразу
     this.performSync();
@@ -54,13 +54,13 @@ export class SyncService {
     }
 
     this.isRunning = false;
-    
+
     if (this.syncIntervalId) {
       clearInterval(this.syncIntervalId);
       this.syncIntervalId = null;
     }
 
-    console.log('[SyncService]: Stopped');
+    console.log("[SyncService]: Stopped");
   }
 
   /**
@@ -78,17 +78,17 @@ export class SyncService {
       // Проверяем, авторизован ли пользователь
       const { user, sessionId } = useAuthStore.getState();
       if (!user?.id || !sessionId) {
-        console.log('[SyncService]: Skipping sync - user not authenticated');
+        console.log("[SyncService]: Skipping sync - user not authenticated");
         return false;
       }
 
       // Проверяем, есть ли данные для синхронизации
       if (!LocalStorageService.needsSynchronization()) {
-        console.log('[SyncService]: No data to sync');
+        console.log("[SyncService]: No data to sync");
         return true;
       }
 
-      console.log('[SyncService]: Starting sync...');
+      console.log("[SyncService]: Starting sync...");
 
       // Получаем данные для синхронизации
       const { playerState, gameProgress } = LocalStorageService.getDataForSync();
@@ -96,13 +96,13 @@ export class SyncService {
       // Синхронизируем состояние игрока, если нужно
       if (playerState) {
         await this.syncPlayerState(playerState);
-        console.log('[SyncService]: Player state synchronized');
+        console.log("[SyncService]: Player state synchronized");
       }
 
       // Синхронизируем прогресс игры, если нужно
       if (gameProgress) {
         await this.syncGameProgress(gameProgress.checkPoint);
-        console.log('[SyncService]: Game progress synchronized');
+        console.log("[SyncService]: Game progress synchronized");
       }
 
       // Отмечаем данные как синхронизированные
@@ -111,24 +111,24 @@ export class SyncService {
       // Сбрасываем счетчик попыток при успешной синхронизации
       this.retryCount = 0;
 
-      console.log('[SyncService]: Sync completed successfully');
+      console.log("[SyncService]: Sync completed successfully");
       return true;
 
     } catch (error) {
-      logAppError('SyncService', error);
-      
+      logAppError("SyncService", error);
+
       // Увеличиваем счетчик неудачных попыток
       this.retryCount++;
 
       // Если превышено максимальное количество попыток, ждем до следующего интервала
       if (this.retryCount >= GameConstants.MAX_RETRY_ATTEMPTS) {
-        console.error('[SyncService]: Max retry attempts reached. Will retry on next interval.');
+        console.error("[SyncService]: Max retry attempts reached. Will retry on next interval.");
         this.retryCount = 0;
         return false;
       }
 
       // Повторяем попытку через задержку
-      console.log(`[SyncService]: Retry attempt ${this.retryCount}/${GameConstants.MAX_RETRY_ATTEMPTS} in ${GameConstants.RETRY_DELAY/1000} seconds`);
+      console.log(`[SyncService]: Retry attempt ${this.retryCount}/${GameConstants.MAX_RETRY_ATTEMPTS} in ${GameConstants.RETRY_DELAY / 1000} seconds`);
       setTimeout(() => {
         if (this.isRunning) {
           this.performSync();
@@ -162,12 +162,12 @@ export class SyncService {
     try {
       const sceneValue: UpdateGameProgressDtoCurrentSceneEnum | undefined = (() => {
         switch (checkPoint) {
-          case UpdateGameProgressDtoCurrentSceneEnum.Intro:
-          case UpdateGameProgressDtoCurrentSceneEnum.Moscow:
-          case UpdateGameProgressDtoCurrentSceneEnum.Kazan:
-            return checkPoint as UpdateGameProgressDtoCurrentSceneEnum;
-          default:
-            return UpdateGameProgressDtoCurrentSceneEnum.Intro;
+        case UpdateGameProgressDtoCurrentSceneEnum.Intro:
+        case UpdateGameProgressDtoCurrentSceneEnum.Moscow:
+        case UpdateGameProgressDtoCurrentSceneEnum.Kazan:
+          return checkPoint as UpdateGameProgressDtoCurrentSceneEnum;
+        default:
+          return UpdateGameProgressDtoCurrentSceneEnum.Intro;
         }
       })();
 

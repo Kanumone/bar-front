@@ -10,7 +10,7 @@ export const GameConstants = {
   // player stats
   MAX_ENERGY: 1000000,
   MAX_HUNGER: 1000000,
-  
+
   ENERGY_POINTS_PER_SECOND: 1,
   HUNGER_POINTS_PER_SECOND: 1,
 

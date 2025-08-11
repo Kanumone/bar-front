@@ -20,8 +20,8 @@ interface LocalPlayerState {
  * Ключи для localStorage
  */
 const STORAGE_KEYS = {
-  PLAYER_STATE: 'bar-game-player-state',
-  GAME_PROGRESS: 'bar-game-progress',
+  PLAYER_STATE: "bar-game-player-state",
+  GAME_PROGRESS: "bar-game-progress",
 } as const;
 
 /**
@@ -38,12 +38,12 @@ export class LocalStorageService {
       if (!stored) return null;
 
       const state = JSON.parse(stored) as LocalPlayerState;
-      
+
       // Валидация структуры данных
       if (this.validatePlayerState(state)) {
         return state;
       }
-      
+
       logAppError("LocalStorage", new Error("Invalid player state structure in localStorage"));
       return null;
     } catch (error) {
@@ -55,7 +55,7 @@ export class LocalStorageService {
   /**
    * Сохранить состояние игрока в localStorage
    */
-  static savePlayerState(state: Omit<LocalPlayerState, 'lastSaved' | 'needsSync'>): void {
+  static savePlayerState(state: Omit<LocalPlayerState, "lastSaved" | "needsSync">): void {
     try {
       const stateToSave: LocalPlayerState = {
         ...state,
@@ -72,7 +72,9 @@ export class LocalStorageService {
   /**
    * Получить прогресс игры из localStorage
    */
-  static getGameProgress(): { checkPoint: string | null; lastSaved: number; needsSync: boolean } | null {
+  static getGameProgress(): { checkPoint: string | null;
+    lastSaved: number;
+    needsSync: boolean } | null {
     try {
       const stored = localStorage.getItem(STORAGE_KEYS.GAME_PROGRESS);
       if (!stored) return null;
@@ -106,7 +108,9 @@ export class LocalStorageService {
    */
   static getDataForSync(): {
     playerState: LocalPlayerState | null;
-    gameProgress: { checkPoint: string | null; lastSaved: number; needsSync: boolean } | null;
+    gameProgress: { checkPoint: string | null;
+      lastSaved: number;
+      needsSync: boolean } | null;
   } {
     const playerState = this.getPlayerState();
     const gameProgress = this.getGameProgress();
@@ -163,17 +167,17 @@ export class LocalStorageService {
    */
   private static validatePlayerState(state: any): state is LocalPlayerState {
     return (
-      typeof state === 'object' &&
+      typeof state === "object" &&
       state !== null &&
-      typeof state.playerName === 'string' &&
-      (state.playerGender === 'boy' || state.playerGender === 'girl' || state.playerGender === null) &&
-      typeof state.energy === 'number' &&
-      typeof state.hunger === 'number' &&
-      typeof state.money === 'number' &&
+      typeof state.playerName === "string" &&
+      (state.playerGender === "boy" || state.playerGender === "girl" || state.playerGender === null) &&
+      typeof state.energy === "number" &&
+      typeof state.hunger === "number" &&
+      typeof state.money === "number" &&
       Array.isArray(state.inventory) &&
-      (typeof state.checkPoint === 'string' || state.checkPoint === null) &&
-      typeof state.lastSaved === 'number' &&
-      typeof state.needsSync === 'boolean'
+      (typeof state.checkPoint === "string" || state.checkPoint === null) &&
+      typeof state.lastSaved === "number" &&
+      typeof state.needsSync === "boolean"
     );
   }
 

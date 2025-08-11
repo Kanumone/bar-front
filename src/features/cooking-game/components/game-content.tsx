@@ -14,25 +14,25 @@ export function GameContent() {
 
   const renderCurrentScreen = () => {
     switch (state.currentScreen) {
-      case "tetris":
-        return <TetrisGame />;
-      case "recipe-book":
-        return (
-          <div className={styles.recipeBookContainer}>
-            <RecipeSelector
-              recipes={recipes}
-              back={goToTetris}
-            />
-          </div>
-        );
-      case "shop":
-        return (
-          <>
-            <Shop back={goToTetris} />
-          </>
-        );
-      default:
-        return <TetrisGame />;
+    case "tetris":
+      return <TetrisGame />;
+    case "recipe-book":
+      return (
+        <div className={styles.recipeBookContainer}>
+          <RecipeSelector
+            recipes={recipes}
+            back={goToTetris}
+          />
+        </div>
+      );
+    case "shop":
+      return (
+        <>
+          <Shop back={goToTetris} />
+        </>
+      );
+    default:
+      return <TetrisGame />;
     }
   };
 

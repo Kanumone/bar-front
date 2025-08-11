@@ -353,27 +353,27 @@ const railwayStationSlides: EpisodeConfig[] = [
   {
     slideIndex: 9,
     filename: "Screen_17.png",
-    actions: []
+    actions: [],
   },
   {
     slideIndex: 9,
     filename: "Screen_18.png",
-    actions: []
+    actions: [],
   },
   {
     slideIndex: 9,
     filename: "Screen_19.png",
-    actions: []
+    actions: [],
   },
   {
     slideIndex: 10,
     filename: "Screen_20.png",
-    actions: []
+    actions: [],
   },
   {
     slideIndex: 10,
     filename: "Screen_21.png",
-    actions: []
+    actions: [],
   },
   {
     slideIndex: 10,
@@ -390,8 +390,8 @@ const railwayStationSlides: EpisodeConfig[] = [
       {
         type: "thoughts",
         text: "Ладно, всё ещё можно спасти. ‘Площадь трёх вокзалов’… вот куда мне надо. Настоящие ворота Москвы. Туда и двинусь.",
-      }
-    ]
+      },
+    ],
   },
   {
     slideIndex: 10,
@@ -403,7 +403,7 @@ const railwayStationSlides: EpisodeConfig[] = [
         options: [
           "Чёрт, я опоздаю! Если дед узнает, что я уже потерялся на подступах к Москве… Не удивлюсь, если он лично приедет и отправит меня обратно в деревню.",
           "Ха, ну что за день… Ладно, приключения начинаются. Может, это знак. Великие открытия начинаются с ошибок. Колумб вообще в Индию собирался, а смотри где оказался.",
-          "Спокойно. Всё под контролем. План прост: шаг 1 — не паниковать. Шаг 2 — Москва всё равно не сбежит. Шаг 3… где ближайшее метро?"
+          "Спокойно. Всё под контролем. План прост: шаг 1 — не паниковать. Шаг 2 — Москва всё равно не сбежит. Шаг 3… где ближайшее метро?",
         ],
       },
       {
@@ -412,8 +412,8 @@ const railwayStationSlides: EpisodeConfig[] = [
           text: "В путь",
           action: () => { gameFlowManager.showGameMap(); },
         },
-      }
-    ]
+      },
+    ],
   },
 ];
 

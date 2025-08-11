@@ -8,11 +8,11 @@ interface CookingNotificationProps {
   onAnimationComplete: () => void;
 }
 
-export const CookingNotification = ({ 
-  isVisible, 
-  currentEnergy, 
-  maxEnergy, 
-  onAnimationComplete 
+export const CookingNotification = ({
+  isVisible,
+  currentEnergy,
+  maxEnergy,
+  onAnimationComplete,
 }: CookingNotificationProps) => {
   const [shouldRender, setShouldRender] = useState(false);
 

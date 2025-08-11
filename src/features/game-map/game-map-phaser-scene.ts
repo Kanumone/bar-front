@@ -1,5 +1,5 @@
 import { Scene } from "phaser";
-import {  getAssetsPathByType } from "@utils/get-assets-path";
+import { getAssetsPathByType } from "@utils/get-assets-path";
 import { GameScene } from "@core/types/common-types";
 import { logActivity } from "$/api/log-activity";
 import { useSceneStore } from "../../core/state";
@@ -60,7 +60,7 @@ export default class GameMapPhaserScene extends Scene {
   }
 
   create(): void {
-    let playerPlace = START_POINT;
+    const playerPlace = START_POINT;
     // ✅ Отображаем карту
     this.mapImage = this.add.image(0, 0, "map_image").setOrigin(0, 0);
 

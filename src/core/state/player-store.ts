@@ -35,7 +35,7 @@ interface PlayerState {
   canMove: () => boolean;
 
   // Методы для работы с инвентарем
-  addToInventory: (item: Omit<InventoryItem, 'quantity'>, quantity?: number) => void;
+  addToInventory: (item: Omit<InventoryItem, "quantity">, quantity?: number) => void;
   removeFromInventory: (itemId: string, quantity?: number) => void;
   getInventoryItem: (itemId: string) => InventoryItem | undefined;
   getInventoryItemQuantity: (itemId: string) => number;
@@ -89,7 +89,7 @@ export const usePlayerState = create<PlayerState>((set, get) => ({
 
   addEnergy(amount) {
     set((state) => ({
-      energy: Math.min(GameConstants.MAX_ENERGY, state.energy + amount)
+      energy: Math.min(GameConstants.MAX_ENERGY, state.energy + amount),
     }));
 
   },
@@ -102,7 +102,7 @@ export const usePlayerState = create<PlayerState>((set, get) => ({
 
   addHunger: (amount) => {
     set((state) => ({
-      hunger: Math.max(0, Math.min(GameConstants.MAX_HUNGER, state.hunger + amount))
+      hunger: Math.max(0, Math.min(GameConstants.MAX_HUNGER, state.hunger + amount)),
     }));
 
   },
@@ -132,31 +132,30 @@ export const usePlayerState = create<PlayerState>((set, get) => ({
   // Методы для работы с инвентарем
   addToInventory: (item, quantity = 1) => {
     const currentInventory = get().inventory;
-    const existingItemIndex = currentInventory.findIndex(inv => inv.id === item.id);
+    const existingItemIndex = currentInventory.findIndex((inv) => inv.id === item.id);
 
     if (existingItemIndex >= 0) {
       // Предмет уже есть в инвентаре, увеличиваем количество
       const newInventory = [...currentInventory];
       newInventory[existingItemIndex] = {
         ...newInventory[existingItemIndex],
-        quantity: newInventory[existingItemIndex].quantity + quantity
+        quantity: newInventory[existingItemIndex].quantity + quantity,
       };
       set({ inventory: newInventory });
     } else {
       // Добавляем новый предмет
       const newItem: InventoryItem = {
         ...item,
-        quantity
+        quantity,
       };
       set({ inventory: [...currentInventory, newItem] });
     }
-
 
   },
 
   removeFromInventory: (itemId, quantity = 1) => {
     const currentInventory = get().inventory;
-    const existingItemIndex = currentInventory.findIndex(inv => inv.id === itemId);
+    const existingItemIndex = currentInventory.findIndex((inv) => inv.id === itemId);
 
     if (existingItemIndex >= 0) {
       const newInventory = [...currentInventory];
@@ -169,7 +168,7 @@ export const usePlayerState = create<PlayerState>((set, get) => ({
         // Уменьшаем количество
         newInventory[existingItemIndex] = {
           ...currentItem,
-          quantity: currentItem.quantity - quantity
+          quantity: currentItem.quantity - quantity,
         };
       }
 
@@ -179,11 +178,11 @@ export const usePlayerState = create<PlayerState>((set, get) => ({
   },
 
   getInventoryItem: (itemId) => {
-    return get().inventory.find(item => item.id === itemId);
+    return get().inventory.find((item) => item.id === itemId);
   },
 
   getInventoryItemQuantity: (itemId) => {
-    const item = get().inventory.find(item => item.id === itemId);
+    const item = get().inventory.find((item) => item.id === itemId);
     return item ? item.quantity : 0;
   },
 
@@ -271,7 +270,7 @@ export const usePlayerState = create<PlayerState>((set, get) => ({
         return;
       }
 
-      const inventory = player.inventory.map(item => ({
+      const inventory = player.inventory.map((item) => ({
         id: item.name,
         name: item.name,
         image: getIngredientImage(item.name),

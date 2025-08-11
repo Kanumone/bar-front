@@ -59,7 +59,7 @@ export class MovePhaserScene extends Scene {
         // Мерджим конфигурацию из маппера с переданными данными
         this.currentConfig = {
           ...MoveSceneMapper.createSceneData(data.scenePrefix),
-          ...data
+          ...data,
         };
       }
     }
@@ -192,7 +192,7 @@ export class MovePhaserScene extends Scene {
   destroy(): void {
     console.log(`${this.prefix}: destroy() — очищена сцена`);
     // Убедимся, что состояние движения сброшено при уничтожении сцены
-    this.clearParallaxLayers()
+    this.clearParallaxLayers();
     useMoveSceneStore.getState().setMoving(false);
   }
 

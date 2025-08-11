@@ -40,43 +40,43 @@ export const App: React.FC = () => {
 
   const renderSceneWrapper = useCallback(() => {
     switch (currentScene) {
-      // novel slides
-      case GameScene.Intro:
-        return <SlidesWrapper config={introSlidesConfig} />;
-      case GameScene.RailwayStation:
-        return <SlidesWrapper config={railwayStationSlidesConfig} />;
-      case GameScene.Moscow:
-        return <SlidesWrapper config={moscowSlidesConfig} />;
+    // novel slides
+    case GameScene.Intro:
+      return <SlidesWrapper config={introSlidesConfig} />;
+    case GameScene.RailwayStation:
+      return <SlidesWrapper config={railwayStationSlidesConfig} />;
+    case GameScene.Moscow:
+      return <SlidesWrapper config={moscowSlidesConfig} />;
       // games
-      case GameScene.CookingGame:
-        return <CookingGameSceneWrapper />;
-      case GameScene.FlyingGame:
-        return <FlyingGameSceneWrapper />;
-      case GameScene.DetectiveGame:
-        return <DetectiveGame />;
-      case GameScene.TretyakovGame:
-        return <TretyakovGame />;
+    case GameScene.CookingGame:
+      return <CookingGameSceneWrapper />;
+    case GameScene.FlyingGame:
+      return <FlyingGameSceneWrapper />;
+    case GameScene.DetectiveGame:
+      return <DetectiveGame />;
+    case GameScene.TretyakovGame:
+      return <TretyakovGame />;
 
       // move scenes
-      case GameScene.MoveToTrain:
-        return <MoveToTrainSceneWrapper />;
-      case GameScene.MoveAfterTrain:
-        return <MoveAfterTrainWrapper />;
-      case GameScene.MoveToVdnh:
-        return <MoveToVdnhSceneWrapper />;
-      case GameScene.MoveToGallery:
-        return <MoveToGallerySceneWrapper />;
+    case GameScene.MoveToTrain:
+      return <MoveToTrainSceneWrapper />;
+    case GameScene.MoveAfterTrain:
+      return <MoveAfterTrainWrapper />;
+    case GameScene.MoveToVdnh:
+      return <MoveToVdnhSceneWrapper />;
+    case GameScene.MoveToGallery:
+      return <MoveToGallerySceneWrapper />;
 
       // others
-      case GameScene.GameMap:
-        return <GameMapSceneWrapper />;
-      case GameScene.Game2048:
-        return <Game2048SceneWrapper />;
-      case GameScene.Auth:
-        return <AuthSceneWrapper />;
+    case GameScene.GameMap:
+      return <GameMapSceneWrapper />;
+    case GameScene.Game2048:
+      return <Game2048SceneWrapper />;
+    case GameScene.Auth:
+      return <AuthSceneWrapper />;
 
-      default:
-        return null;
+    default:
+      return null;
     }
   }, [currentScene]);
 
@@ -86,7 +86,7 @@ export const App: React.FC = () => {
     <div id="game-container" ref={phaserCanvasRef}>
       {/* ✅ Оборачиваем сцену в Layout, кроме Auth */}
       {currentScene === GameScene.Auth ? scene : <Layout>{scene}</Layout>}
-      
+
       {/* Дебаг панель (только в режиме разработки) */}
       {isDebugOpen && <DebugPanel onClose={closeDebug} />}
     </div>

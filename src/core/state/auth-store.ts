@@ -32,7 +32,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   setSessionId: (sessionId) => {
-    set({ sessionId, isAuthenticated: !!sessionId });
+    set({ sessionId,
+      isAuthenticated: !!sessionId });
     localStorage.setItem("sessionId", sessionId);
   },
 
@@ -54,7 +55,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
     try {
       const existingSessionId = get().sessionId;
-      let sessionId = '';
+      let sessionId = "";
 
       if (existingSessionId) {
         const { data: validation } = await apiClient.auth.authControllerValidateSession(existingSessionId);
@@ -65,8 +66,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         sessionId = await get().requestSession();
       }
       console.log("sessionId", sessionId);
-
-
 
       try {
         const details: Record<string, string> = {
@@ -128,9 +127,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     const sessionId = sessionResp.sessionId;
     get().setSessionId(sessionId);
 
-
     // Получаем профиль пользователя по sessionId
-    const { data: userInfo } = await apiClient.auth.authControllerGetUserInfo(sessionId!);
+    const { data: userInfo } = await apiClient.auth.authControllerGetUserInfo(sessionId);
     get().setUser(userInfo);
 
     return sessionId;
@@ -143,7 +141,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({
       user: null,
       sessionId: null,
-      isAuthenticated: false
+      isAuthenticated: false,
     });
     localStorage.removeItem("user");
     localStorage.removeItem("sessionId");

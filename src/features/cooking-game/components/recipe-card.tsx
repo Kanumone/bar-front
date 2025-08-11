@@ -11,13 +11,13 @@ interface RecipeCardProps {
   className?: string;
 }
 
-export const RecipeCard = ({ 
-  title, 
-  ingredients, 
-  isAvailable, 
+export const RecipeCard = ({
+  title,
+  ingredients,
+  isAvailable,
   energy,
-  onCook, 
-  className 
+  onCook,
+  className,
 }: RecipeCardProps) => {
   const handleCook = (event: React.MouseEvent) => {
     event.preventDefault();
@@ -30,7 +30,7 @@ export const RecipeCard = ({
     <div className={clsx(styles.card, className)}>
       <div className={styles.cardContent}>
         <h3 className={styles.title}>{title}</h3>
-        
+
         <div className={styles.dishIcon}>
           <div className={styles.dishVisual}>
             <div className={styles.dishBase}></div>
@@ -38,24 +38,24 @@ export const RecipeCard = ({
             <div className={styles.dishAccent}></div>
           </div>
         </div>
-        
+
         <div className={styles.energyInfo}>
           <span className={styles.energyIcon}>⚡</span>
           <span className={styles.energyValue}>+{energy} энергии</span>
         </div>
-        
+
         <p className={styles.ingredientsLabel}>Ингредиенты:</p>
-        
+
         <div className={styles.ingredientsList}>
           {ingredients.map((ingredient, index) => (
             <div key={ingredient.id || index} className={styles.ingredientItem}>
-              <div 
+              <div
                 className={styles.ingredientIcon}
                 style={{ backgroundColor: ingredient.color }}
               >
-                <img 
-                  src={ingredient.imageSrc} 
-                  alt="ingredient" 
+                <img
+                  src={ingredient.imageSrc}
+                  alt="ingredient"
                   className={styles.ingredientImage}
                 />
               </div>
@@ -63,12 +63,12 @@ export const RecipeCard = ({
             </div>
           ))}
         </div>
-        
-        <button 
+
+        <button
           onClick={handleCook}
           className={clsx(
             styles.cookButton,
-            isAvailable ? styles.available : styles.unavailable
+            isAvailable ? styles.available : styles.unavailable,
           )}
           disabled={!isAvailable}
         >
@@ -77,4 +77,4 @@ export const RecipeCard = ({
       </div>
     </div>
   );
-}; 
+};

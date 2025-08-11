@@ -15,7 +15,7 @@ interface LayoutProps {
 
 const needShowMenu = (scene: SceneName) => {
   return scene.startsWith("Move");
-}
+};
 
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -42,7 +42,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           <PanelStack
             position={{
               top: "calc(var(--tg-safe-top) + 30px)",
-              right: "0"
+              right: "0",
             }}
             gap="16px"
           >
@@ -68,7 +68,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             side="left"
             position={{
               top: "var(--tg-safe-top)",
-              left: "0"
+              left: "0",
             }}
             gap="12px"
           >

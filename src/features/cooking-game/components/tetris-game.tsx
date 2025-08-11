@@ -452,35 +452,35 @@ export function TetrisGame() {
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
     >
-        <div className={styles.gameArea}>
-          <div className={styles.gameBoardSection}>
-            <GameBoard
-              board={state.board}
-              previewPosition={dragState.previewPosition}
-              previewPiece={dragState.piece}
-              isValidPosition={dragState.isValidPosition}
-              isGameOver={state.isGameOver}
-            />
-          </div>
-
-          <div className={styles.nextPiecesSection}>
-            <NextPiece onPiecesChange={setAvailablePieces} />
-          </div>
+      <div className={styles.gameArea}>
+        <div className={styles.gameBoardSection}>
+          <GameBoard
+            board={state.board}
+            previewPosition={dragState.previewPosition}
+            previewPiece={dragState.piece}
+            isValidPosition={dragState.isValidPosition}
+            isGameOver={state.isGameOver}
+          />
         </div>
 
-        <DragOverlay>
-          {dragState.piece && (
-            <DraggedPiece piece={dragState.piece} />
-          )}
-        </DragOverlay>
+        <div className={styles.nextPiecesSection}>
+          <NextPiece onPiecesChange={setAvailablePieces} />
+        </div>
+      </div>
 
-        {state.isGameOver && (
-          <div className={styles.gameOver}>
-            <h3>Игра окончена!</h3>
-            <p>Ваш счет: {state.score}</p>
-            <button onClick={handleRestart}>Играть снова</button>
-          </div>
+      <DragOverlay>
+        {dragState.piece && (
+          <DraggedPiece piece={dragState.piece} />
         )}
+      </DragOverlay>
+
+      {state.isGameOver && (
+        <div className={styles.gameOver}>
+          <h3>Игра окончена!</h3>
+          <p>Ваш счет: {state.score}</p>
+          <button onClick={handleRestart}>Играть снова</button>
+        </div>
+      )}
     </DndContext>
   );
 }

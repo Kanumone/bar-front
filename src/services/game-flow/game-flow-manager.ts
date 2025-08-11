@@ -113,7 +113,7 @@ class GameFlowManager {
     if (!this.game) return;
 
     const sceneData = MoveSceneMapper.createSceneData("MoveAfterTrain", data);
-    
+
     useSceneStore.setState({
       currentScene: GameScene.MoveAfterTrain,
       sceneData: sceneData,
@@ -122,7 +122,7 @@ class GameFlowManager {
 
     this.stopActiveScenes();
     this.game.scene.start(GameScene.Move, sceneData);
-    
+
     console.log("▶️ Запущена логическая сцена MoveAfterTrain (Phaser: Move)", sceneData);
   }
 
@@ -131,7 +131,7 @@ class GameFlowManager {
     if (!this.game) return;
 
     const sceneData = MoveSceneMapper.createSceneData("MoveToTrain", data);
-    
+
     useSceneStore.setState({
       currentScene: GameScene.MoveToTrain,
       sceneData: sceneData,

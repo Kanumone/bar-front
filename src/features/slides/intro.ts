@@ -369,8 +369,7 @@ const introConfig: EpisodeConfig[] = [
       },
     ],
   },
-]
-
+];
 
 export function getIntroSlides(): Episode[] {
   const episodes: Episode[] = [];

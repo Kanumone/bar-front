@@ -20,16 +20,16 @@ interface ActivityLog {
  * При отсутствии интернета сохраняет логи локально и отправляет при восстановлении связи
  */
 export class LoggingService {
-  private static readonly STORAGE_KEY = 'bar-game-pending-logs';
+  private static readonly STORAGE_KEY = "bar-game-pending-logs";
   private static readonly MAX_PENDING_LOGS = 100;
-  
+
   /**
    * Отправляет лог активности на сервер с резервным сохранением
    */
   static async logActivity(
-    action: string, 
-    details: Record<string, unknown> = {}, 
-    sceneName = "Unknown"
+    action: string,
+    details: Record<string, unknown> = {},
+    sceneName = "Unknown",
   ): Promise<void> {
     const { user, sessionId } = useAuthStore.getState();
 
@@ -95,7 +95,7 @@ export class LoggingService {
 
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(pendingLogs));
     } catch (error) {
-      logAppError('LoggingService', error);
+      logAppError("LoggingService", error);
     }
   }
 
@@ -110,7 +110,7 @@ export class LoggingService {
       const logs = JSON.parse(stored) as ActivityLog[];
       return Array.isArray(logs) ? logs : [];
     } catch (error) {
-      logAppError('LoggingService', error);
+      logAppError("LoggingService", error);
       return [];
     }
   }
@@ -120,7 +120,7 @@ export class LoggingService {
    */
   static async sendPendingLogs(): Promise<void> {
     const { user, sessionId } = useAuthStore.getState();
-    
+
     if (!user?.id || !sessionId) {
       return;
     }
@@ -146,7 +146,7 @@ export class LoggingService {
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify([]));
       console.log(`[Logging]: Successfully sent ${pendingLogs.length} pending logs`);
     } catch (error) {
-      console.warn(`[Logging]: Failed to send pending logs batch:`, error);
+      console.warn("[Logging]: Failed to send pending logs batch:", error);
     }
   }
 
@@ -156,9 +156,9 @@ export class LoggingService {
   static clearPendingLogs(): void {
     try {
       localStorage.removeItem(this.STORAGE_KEY);
-      console.log('[Logging]: Cleared pending logs');
+      console.log("[Logging]: Cleared pending logs");
     } catch (error) {
-      logAppError('LoggingService', error);
+      logAppError("LoggingService", error);
     }
   }
 
@@ -166,7 +166,8 @@ export class LoggingService {
    * Генерирует уникальный ID для лога
    */
   private static generateLogId(): string {
-    return `log_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    return `log_${Date.now()}_${Math.random().toString(36)
+      .substr(2, 9)}`;
   }
 
   /**
@@ -178,7 +179,7 @@ export class LoggingService {
     newestTimestamp: number | null;
   } {
     const logs = this.getPendingLogs();
-    
+
     if (logs.length === 0) {
       return {
         count: 0,
@@ -187,8 +188,8 @@ export class LoggingService {
       };
     }
 
-    const timestamps = logs.map(log => log.timestamp);
-    
+    const timestamps = logs.map((log) => log.timestamp);
+
     return {
       count: logs.length,
       oldestTimestamp: Math.min(...timestamps),

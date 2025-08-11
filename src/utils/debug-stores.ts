@@ -5,24 +5,24 @@
 
 /**
  * Утилита для отладки Zustand-сторов через консоль браузера
- * 
+ *
  * Использование:
  * 1. В консоли браузера доступны:
  *    - window.__STORES__ - все сторы
  *    - window.__getState__ - получить текущее состояние стора
  *    - window.__setState__ - изменить состояние стора
  *    - window.__resetState__ - сбросить состояние игрока
- * 
+ *
  * Примеры:
  * - window.__getState__('scene') - получить состояние сцены
  * - window.__setState__('player', { energy: 100 }) - установить энергию игрока
  * - window.__resetState__() - сбросить прогресс игрока
  */
 
-type StoreHook = {
+interface StoreHook {
   getState: () => unknown;
   setState: (newState: Record<string, unknown>) => void;
-};
+}
 
 interface StoreRegistry {
   scene: StoreHook;
@@ -40,7 +40,7 @@ let stores: StoreRegistry | null = null;
 const ensureStores = (): StoreRegistry => {
   if (!stores) {
     throw new Error(
-      "Debug stores are not initialized yet. Call initDebugStores() after app mount."
+      "Debug stores are not initialized yet. Call initDebugStores() after app mount.",
     );
   }
   return stores;
@@ -63,11 +63,11 @@ const setState = (storeName: keyof StoreRegistry, newState: Record<string, any>)
     console.error(`Стор "${storeName}" не найден. Доступные сторы:`, Object.keys(registry));
     return;
   }
-  
+
   try {
     registry[storeName].setState(newState);
     console.log(`✅ Состояние "${storeName}" обновлено:`, newState);
-    console.log(`📊 Текущее состояние:`, getState(storeName));
+    console.log("📊 Текущее состояние:", getState(storeName));
   } catch (error) {
     console.error(`❌ Ошибка при обновлении состояния "${storeName}":`, error);
   }
@@ -84,17 +84,17 @@ const resetState = async () => {
     } else {
       throw new Error("Метод resetProgress не найден в player store");
     }
-    console.log('✅ Прогресс игрока сброшен');
-    console.log('📊 Текущее состояние:', getState('player'));
+    console.log("✅ Прогресс игрока сброшен");
+    console.log("📊 Текущее состояние:", getState("player"));
   } catch (error) {
-    console.error('❌ Ошибка при сбросе прогресса:', error);
+    console.error("❌ Ошибка при сбросе прогресса:", error);
   }
 };
 
 // Вызов методов стора
 const callStoreMethod = (
-  storeName: keyof StoreRegistry, 
-  methodName: string, 
+  storeName: keyof StoreRegistry,
+  methodName: string,
   ...args: any[]
 ) => {
   const registry = ensureStores();
@@ -102,18 +102,18 @@ const callStoreMethod = (
     console.error(`Стор "${storeName}" не найден. Доступные сторы:`, Object.keys(registry));
     return;
   }
-  
+
   const store = registry[storeName].getState() as Record<string, unknown>;
-  
+
   const method = store[methodName];
-  if (typeof method !== 'function') {
+  if (typeof method !== "function") {
     console.error(
       `Метод "${methodName}" не найден в сторе "${storeName}". Доступные методы:`,
-      Object.keys(store).filter((key) => typeof store[key as keyof typeof store] === 'function')
+      Object.keys(store).filter((key) => typeof store[key] === "function"),
     );
     return;
   }
-  
+
   try {
     const result = (method as (...params: unknown[]) => unknown)(...args);
     console.log(`✅ Метод "${methodName}" стора "${storeName}" вызван с аргументами:`, args);
@@ -154,13 +154,13 @@ export const initDebugStores = (): void => {
     window.__resetState__ = resetState;
     window.__callStoreMethod__ = callStoreMethod;
 
-    console.log('🛠️ Инструменты отладки сторов инициализированы');
-    console.log('📚 Доступные сторы:', Object.keys(ensureStores()));
-    console.log('📖 Документация по использованию:');
-    console.log('  • window.__getState__(storeName) - получить состояние стора');
-    console.log('  • window.__setState__(storeName, newState) - изменить состояние стора');
-    console.log('  • window.__resetState__() - сбросить прогресс игрока');
-    console.log('  • window.__callStoreMethod__(storeName, methodName, ...args) - вызвать метод стора');
-    console.log('  • window.__STORES__ - доступ ко всем сторам');
+    console.log("🛠️ Инструменты отладки сторов инициализированы");
+    console.log("📚 Доступные сторы:", Object.keys(ensureStores()));
+    console.log("📖 Документация по использованию:");
+    console.log("  • window.__getState__(storeName) - получить состояние стора");
+    console.log("  • window.__setState__(storeName, newState) - изменить состояние стора");
+    console.log("  • window.__resetState__() - сбросить прогресс игрока");
+    console.log("  • window.__callStoreMethod__(storeName, methodName, ...args) - вызвать метод стора");
+    console.log("  • window.__STORES__ - доступ ко всем сторам");
   })();
 };

@@ -32,9 +32,9 @@ export const useSceneStore = create<SceneState>((set, get) => ({
     set({
       prevScene,
       currentScene: scene,
-      sceneData: data
+      sceneData: data,
     });
-    
+
     try {
       const { user, sessionId } = useAuthStore.getState();
 
@@ -66,7 +66,7 @@ export const useSceneStore = create<SceneState>((set, get) => ({
     if (prevScene) {
       set({
         prevScene: currentScene,
-        currentScene: prevScene 
+        currentScene: prevScene,
       });
     }
   },

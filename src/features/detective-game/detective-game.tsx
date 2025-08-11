@@ -161,7 +161,7 @@ export const DetectiveGame: React.FC = () => {
             <div style={{
               marginTop: "5%",
               display: "flex",
-              justifyContent: "center"
+              justifyContent: "center",
             }}>
               <Button text="Застегнуть рюкзак" onClick={() => handleNext()} />
             </div>

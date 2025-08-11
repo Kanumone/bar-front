@@ -6,7 +6,7 @@ import { useStoryStore } from "$core/state";
 export function useSlidesNavigation(
   slides: Episode[],
   playSceneSound: (url?: string) => void,
-  sceneName: string
+  sceneName: string,
 ) {
   const {
     slideIndex,
@@ -21,7 +21,7 @@ export function useSlidesNavigation(
     processUpdate: storeProcessUpdate,
     goNext: storeGoNext,
     handleActionButtonClick: storeHandleActionButtonClick,
-    handleChoiceSelect: storeHandleChoiceSelect
+    handleChoiceSelect: storeHandleChoiceSelect,
   } = useStoryStore();
 
   // Инициализируем слайды при первом рендере и при их изменении
@@ -57,6 +57,6 @@ export function useSlidesNavigation(
     goNext,
     handleActionButtonClick,
     handleChoiceSelect,
-    processUpdate
+    processUpdate,
   };
 }
