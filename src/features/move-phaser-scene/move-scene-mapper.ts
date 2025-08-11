@@ -36,7 +36,6 @@ export class MoveSceneMapper {
                 ground: getAssetsPath("images/platform.png"),
             },
             playerSpeed: 150,
-            targetX: 100,
         },
 
         // Сцена движения после поезда
@@ -72,7 +71,6 @@ export class MoveSceneMapper {
                 ground: getAssetsPath("images/platform.png"),
             },
             playerSpeed: 150,
-            targetX: 100,
         },
         [GameScene.MoveToGallery]: {
             backgroundLayers: {
@@ -91,26 +89,32 @@ export class MoveSceneMapper {
                 ground: getAssetsPath("images/platform.png"),
             },
             playerSpeed: 150,
-            targetX: 100,
         },
         [GameScene.MoveToKazan]: {
             backgroundLayers: {
                 preBackground: getAssetsPathByType({
                     type: "images",
                     scene: "moscow-move",
-                    filename: "park_up_background.png",
+                    filename: "pre-background.svg",
                 }),
                 background: getAssetsPathByType({
                     type: "images",
                     scene: "moscow-move",
-                    filename: "park_down_background.png",
+                    filename: "background.svg",
                 }),
-                light: null,
-                front: null,
+                light: getAssetsPathByType({
+                    type: "images",
+                    scene: "moscow-move",
+                    filename: "light.svg",
+                }),
+                front: getAssetsPathByType({
+                    type: "images",
+                    scene: "moscow-move",
+                    filename: "front.svg",
+                }),
                 ground: getAssetsPath("images/platform.png"),
             },
             playerSpeed: 150,
-            targetX: 100,
         },
 
         // Сцена движения по городу

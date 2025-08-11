@@ -5,6 +5,7 @@ import { logAppError } from "@utils/log-app-error";
 import { LocalStorageService } from "$/services/local-storage-service";
 import { syncService } from "$services/local-storage-service/sync-service";
 import { GameConstants } from "$/core/constants/constants";
+import { getIngredientImage } from "$utils";
 
 interface PlayerState {
   playerName: string;
@@ -30,6 +31,9 @@ interface PlayerState {
   addMoney: (amount: number) => void;
   spendMoney: (amount: number) => boolean;
 
+  // Утилитарные методы
+  canMove: () => boolean;
+
   // Методы для работы с инвентарем
   addToInventory: (item: Omit<InventoryItem, 'quantity'>, quantity?: number) => void;
   removeFromInventory: (itemId: string, quantity?: number) => void;
@@ -47,7 +51,7 @@ interface PlayerState {
   // Методы для работы с backend (загрузка и сброс)
   loadPlayerStateFromServer: () => Promise<void>;
   resetProgress: () => Promise<void>;
-  
+
   // Управление синхронизацией
   startAutoSync: () => void;
   stopAutoSync: () => void;
@@ -69,20 +73,17 @@ export const usePlayerState = create<PlayerState>((set, get) => ({
   setEnergy: (value) => {
     const clamped = Math.max(0, Math.min(GameConstants.MAX_ENERGY, value));
     set({ energy: clamped });
-    get().savePlayerStateToLocal();
   },
 
   increaseEnergy() {
     if (get().energy < GameConstants.MAX_ENERGY) {
       set((state) => ({ energy: Math.min(GameConstants.MAX_ENERGY, state.energy + 1) }));
-      get().savePlayerStateToLocal();
     }
   },
 
   decreaseEnergy() {
     if (get().energy > 0) {
       set((state) => ({ energy: Math.max(0, state.energy - 1) }));
-      get().savePlayerStateToLocal();
     }
   },
 
@@ -90,31 +91,31 @@ export const usePlayerState = create<PlayerState>((set, get) => ({
     set((state) => ({
       energy: Math.min(GameConstants.MAX_ENERGY, state.energy + amount)
     }));
-    get().savePlayerStateToLocal();
+
   },
 
   setHunger: (value) => {
     const clamped = Math.max(0, Math.min(GameConstants.MAX_HUNGER, value));
     set({ hunger: clamped });
-    get().savePlayerStateToLocal();
+
   },
 
   addHunger: (amount) => {
     set((state) => ({
       hunger: Math.max(0, Math.min(GameConstants.MAX_HUNGER, state.hunger + amount))
     }));
-    get().savePlayerStateToLocal();
+
   },
 
   setMoney: (value) => {
     set({ money: Math.max(0, value) });
-    get().savePlayerStateToLocal();
+
   },
 
   addMoney: (amount) => {
     if (amount > 0) {
       set((state) => ({ money: state.money + amount }));
-      get().savePlayerStateToLocal();
+
     }
   },
 
@@ -122,7 +123,7 @@ export const usePlayerState = create<PlayerState>((set, get) => ({
     const currentMoney = get().money;
     if (currentMoney >= amount && amount > 0) {
       set({ money: currentMoney - amount });
-      get().savePlayerStateToLocal();
+
       return true;
     }
     return false;
@@ -132,7 +133,7 @@ export const usePlayerState = create<PlayerState>((set, get) => ({
   addToInventory: (item, quantity = 1) => {
     const currentInventory = get().inventory;
     const existingItemIndex = currentInventory.findIndex(inv => inv.id === item.id);
-    
+
     if (existingItemIndex >= 0) {
       // Предмет уже есть в инвентаре, увеличиваем количество
       const newInventory = [...currentInventory];
@@ -149,18 +150,18 @@ export const usePlayerState = create<PlayerState>((set, get) => ({
       };
       set({ inventory: [...currentInventory, newItem] });
     }
-    
-    get().savePlayerStateToLocal();
+
+
   },
 
   removeFromInventory: (itemId, quantity = 1) => {
     const currentInventory = get().inventory;
     const existingItemIndex = currentInventory.findIndex(inv => inv.id === itemId);
-    
+
     if (existingItemIndex >= 0) {
       const newInventory = [...currentInventory];
       const currentItem = newInventory[existingItemIndex];
-      
+
       if (currentItem.quantity <= quantity) {
         // Удаляем предмет полностью
         newInventory.splice(existingItemIndex, 1);
@@ -171,9 +172,9 @@ export const usePlayerState = create<PlayerState>((set, get) => ({
           quantity: currentItem.quantity - quantity
         };
       }
-      
+
       set({ inventory: newInventory });
-      get().savePlayerStateToLocal();
+
     }
   },
 
@@ -188,12 +189,17 @@ export const usePlayerState = create<PlayerState>((set, get) => ({
 
   setInventory: (items) => {
     set({ inventory: items });
-    get().savePlayerStateToLocal();
+
   },
 
   setProgress: (checkPoint) => {
     set({ checkPoint });
     get().saveGameProgressToLocal();
+  },
+
+  canMove: () => {
+    const { energy, hunger } = get();
+    return energy > 0 && hunger < GameConstants.MAX_HUNGER;
   },
 
   // Загрузка состояния из localStorage
@@ -265,11 +271,18 @@ export const usePlayerState = create<PlayerState>((set, get) => ({
         return;
       }
 
+      const inventory = player.inventory.map(item => ({
+        id: item.name,
+        name: item.name,
+        image: getIngredientImage(item.name),
+        quantity: item.quantity,
+      }));
+
       set({
         energy: player.energy,
         hunger: player.hunger,
-        money: 0, // TODO: реализовать поддержку money в API
-        inventory: [], // // TODO: реализовать поддержку money в API
+        money: player.money,
+        inventory: inventory,
         checkPoint: progress.currentScene as SceneName || null,
       });
 
@@ -300,10 +313,10 @@ export const usePlayerState = create<PlayerState>((set, get) => ({
         apiClient.gameState.gameStateControllerDeletePlayerState(),
         apiClient.gameState.gameStateControllerDeleteGameProgress(),
       ]);
-      
+
       // Очищаем localStorage
       LocalStorageService.clearGameData();
-      
+
       // Сбрасываем состояние
       set({
         playerName: "",

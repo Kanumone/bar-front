@@ -3,6 +3,8 @@ import { createTiledBackground, getAssetsPathByType } from "$/utils";
 import { GameScene } from "@core/types/common-types";
 import type { MoveScene, MoveSceneData, SceneBackground } from "@core/types/common-types";
 import { useMoveSceneStore } from "$/core/state/move-scene-store";
+import { usePlayerState } from "$/core/state/player-store";
+import { GameConstants } from "$/core/constants/constants";
 import { MoveSceneMapper } from "./move-scene-mapper";
 
 const GROUND_HEIGHT = 50;
@@ -25,10 +27,10 @@ export class MovePhaserScene extends Scene {
   private currentConfig: MoveSceneData | null = null;
 
   private player!: Phaser.Physics.Arcade.Sprite;
-  private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
-  private moveLeft = false;
-  private moveRight = false;
+  // Управление ввода курсорами больше не используется
+  private isMove = false;
   private isMovingInternal = false;
+  private playerSpeed = 0;
 
   private parallaxBackground?: Phaser.GameObjects.TileSprite;
   private parallaxPreBackground?: Phaser.GameObjects.TileSprite;
@@ -39,6 +41,11 @@ export class MovePhaserScene extends Scene {
   private platforms!: Phaser.Physics.Arcade.StaticGroup;
 
   backgroundLayers: SceneBackground | null = null;
+
+  private blockedBubble?: Phaser.GameObjects.Container;
+
+  // Расход ресурсов при движении
+  private movementConsumptionAccumulatorMs = 0;
 
   constructor() {
     super(GameScene.Move);
@@ -66,6 +73,7 @@ export class MovePhaserScene extends Scene {
     this.prefix = this.currentConfig.scenePrefix ?? "MoveScene";
     this.targetX = this.currentConfig.targetX ?? 0;
     this.backgroundLayers = this.currentConfig.backgroundLayers;
+    this.playerSpeed = this.currentConfig.playerSpeed ?? PLAYER_SPEED;
   }
 
   // ✅ Новый метод для переключения конфигурации во время работы сцены
@@ -80,7 +88,7 @@ export class MovePhaserScene extends Scene {
 
       // Создаем новую конфигурацию
       const newConfig = MoveSceneMapper.createSceneData(scene, customData);
-      
+
       // Обновляем текущую конфигурацию
       this.currentConfig = newConfig;
       this.prefix = newConfig.scenePrefix ?? "MoveScene";
@@ -89,7 +97,7 @@ export class MovePhaserScene extends Scene {
 
       // Обновляем фоновые слои
       this.updateBackgroundLayers();
-      
+
       // Обновляем позицию игрока если нужно
       if (this.player && newConfig.targetX !== undefined) {
         this.player.setX(newConfig.targetX);
@@ -105,7 +113,7 @@ export class MovePhaserScene extends Scene {
   private updateBackgroundLayers(): void {
     // Очищаем старые слои
     this.clearParallaxLayers();
-    
+
     // Создаем новые слои
     const { width, height } = this.sys.game.canvas;
     this.createParallaxLayers(width, height);
@@ -173,9 +181,8 @@ export class MovePhaserScene extends Scene {
     this.createPlayer();
     this.createAnimations();
     this.setupInputHandling();
-    this.setupCamera();
 
-    this.physics.add.collider(this.player, this.platforms);
+    // this.physics.add.collider(this.player, this.platforms);
     this.scale.on("resize", this.handleResize, this);
 
     // Устанавливаем начальное состояние движения в сторе
@@ -292,77 +299,82 @@ export class MovePhaserScene extends Scene {
   }
 
   private setupInputHandling(): void {
-    if (this.input.keyboard) this.cursors = this.input.keyboard.createCursorKeys();
-
-    this.input.on(Phaser.Input.Events.POINTER_DOWN, (pointer: Phaser.Input.Pointer) => {
-      if (pointer.x < this.sys.game.canvas.width / 2) {
-        this.moveLeft = true;
-        this.moveRight = false;
-      } else {
-        this.moveRight = true;
-        this.moveLeft = false;
-      }
+    this.input.on(Phaser.Input.Events.POINTER_DOWN, () => {
+      this.tryStartMovement();
     });
 
     this.input.on(Phaser.Input.Events.POINTER_UP, () => {
-      this.moveLeft = false;
-      this.moveRight = false;
+      this.hideBlockedBubble();
+      this.stopMovement();
     });
   }
 
-  private setupCamera(): void {
-    const { width, height } = this.sys.game.canvas;
-    this.cameras.main.setOrigin(0.5, 1);
-    this.cameras.main.startFollow(this.player, true, 0.5, 1, 0, height / 2);
-    this.cameras.main.setDeadzone(width * 0.1, 0);
-  }
-
   update(_time: number, _delta: number): void {
-    // Если квиз видим, останавливаем движение и анимацию, и выходим
-    if (useMoveSceneStore.getState().isQuizVisible) {
-      // Убеждаемся, что isMovingInternal и isMoving в сторе установлены в false
-      if (this.isMovingInternal) {
-        this.isMovingInternal = false;
-        useMoveSceneStore.getState().setMoving(false);
-      }
-      this.player?.setVelocityX(0);
-      this.player?.anims.stop();
-      if (this.player && this.player.anims.currentAnim?.key !== `${this.prefix}-idle`) {
-        this.player.anims.play(`${this.prefix}-idle`, true);
-      }
-      return;
-    }
-
+    // === Frame pipeline ===
+    if (this.handleQuizBlocking()) return;
     if (!this.player || !this.player.body) return;
 
-    if (this.player.body.touching.down) this.player.setVelocityY(0);
+    this.handleMovementState(this.isMove);
 
-    // Получаем скорость из конфигурации
-    const currentSpeed = this.currentConfig?.playerSpeed ?? PLAYER_SPEED;
-    
-    let currentVelocityX = 0;
-    if (this.cursors) {
-      if (this.moveLeft || this.moveRight) {
-        currentVelocityX = currentSpeed;
-        this.player.setFlipX(false);
-      }
-      this.player.setVelocityX(currentVelocityX);
-      this.platforms.setX(this.player.x);
-    }
-
-    // Обновляем состояние движения и анимацию
-    const isCurrentlyMoving = currentVelocityX !== 0;
-    this.handleMovementState(isCurrentlyMoving);
-
-    // Обновляем параллакс только если игрок движется
-    if (isCurrentlyMoving) {
+    if (this.isMove) {
       const parallaxFactors = this.currentConfig?.parallaxFactors ?? PARALLAX_FACTORS;
-      const speedFactor = currentVelocityX * this.game.loop.delta / 1000;
-      if (this.parallaxBackground) this.parallaxBackground.tilePositionX += speedFactor * parallaxFactors.background;
-      if (this.parallaxPreBackground) this.parallaxPreBackground.tilePositionX += speedFactor * parallaxFactors.preBackground;
-      if (this.parallaxLight) this.parallaxLight.tilePositionX += speedFactor * parallaxFactors.light;
-      if (this.parallaxFront) this.parallaxFront.tilePositionX += speedFactor * parallaxFactors.front;
+      const k = this.playerSpeed * this.game.loop.delta / 1000;
+      if (this.parallaxBackground) this.parallaxBackground.tilePositionX += k * parallaxFactors.background;
+      if (this.parallaxPreBackground) this.parallaxPreBackground.tilePositionX += k * parallaxFactors.preBackground;
+      if (this.parallaxLight) this.parallaxLight.tilePositionX += k * parallaxFactors.light;
+      if (this.parallaxFront) this.parallaxFront.tilePositionX += k * parallaxFactors.front;
+
+      // расход ресурсов
+      this.movementConsumptionAccumulatorMs += _delta;
+      if (this.movementConsumptionAccumulatorMs >= 1000) {
+        const steps = Math.floor(this.movementConsumptionAccumulatorMs / 1000);
+        this.movementConsumptionAccumulatorMs -= steps * 1000;
+        const { addHunger, setEnergy, energy: currentEnergy } = usePlayerState.getState();
+        addHunger(steps * GameConstants.HUNGER_POINTS_PER_SECOND);
+        setEnergy(currentEnergy - steps * GameConstants.ENERGY_POINTS_PER_SECOND);
+      }
+    } else {
+      this.movementConsumptionAccumulatorMs = 0;
     }
+  }
+
+  // === High-level actions ===
+  private tryStartMovement(): void {
+    if (this.handleQuizBlocking()) return;
+    if (this.handleCharacterConstraintsBlocking()) return;
+    this.startMovement();
+  }
+
+  private startMovement(): void {
+    this.isMove = true;
+  }
+
+  private stopMovement(): void {
+    this.isMove = false;
+    this.player.anims.stop();
+    this.player.anims.play(`${this.prefix}-idle`, true);
+  }
+
+  // === Blocking handlers ===
+  private handleQuizBlocking(): boolean {
+    if (!useMoveSceneStore.getState().isQuizVisible) return false;
+    this.stopMovement();
+    this.player?.anims.stop();
+    if (this.player && this.player.anims.currentAnim?.key !== `${this.prefix}-idle`) {
+      this.player.anims.play(`${this.prefix}-idle`, true);
+    }
+    return true;
+  }
+
+  private handleCharacterConstraintsBlocking(): boolean {
+    if (usePlayerState.getState().canMove()) {
+      this.hideBlockedBubble();
+      return false;
+    }
+    const { energy } = usePlayerState.getState();
+    this.stopMovement();
+    this.showBlockedBubble(energy === 0 ? "Нужно поспать..." : "Нужно поесть...");
+    return true;
   }
 
   private handleMovementState(isMoving: boolean): void {
@@ -400,5 +412,40 @@ export class MovePhaserScene extends Scene {
     platform.setY(height);
     platform.displayWidth = width * 2;
     platform.displayHeight = GROUND_HEIGHT * 1.5;
+  }
+
+  // === UI helpers ===
+  private showBlockedBubble(message: string): void {
+    this.hideBlockedBubble();
+
+    const { x, y } = this.player;
+
+    const container = this.add.container(x, y - 140).setDepth(10000);
+
+    // фон пузыря
+    const bg = this.add.graphics();
+    const text = this.add.text(0, 0, message, {
+      fontFamily: "Arial",
+      fontSize: "16px",
+      color: "#ffffff",
+      align: "center",
+    });
+    text.setOrigin(0.5, 0.5);
+    const bubbleWidth = 280;
+    const bubbleHeight = 80;
+    bg.fillStyle(0x000000, 0.7);
+    // draw rounded rect centered at 0,0
+    const rectX = -bubbleWidth / 2;
+    const rectY = -bubbleHeight / 2;
+    bg.fillRoundedRect(rectX, rectY, bubbleWidth, bubbleHeight, 12);
+
+    this.blockedBubble = container.add([bg, text]);
+  }
+
+  private hideBlockedBubble(): void {
+    if (this.blockedBubble) {
+      this.blockedBubble.destroy(true);
+      this.blockedBubble = undefined;
+    }
   }
 }
