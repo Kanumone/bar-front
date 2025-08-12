@@ -5,24 +5,21 @@
   align-items: center;
   justify-content: center;
   padding: 2rem;
-  font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+  font-family: Arial, sans-serif;
   position: relative;
   overflow: hidden;
 }
 
 .book {
   display: flex;
-  width: 80%;
+  width: 90%;
   max-width: 700px;
-  height: 70vh;
+  height: 85%;
   background: #fff;
   border-radius: 8px;
-  box-shadow: 
-    0 20px 40px rgba(0, 0, 0, 0.3),
-    0 0 0 1px rgba(255, 255, 255, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
   position: relative;
   overflow: hidden;
+  flex-direction: column;
 }
 
 .backButton {
@@ -39,14 +36,7 @@
   justify-content: center;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   z-index: 10;
-}
-
-.backButton:hover {
-  background: linear-gradient(135deg, #F57C00 0%, #E65100 100%);
-  transform: scale(1.1);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .backArrow {
@@ -90,18 +80,16 @@
   flex-direction: column;
 }
 
-.page::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: 
-    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
-  pointer-events: none;
+/* Вертикальные доли: магазин 70%, инвентарь 30% */
+.shopPage {
+  flex: 7;
 }
+
+.inventoryPage {
+  flex: 3;
+}
+
+
 
 .pageContent {
   flex: 1;
@@ -149,7 +137,7 @@
   scrollbar-color: rgba(255, 152, 0, 0.4) transparent;
   padding-bottom: 4px;
   margin-bottom: -4px;
-  grid-auto-columns: min-content;
+  grid-auto-columns: max-content;
 }
 
 .itemsScrollContainer::-webkit-scrollbar {
@@ -183,12 +171,6 @@
   text-align: center;
 }
 
-.itemWrapper:hover {
-  transform: translateY(-2px);
-  background: rgba(255, 152, 0, 0.1);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
 .itemIcon {
   width: 40px;
   height: 40px;
@@ -205,8 +187,8 @@
 }
 
 .itemImage {
-  width: 100%;
-  height: 100%;
+  width: 40px;
+  height: 40px;
   object-fit: cover;
   border-radius: 8px;
 }
@@ -237,151 +219,94 @@
   border: 1px solid rgba(255, 152, 0, 0.3);
 }
 
-.marketItem {
+/* Новая карточка товара с фиксированным размером */
+.itemCard {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.7);
+  width: 100px;
+  height: 180px;
   border-radius: 12px;
-  padding: 1rem;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border: 2px solid rgba(76, 175, 80, 0.3);
-  transition: all 0.3s ease;
-  min-width: 120px;
-  flex-shrink: 0;
+  overflow: hidden;
 }
 
-.marketItem:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-  border-color: rgba(76, 175, 80, 0.6);
-}
-
-.marketItem .itemIcon {
-  background: linear-gradient(135deg, #4CAF50 0%, #388E3C 100%);
-  border-color: #2E7D32;
-  width: 6vw;
-  height: 6vw;
-  min-width: 50px;
-  min-height: 50px;
-  max-width: 70px;
-  max-height: 70px;
-}
-
-
-
-
-
-.bookSpine {
-  width: 8px;
-  background: linear-gradient(180deg, #8B4513 0%, #654321 50%, #3E2723 100%);
+.itemImageContainer {
   position: relative;
-  box-shadow: 
-    inset -2px 0 4px rgba(0, 0, 0, 0.3),
-    inset 2px 0 4px rgba(255, 255, 255, 0.1);
+  width: 100%;
+  height: 60%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 }
 
-.bookSpine::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 4px;
-  height: 60px;
-  background: linear-gradient(180deg, #D4AF37 0%, #B8860B 100%);
-  border-radius: 2px;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+
+.itemTitle { /* нижний заголовок в контейнере itemBottom */
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.2;
+  display: block;
+  color: #5D4037;
+  margin: 4px 0 4px 0;
+  text-align: center;
 }
 
-/* Адаптация для мобильных устройств */
-@media screen and (max-width: 768px) {
-  .container {
-    padding: 1rem;
-  }
-  
-  .book {
-    width: 95%;
-    height: 85vh;
-    flex-direction: column;
-  }
-  
-  .page {
-    flex: none;
-    height: 50%;
-  }
-  
-  .bookSpine {
-    width: 100%;
-    height: 4px;
-  }
-  
-  .bookSpine::before {
-    width: 60px;
-    height: 2px;
-  }
-  
-  .pageContent {
-    padding: 1.5rem;
-  }
-  
-  .itemsScrollContainer {
-    gap: 0.5rem;
-  }
-  
-  .pageTitle {
-    font-size: 1.5rem;
-  }
+.itemTitleWord {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* Для очень маленьких экранов */
-@media screen and (max-width: 480px) {
-  .book {
-    height: 90vh;
-  }
-  
-  .pageContent {
-    padding: 1rem;
-  }
-  
-  .itemsScrollContainer {
-    gap: 0.5rem;
-  }
-  
-  .itemWrapper {
-    min-width: 70px;
-  }
-  
-  .backButton {
-    width: 28px;
-    height: 28px;
-    top: 8px;
-    left: 8px;
-  }
-  
-  .backArrow {
-    font-size: 14px;
-  }
-  
-  .moneyCounter {
-    top: 8px;
-    right: 8px;
-    padding: 4px 8px;
-  }
-  
-  .moneyIcon {
-    font-size: 12px;
-  }
-  
-  .moneyAmount {
-    font-size: 11px;
-  }
-  
-  .itemIcon {
-    width: 2.5rem;
-    height: 2.5rem;
-    font-size: 1.25rem;
-  }
+.itemBottom {
+  display: flex;
+  flex-direction: column;
+  padding: 4px;
+  height: 40%;
+}
+
+.itemActions {
+  display: flex;
+  margin-top: auto;
+}
+
+.buyButton {
+  width: 100%;
+  min-height: 28px; /* компактная, но не слишком маленькая */
+  border: none;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #4CAF50 0%, #388E3C 100%);
+  color: #fff;
+  font-weight: 800;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+/* Иконки в инвентаре: другой стиль и фиксированный размер 40x40 */
+.inventoryPage .itemIcon {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #90CAF9 0%, #42A5F5 100%);
+  border: 2px solid #1E88E5;
+}
+
+.buyButton:hover {
+  filter: brightness(1.05);
+}
+
+.buyButton:active {
+  transform: translateY(1px);
+}
+
+.buyButtonDisabled,
+.buyButton:disabled {
+  background: linear-gradient(135deg, #BDBDBD 0%, #9E9E9E 100%);
+  cursor: not-allowed;
+}
+
+/* Состояние недоступности для всей карточки */
+.itemNotAvailable {
+  opacity: 0.7;
+  filter: grayscale(0.2);
 }
 
 /* Стили для пустого инвентаря */
@@ -410,4 +335,3 @@
   font-style: italic;
   opacity: 0.8;
 }
-  

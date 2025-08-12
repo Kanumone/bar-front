@@ -109,7 +109,6 @@ const ingredientMap: Record<string, string> = {
   "зелень": "assets/images/scenes/cooking/ingredients/green.png",
   "маслины": "assets/images/scenes/cooking/ingredients/olives.png",
   "изюм": "assets/images/scenes/cooking/ingredients/raisin.png",
-  "мёд": "assets/images/scenes/cooking/ingredients/sugar.png", // используем сахар как мёд
   "сахар": "assets/images/scenes/cooking/ingredients/sugar.png",
   "томатная паста": "assets/images/scenes/cooking/ingredients/tomato.png",
   "квашеная капуста": "assets/images/scenes/cooking/ingredients/sauerkraut.png",

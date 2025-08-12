@@ -239,7 +239,7 @@ export const Shop = ({ back }: ShopProps) => {
         <span className={styles.moneyIcon}>💰</span>
         <span className={styles.moneyAmount}>{money}</span>
       </div>
-      <div className={styles.page}>
+      <div className={`${styles.page} ${styles.shopPage}`}>
         <div className={styles.pageContent}>
           <h2 className={styles.pageTitle}>Маркет</h2>
 
@@ -249,16 +249,28 @@ export const Shop = ({ back }: ShopProps) => {
               return (
                 <div
                   key={idx}
-                  className={`${styles.itemWrapper} ${!canAfford ? styles.itemNotAvailable : ""}`}
-                  onClick={() => handleBuyItem(item)}
+                  className={`${styles.itemCard} ${!canAfford ? styles.itemNotAvailable : ""}`}
                 >
-                  <div className={styles.itemIcon}>
+                  <div className={styles.itemImageContainer}>
                     <img src={item.image} alt={item.name} className={styles.itemImage} />
                   </div>
-                  <span className={styles.itemLabel}>{item.name}</span>
-                  <span className={`${styles.itemPrice} ${!canAfford ? styles.priceNotAvailable : ""}`}>
-                    {item.price} ₽
-                  </span>
+                  <div className={styles.itemBottom}>
+                    <div className={styles.itemTitle} title={item.name}>
+                      {item.name.split(" ").map((word, i) => (
+                        <span key={i} className={styles.itemTitleWord}>{word}</span>
+                      ))}
+                    </div>
+                    <div className={styles.itemActions}>
+                      <button
+                        className={`${styles.buyButton} ${!canAfford ? styles.buyButtonDisabled : ""}`}
+                        onClick={() => handleBuyItem(item)}
+                        disabled={!canAfford}
+                        aria-label={`Купить ${item.name} за ${item.price} рублей`}
+                      >
+                        {item.price} ₽
+                      </button>
+                    </div>
+                  </div>
                 </div>
               );
             })}
@@ -266,7 +278,7 @@ export const Shop = ({ back }: ShopProps) => {
         </div>
       </div>
 
-      <div className={styles.page}>
+      <div className={`${styles.page} ${styles.inventoryPage}`}>
         <div className={styles.pageContent}>
           <h2 className={styles.pageTitle}>Инвентарь</h2>
 
@@ -279,9 +291,9 @@ export const Shop = ({ back }: ShopProps) => {
             ) : (
               inventory.map((item, idx) => (
                 <div key={idx} className={styles.itemWrapper}>
-                  <div className={styles.itemIcon}>
-                    <img src={item.image} alt={item.name} className={styles.itemImage} />
-                  </div>
+                  
+                    <img src={item.image} alt={item.name} className={styles.itemImage}/>
+                  
                   <span className={styles.itemLabel}>{item.quantity} {item.name}</span>
                 </div>
               ))
