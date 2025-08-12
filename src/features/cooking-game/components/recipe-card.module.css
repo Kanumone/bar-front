@@ -1,16 +1,24 @@
 .card {
   background: linear-gradient(135deg, #FFF8E1 0%, #FFECB3 100%);
   border: 3px solid #FFB74D;
-  border-radius: 30px;
+  border-radius: 24px;
   box-shadow: 0 8px 16px rgba(255, 183, 77, 0.3);
-  transition: all 0.3s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
   overflow: hidden;
+  width: 200px;
+  min-width: 200px;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
 }
 
 
 .cardContent {
   padding: 16px;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .title {
@@ -22,77 +30,40 @@
   line-height: 1.2;
 }
 
-.dishIcon {
-  width: 48px;
-  height: 48px;
+.dishImageWrapper {
+  width: 100%;
+  height: 120px;
   margin: 0 auto 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.dishVisual {
-  width: 36px;
-  height: 24px;
-  background: linear-gradient(135deg, #D32F2F 0%, #B71C1C 100%);
-  border-radius: 50px;
   position: relative;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
 }
 
-.dishBase {
-  position: absolute;
-  top: 3px;
-  left: 6px;
-  width: 6px;
-  height: 6px;
-  background: #4CAF50;
-  border-radius: 50%;
-}
-
-.dishGarnish {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  width: 3px;
-  height: 3px;
-  background: #FF9800;
-  border-radius: 50%;
-}
-
-.dishAccent {
-  position: absolute;
-  bottom: 4px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 4px;
-  height: 4px;
-  background: #9C27B0;
-  border-radius: 50%;
+.dishImage {
+  max-width: 80%;
+  max-height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.25));
 }
 
 .energyInfo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  margin-bottom: 12px;
-  padding: 6px 10px;
-  background: linear-gradient(135deg, #E8F5E8 0%, #C8E6C9 100%);
-  border: 2px solid #4CAF50;
-  border-radius: 12px;
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  display: inline-flex;
+  gap: 3px;
+  padding: 4px;
 }
 
 .energyIcon {
-  font-size: 14px;
-  filter: drop-shadow(0 0 2px rgba(255, 235, 59, 0.8));
+  font-size: 16px;
 }
 
 .energyValue {
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 700;
   color: #2E7D32;
-  letter-spacing: 0.3px;
 }
 
 .ingredientsLabel {
@@ -176,6 +147,7 @@
   text-transform: uppercase;
   letter-spacing: 0.4px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+  margin-top: auto;
 }
 
 .available {
@@ -210,30 +182,8 @@
     margin-bottom: 10px;
   }
   
-  .dishIcon {
-    width: 40px;
-    height: 40px;
-    margin-bottom: 10px;
-  }
-  
-  .dishVisual {
-    width: 30px;
-    height: 20px;
-  }
-  
-  .energyInfo {
-    padding: 5px 8px;
-    margin-bottom: 10px;
-    gap: 3px;
-  }
-  
-  .energyIcon {
-    font-size: 12px;
-  }
-  
-  .energyValue {
-    font-size: 11px;
-  }
+  .dishImageWrapper { height: 100px; }
+  .card { width: 180px; min-width: 180px; height: 280px; }
   
   .ingredientsLabel {
     font-size: 10px;

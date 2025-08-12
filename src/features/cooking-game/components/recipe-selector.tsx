@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import clsx from "clsx";
 import type { Ingredient, Recipe } from "../types";
 import { RecipeCard } from "./recipe-card";
-import { RecipeNavigation } from "./recipe-navigation";
+// навигация больше не используется, скролл по аналогии с shop
 import { CookingNotification } from "./cooking-notification";
 import { usePlayerState } from "$core/state";
 import styles from "./recipe-selector.module.css";
@@ -13,21 +13,18 @@ interface RecipeSelectorProps {
   back: () => void;
 }
 
-const RECIPES_PER_PAGE = 4;
+// пагинация не нужна при горизонтальном скролле
 
 export const RecipeSelector = ({
   recipes,
   className,
   back,
 }: RecipeSelectorProps) => {
-  const [currentPage, setCurrentPage] = useState(0);
   const [showNotification, setShowNotification] = useState(false);
 
   const { energy, inventory, addEnergy } = usePlayerState();
 
-  const totalPages = Math.ceil(recipes.length / RECIPES_PER_PAGE);
-  const startIndex = currentPage * RECIPES_PER_PAGE;
-  const endIndex = startIndex + RECIPES_PER_PAGE;
+  // список целиком, без страниц
 
   // Мемоизированные рецепты с проверкой доступности
   const recipesWithAvailability = useMemo(() => {
@@ -44,15 +41,7 @@ export const RecipeSelector = ({
     }));
   }, [recipes, inventory]);
 
-  const currentRecipes = recipesWithAvailability.slice(startIndex, endIndex);
-
-  const handlePrevious = () => {
-    setCurrentPage((prev) => Math.max(0, prev - 1));
-  };
-
-  const handleNext = () => {
-    setCurrentPage((prev) => Math.min(totalPages - 1, prev + 1));
-  };
+  const currentRecipes = recipesWithAvailability;
 
   const handleRecipeCook = (recipe: Recipe) => {
     addEnergy(recipe.energy);
@@ -68,17 +57,26 @@ export const RecipeSelector = ({
       {/* Декоративные элементы фона */}
       <div className={styles.backgroundDecorations}></div>
 
-      {/* Основной контент */}
-      <div className={styles.content}>
-        <button className={styles.backButton} onClick={back}>
+      {/* Хедер: кнопка назад слева и текущая энергия справа */}
+      <div className={styles.header}>
+        <button className={styles.backButton} onClick={back} aria-label="Назад">
           <span className={styles.backArrow}>←</span>
         </button>
+        <div className={styles.energyCounter} aria-label={`Энергия: ${energy}`}>
+          <span className={styles.energyIcon}>⚡</span>
+          <span className={styles.energyAmount}>{energy}</span>
+        </div>
+      </div>
+
+      {/* Основной контент */}
+      <div className={styles.content}>
         {/* Сетка рецептов */}
         <div className={styles.recipesGrid}>
           {currentRecipes.map((recipe) => (
             <RecipeCard
               key={recipe.id}
               title={recipe.title}
+              imageSrc={recipe.imageSrc}
               ingredients={recipe.ingredients}
               isAvailable={recipe.isAvailable}
               energy={recipe.energy}
@@ -87,16 +85,23 @@ export const RecipeSelector = ({
           ))}
         </div>
 
-        {/* Область навигации (всегда резервирует место) */}
-        <div className={styles.navigationArea}>
-          {totalPages > 1 && (
-            <RecipeNavigation
-              onPrevious={handlePrevious}
-              onNext={handleNext}
-              hasPrevious={currentPage > 0}
-              hasNext={currentPage < totalPages - 1}
-            />
-          )}
+        {/* Инвентарь как в shop.tsx */}
+        <div className={styles.inventorySection}>
+          <h3 className={styles.inventoryTitle}>Инвентарь</h3>
+          <div className={styles.inventoryScrollContainer}>
+            {inventory.length === 0 ? (
+              <div className={styles.emptyInventory}>Инвентарь пуст</div>
+            ) : (
+              inventory.map((item) => (
+                <div key={item.id} className={styles.inventoryItem}>
+                  <img src={item.image} alt={item.name} className={styles.inventoryItemImage} />
+                  <span className={styles.inventoryItemLabel}>
+                    {item.quantity} {item.name}
+                  </span>
+                </div>
+              ))
+            )}
+          </div>
         </div>
       </div>
 

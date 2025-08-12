@@ -28,7 +28,7 @@
   left: 12px;
   width: 32px;
   height: 32px;
-  background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+  background: orange;
   border: none;
   border-radius: 50%;
   display: flex;
@@ -53,7 +53,8 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  background: linear-gradient(135deg, #4CAF50 0%, #388E3C 100%);
+  
+  background: orange;
   padding: 6px 10px;
   border-radius: 16px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -61,8 +62,12 @@
 }
 
 .moneyIcon {
-  font-size: 14px;
-  filter: drop-shadow(0 0 2px rgba(255, 235, 59, 0.8));
+  background-image: url('assets/images/ui/money.png');
+  height: 20px;
+  width: 20px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .moneyAmount {

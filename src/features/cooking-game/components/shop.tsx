@@ -236,7 +236,7 @@ export const Shop = ({ back }: ShopProps) => {
         <span className={styles.backArrow}>←</span>
       </button>
       <div className={styles.moneyCounter}>
-        <span className={styles.moneyIcon}>💰</span>
+        <span className={styles.moneyIcon}></span>
         <span className={styles.moneyAmount}>{money}</span>
       </div>
       <div className={`${styles.page} ${styles.shopPage}`}>

@@ -4,6 +4,7 @@ import styles from "./recipe-card.module.css";
 
 interface RecipeCardProps {
   title: string;
+  imageSrc: string;
   ingredients: Ingredient[];
   isAvailable: boolean;
   energy: number;
@@ -13,6 +14,7 @@ interface RecipeCardProps {
 
 export const RecipeCard = ({
   title,
+  imageSrc,
   ingredients,
   isAvailable,
   energy,
@@ -31,17 +33,12 @@ export const RecipeCard = ({
       <div className={styles.cardContent}>
         <h3 className={styles.title}>{title}</h3>
 
-        <div className={styles.dishIcon}>
-          <div className={styles.dishVisual}>
-            <div className={styles.dishBase}></div>
-            <div className={styles.dishGarnish}></div>
-            <div className={styles.dishAccent}></div>
+        <div className={styles.dishImageWrapper}>
+          <img src={imageSrc} alt={title} className={styles.dishImage} />
+          <div className={styles.energyInfo}>
+            <span className={styles.energyIcon}>⚡</span>
+            <span className={styles.energyValue}>{energy}</span>
           </div>
-        </div>
-
-        <div className={styles.energyInfo}>
-          <span className={styles.energyIcon}>⚡</span>
-          <span className={styles.energyValue}>+{energy} энергии</span>
         </div>
 
         <p className={styles.ingredientsLabel}>Ингредиенты:</p>
