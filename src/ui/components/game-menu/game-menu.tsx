@@ -61,6 +61,9 @@ export const GameMenu: React.FC<GameMenuProps> = ({
     case "tretyakov":
       gameFlowManager.showTretyakovGame();
       break;
+    case "kazan":
+      gameFlowManager.showKazan();
+      break;
     default:
       break;
     }
@@ -93,6 +96,7 @@ export const GameMenu: React.FC<GameMenuProps> = ({
         <div className={styles.item} onClick={() => onSceneSelection("railway-station")}>🚉 Вокзал</div>
         <div className={styles.item} onClick={() => onSceneSelection("moscow")}>🇷🇺 Москва</div>
         <div className={styles.item} onClick={() => onSceneSelection("tretyakov")}>🎨 Третьяков</div>
+        <div className={styles.item} onClick={() => onSceneSelection("kazan")}>🕌 Казань</div>
       </div>
     </div>
   );

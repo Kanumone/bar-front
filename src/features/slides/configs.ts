@@ -2,6 +2,7 @@ import type { SlidesConfig } from "@core/types/common-types";
 import { getIntroSlides } from "./intro";
 import { getRailwayStationSlides } from "./railway-station";
 import { getMoscowSlides } from "./moscow";
+import { getKazanSlides } from "./kazan";
 
 // ✅ Конфигурация для Intro сцены
 export const introSlidesConfig: SlidesConfig = {
@@ -35,6 +36,19 @@ export const moscowSlidesConfig: SlidesConfig = {
   sceneConfig: {
     scene: "moscow",
     backgroundMusic: "Звук утреннего города.mp3",
+    effects: {
+      canSkipDelay: 800,
+      imageLoadDelay: 300,
+    },
+  },
+};
+
+// ✅ Конфигурация для Kazan сцены
+export const kazanSlidesConfig: SlidesConfig = {
+  getSlides: getKazanSlides,
+  sceneConfig: {
+    scene: "kazan",
+    backgroundMusic: "kazan-city-ambient.mp3", // TODO: подтвердить имя файла
     effects: {
       canSkipDelay: 800,
       imageLoadDelay: 300,

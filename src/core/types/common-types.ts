@@ -35,23 +35,29 @@ export interface GameMapSceneData {
 
 export interface SceneDataMap {
   Auth: null;
+  // slides
   Intro: null;
+  RailwayStation: null;
+  Kazan: null;
+  Moscow: null;
+
+  // move scenes
+  Move: MoveSceneData;
   MoveScene: MoveSceneData;
-  GameMap: GameMapSceneData;
-  Game2048: null;
   MoveToTrain: MoveSceneData | null;
+  MoveAfterTrain: null;
   MoveToVdnh: MoveSceneData | null;
   MoveToGallery: MoveSceneData | null;
   MoveToKazan: MoveSceneData | null;
+
+  // games
+  GameMap: GameMapSceneData;
   DetectiveGame: null;
   TretyakovGame: null;
-  RailwayStation: null;
   CookingGame: null;
-  MoveAfterTrain: null;
   FlyingGame: null;
   GameFood: null;
-  Moscow: null; // Добавляем недостающую сцену
-  Move: MoveSceneData; // Добавляем сцену Move, которая используется в GameScene
+  Game2048: null;
 }
 
 export type SceneName = keyof SceneDataMap;
@@ -63,6 +69,7 @@ export const GameScene = {
   Intro: "Intro",
   RailwayStation: "RailwayStation",
   Moscow: "Moscow",
+  Kazan: "Kazan",
 
   // games
   FlyingGame: "FlyingGame",

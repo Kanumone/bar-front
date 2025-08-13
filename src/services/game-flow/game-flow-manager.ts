@@ -10,7 +10,7 @@ import {
 import { GameMapPhaserScene } from "@features/game-map";
 import { MovePhaserScene, MoveSceneMapper } from "@features/move-phaser-scene";
 import { FlyingGameScene } from "@features/flying-game/flying-game-scene";
-import { introSlidesConfig, moscowSlidesConfig, railwayStationSlidesConfig } from "../../features/slides/configs";
+import { introSlidesConfig, kazanSlidesConfig, moscowSlidesConfig, railwayStationSlidesConfig } from "../../features/slides/configs";
 
 class GameFlowManager {
   private game: Phaser.Game | null = null;
@@ -246,6 +246,11 @@ class GameFlowManager {
   showMoscow() {
     useSceneStore.getState().setScene(GameScene.Moscow, null);
     useSceneStore.getState().setSlidesConfig(moscowSlidesConfig);
+  }
+
+  showKazan() {
+    useSceneStore.getState().setScene(GameScene.Kazan, null);
+    useSceneStore.getState().setSlidesConfig(kazanSlidesConfig);
   }
 }
 

@@ -21,7 +21,7 @@ import { MoveToVdnhSceneWrapper } from "./ui/scenes/move-to-vdnh-wrapper";
 import { MoveToGallerySceneWrapper } from "./ui/scenes/move-to-gallery-wrapper";
 import { Layout } from "./ui/layout/";
 import { DebugPanel } from "./ui/components/debug-panel";
-import { introSlidesConfig, railwayStationSlidesConfig, moscowSlidesConfig } from "$features/slides/configs";
+import { introSlidesConfig, railwayStationSlidesConfig, moscowSlidesConfig, kazanSlidesConfig } from "$features/slides/configs";
 
 export const App: React.FC = () => {
   useAuth();
@@ -47,6 +47,8 @@ export const App: React.FC = () => {
       return <SlidesWrapper config={railwayStationSlidesConfig} />;
     case GameScene.Moscow:
       return <SlidesWrapper config={moscowSlidesConfig} />;
+    case GameScene.Kazan:
+      return <SlidesWrapper config={kazanSlidesConfig} />;
       // games
     case GameScene.CookingGame:
       return <CookingGameSceneWrapper />;

@@ -1,5 +1,3 @@
-export * from "./auth-phaser-scene";
-
 export * from "./flying-game";
 
 export * from "./game-2048";
