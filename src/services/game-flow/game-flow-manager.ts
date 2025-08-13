@@ -10,7 +10,7 @@ import {
 import { GameMapPhaserScene } from "@features/game-map";
 import { MovePhaserScene, MoveSceneMapper } from "@features/move-phaser-scene";
 import { FlyingGameScene } from "@features/flying-game/flying-game-scene";
-import { introSlidesConfig, railwayStationSlidesConfig } from "../../features/slides/configs";
+import { introSlidesConfig, moscowSlidesConfig, railwayStationSlidesConfig } from "../../features/slides/configs";
 
 class GameFlowManager {
   private game: Phaser.Game | null = null;
@@ -95,11 +95,6 @@ class GameFlowManager {
 
   showAuth() {
     useSceneStore.getState().setScene(GameScene.Auth, null);
-  }
-
-  showIntro() {
-    useSceneStore.getState().setSlidesConfig(introSlidesConfig);
-    useSceneStore.getState().setScene(GameScene.Intro, null);
   }
 
   showGameMap() {
@@ -225,13 +220,7 @@ class GameFlowManager {
     this.startPhaserScene(GameScene.FlyingGame);
   }
 
-  showRailwayStation() {
-    useSceneStore.getState().setSlidesConfig(railwayStationSlidesConfig);
-    useSceneStore.getState().setScene(GameScene.RailwayStation, null);
-  }
-
   showGameCooking() {
-    console.log("showGameCooking");
     useSceneStore.getState().setScene(GameScene.CookingGame, null);
   }
 
@@ -239,12 +228,24 @@ class GameFlowManager {
     useSceneStore.getState().setScene(GameScene.DetectiveGame, null);
   }
 
-  showMoscow() {
-    useSceneStore.getState().setScene(GameScene.Moscow, null);
-  }
-
   showTretyakovGame() {
     useSceneStore.getState().setScene(GameScene.TretyakovGame, null);
+  }
+
+  // slides scenes
+  showIntro() {
+    useSceneStore.getState().setScene(GameScene.Intro, null);
+    useSceneStore.getState().setSlidesConfig(introSlidesConfig);
+  }
+
+  showRailwayStation() {
+    useSceneStore.getState().setScene(GameScene.RailwayStation, null);
+    useSceneStore.getState().setSlidesConfig(railwayStationSlidesConfig);
+  }
+
+  showMoscow() {
+    useSceneStore.getState().setScene(GameScene.Moscow, null);
+    useSceneStore.getState().setSlidesConfig(moscowSlidesConfig);
   }
 }
 

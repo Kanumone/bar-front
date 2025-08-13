@@ -1,21 +1,70 @@
 import { getAssetsPathByType } from "$/utils/get-assets-path";
 
-export interface Action {
-  type: "thoughts" | "speech" | "choice" | "message" | "button" | "empty";
-  characterName?: string;
-  text?: string;
-  options?: string[];
-  // ✅ Добавляем поддержку условных действий для каждого варианта выбора
-  conditionalActions?: Action[][];
-  button?: {
-    text: string;
-    sound?: string;
-    action: () => void;
-  },
-  onNext?: {
-    sound?: string
-  }
-}
+type ActionBase = { onNext?: { sound?: string } };
+
+export type Action =
+  | {
+      type: "thoughts";
+      text: string;
+      characterName?: string;
+    } & ActionBase
+  | {
+      type: "speech";
+      text: string;
+      characterName?: string;
+    } & ActionBase
+  | ({ type: "message"; text: string }) & ActionBase
+  | {
+      type: "button";
+      button: { text: string; sound?: string; action: () => void };
+    } & ActionBase
+  | {
+      // Единый choice с необязательными outcomes
+      type: "choice";
+      text?: string;
+      characterName?: string;
+      options: string[];
+      outcomes?: Record<
+        number,
+        {
+          actions?: Action[];
+          background?: string | null; // null — оставить как было
+          carryBackgroundToNextSlide?: boolean;
+        }
+      >;
+    } & ActionBase
+  | {
+      // 2) Выбор правильной картинки из двух (верх/низ)
+      type: "image-pick-2";
+      topImage: string; // filename
+      bottomImage: string; // filename
+      correct: "top" | "bottom";
+      feedback?: { correct?: string; wrong?: string };
+      allowRetry?: boolean;
+      postActions?: { correct?: Action[]; wrong?: Action[] };
+    } & ActionBase
+  | {
+      // 3) Расстановка сообщений в нужном порядке
+      type: "order-messages";
+      messages: string[]; // правильный порядок
+      allowRetry?: boolean; // по умолчанию true
+      feedback?: { correct?: string; wrong?: string };
+      showSolutionAfterCheck?: boolean;
+      postActions?: { correct?: Action[]; wrong?: Action[] };
+    } & ActionBase
+  | {
+      // 4) Несколько групп choice, все должны быть отвечены
+      type: "multi-choice";
+      groups: Array<{
+        id: string;
+        prompt?: string;
+        options: string[];
+        outcomes?: Record<string, { actions?: Action[]; background?: string | null; carryBackgroundToNextSlide?: boolean }>;
+      }>;
+      submitMode?: "auto" | "button";
+      submitButtonText?: string;
+      postActionsOrder?: "byGroups" | "bySelection";
+    } & ActionBase;
 
 export interface EpisodeConfig {
   slideIndex: number;
@@ -81,30 +130,55 @@ export class Episode {
   })
   : undefined;
 
-    // ✅ нормализуем actions и звуки
-    this.actions = (config.actions ?? []).map((a) => ({
-      ...a,
-      button: a.button
+    // ✅ нормализуем actions и звуки/картинки
+    this.actions = (config.actions ?? []).map((a) => {
+      // onNext.sound
+      const onNext = (a as any).onNext?.sound
         ? {
-          ...a.button,
-          sound: a.button.sound
-              ? getAssetsPathByType({
-                type: "sounds",
-                scene: this.scene,
-                filename: a.button.sound,
-              })
-              : undefined,
+            sound: getAssetsPathByType({
+              type: "sounds",
+              scene: this.scene,
+              filename: (a as any).onNext.sound,
+            }),
+          }
+        : (a as any).onNext;
+
+      if (a.type === "button") {
+        const button = a.button
+          ? {
+              ...a.button,
+              sound: a.button.sound
+                ? getAssetsPathByType({
+                    type: "sounds",
+                    scene: this.scene,
+                    filename: a.button.sound,
+                  })
+                : undefined,
+            }
+          : a.button;
+        return { ...a, button, onNext } as Action;
+      }
+
+      if (a.type === "image-pick-2") {
+        const topImage = getAssetsPathByType({ type: "images", scene: this.scene, filename: a.topImage });
+        const bottomImage = getAssetsPathByType({ type: "images", scene: this.scene, filename: a.bottomImage });
+        return { ...a, topImage, bottomImage, onNext } as Action;
+      }
+
+      if (a.type === "choice" && a.outcomes) {
+        const outcomes: Record<number, { actions?: Action[]; background?: string | null; carryBackgroundToNextSlide?: boolean }> = {};
+        for (const key of Object.keys(a.outcomes)) {
+          const idx = Number(key);
+          const o = (a.outcomes as any)[idx] || {};
+          const background = typeof o.background === "string"
+            ? getAssetsPathByType({ type: "images", scene: this.scene, filename: o.background })
+            : o.background; // null | undefined
+          outcomes[idx] = { ...o, background };
         }
-        : undefined,
-      onNext: a.onNext?.sound
-        ? {
-          sound: getAssetsPathByType({
-            type: "sounds",
-            scene: this.scene,
-            filename: a.onNext.sound,
-          }),
-        }
-        : a.onNext,
-    }));
+        return { ...a, outcomes, onNext } as Action;
+      }
+
+      return { ...(a as any), onNext } as Action;
+    });
   }
 }

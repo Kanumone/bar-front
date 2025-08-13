@@ -53,7 +53,6 @@ const railwayStationSlides: EpisodeConfig[] = [
     actions: [
       {
         type: "message",
-        characterName: "Алексей",
         text: "Звук останавливающегося поезда.",
       },
     ],

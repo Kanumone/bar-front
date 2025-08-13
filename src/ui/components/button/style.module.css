@@ -5,7 +5,6 @@
   font-size: 20px;
   font-weight: 500;
   color: #E0E0E0;
-  cursor: pointer;
   transition: all 0.3s ease;
   border-radius: 25px;
   text-align: center;
@@ -13,46 +12,7 @@
   user-select: none;
   width: 100%;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 16px;
+  max-width: 90%;
 }
 
-/* Hover эффекты только для устройств с мышью */
-@media (hover: hover) and (pointer: fine) {
-
-  .button:hover {
-    background-color: #6B6A4F;
-    border-color: #A89A7A;
-    color: #F0F0F0;
-    transform: translateX(-50%) scale(1.02);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  }
-}
-
-/* Адаптация для мобильных устройств */
-@media screen and (width <=768px) {
-
-  .button {
-    font-size: 20px;
-    padding: 15px 20px;
-    bottom: 15px;
-  }
-}
-
-/* Для очень маленьких экранов */
-@media screen and (width <=480px) {
-
-  .button {
-    font-size: 18px;
-    padding: 12px 15px;
-    bottom: 10px;
-    max-width: 90%;
-  }
-}
-
-/* Для сенсорных устройств - увеличиваем область нажатия */
-@media (pointer: coarse) {
-
-  .button {
-    min-height: 44px;
-    padding: 12px 20px;
-  }
-}

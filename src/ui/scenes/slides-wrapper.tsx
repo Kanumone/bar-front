@@ -5,12 +5,15 @@ import { useBackgroundMusic } from "../../core/hooks/use-background-music/use-mu
 import type { Episode } from "../../features/slides";
 import { Button } from "../components/button";
 import { Messagebox } from "../components/messagebox";
+import { OrderMessagesView } from "../components/order-messages-view";
+import { MultiChoiceView } from "../components/multi-choice-view";
 import { useSlidesNavigation } from "./use-slides-navigation";
 
 import styles from "./slides-wrapper.module.css";
 import { useSlideEffects } from "./use-slides-effects";
 import { useSlideSounds } from "./use-slides-sounds";
 import type { SlidesConfig } from "$core/types/common-types";
+import { useStoryStore } from "$core/state";
 
 export const SlidesWrapper = ({ config }: { config: SlidesConfig }) => {
   // ✅ Получаем слайды из конфигурации
@@ -35,9 +38,18 @@ export const SlidesWrapper = ({ config }: { config: SlidesConfig }) => {
     goNext,
     handleActionButtonClick,
     handleChoiceSelect,
+    // new
+    backgroundOverrideSrc,
+    handleImagePick2Select,
+    initOrderMessages,
+    handleOrderMessagesReorder,
+    handleOrderMessagesCheck,
+    handleMultiChoiceSelect,
+    handleMultiChoiceSubmit,
   } = useSlidesNavigation(slides, playSceneSound, config.sceneConfig.scene);
 
   const currentAction = currentActions[actionIndex];
+  const orderLocal = useStoryStore((s) => s.getOrderMessagesLocal(slideIndex, actionIndex));
 
   // ✅ обновляем currentSlide для звуков
   useEffect(() => {
@@ -50,7 +62,7 @@ export const SlidesWrapper = ({ config }: { config: SlidesConfig }) => {
     scene: config.sceneConfig.scene || "intro",
   });
 
-  const showSkipButton = currentAction?.type !== "button" && currentAction?.type !== "choice";
+  const showSkipButton = currentAction?.type === "message" || currentAction?.type === "speech" || currentAction?.type === "thoughts" || actionIndex === -1;
 
   // ✅ Эффекты (canSkip и т.д.) с настройками из конфигурации
   useSlideEffects({
@@ -68,6 +80,13 @@ export const SlidesWrapper = ({ config }: { config: SlidesConfig }) => {
   const translateX = -currentSlide.originX * 100;
   const translateY = -currentSlide.originY * 100;
 
+  // Инициализация порядка сообщений при входе в action
+  useEffect(() => {
+    if (currentAction?.type === "order-messages") {
+      initOrderMessages();
+    }
+  }, [currentAction, initOrderMessages]);
+
   return (
     <div className={styles.wrapper} onPointerDown={goNext}>
       <AnimatePresence mode="wait">
@@ -80,7 +99,7 @@ export const SlidesWrapper = ({ config }: { config: SlidesConfig }) => {
           transition={{ duration: 0.5 }}
         >
           <img
-            src={currentSlide.src}
+            src={backgroundOverrideSrc ?? currentSlide.src}
             className={styles.image}
             style={{
               objectPosition: `${currentSlide.originX * 100}% ${currentSlide.originY * 100}%`,
@@ -151,16 +170,12 @@ export const SlidesWrapper = ({ config }: { config: SlidesConfig }) => {
               />
             )}
 
-            {currentAction.type === "choice" && currentAction.options && (
+            {currentAction.type === "choice" && (currentAction as any).options && (
               <div className={styles.choiceContainer}>
                 <div className={styles.choiceMessage}>
                   <Messagebox
                     text={
-                      currentAction.characterName && currentAction.text
-                        ? `${currentAction.characterName}: ${currentAction.text}`
-                        : currentAction.text
-                          ? currentAction.text
-                          : "Выберите вариант:"
+                      "Выберите вариант:"
                     }
                   />
                 </div>
@@ -169,7 +184,7 @@ export const SlidesWrapper = ({ config }: { config: SlidesConfig }) => {
                     <Button
                       key={`choice-${o}`}
                       text={o}
-                      onClick={() => handleChoiceSelect(o)}
+                      onClick={() => handleChoiceSelect(o, idx)}
                       className={styles.choiceButton}
                     />
                   ))}
@@ -183,6 +198,47 @@ export const SlidesWrapper = ({ config }: { config: SlidesConfig }) => {
                   text={currentAction.button.text}
                   onClick={() => handleActionButtonClick(currentAction)}
                   className={styles.actionButton}
+                />
+              </div>
+            )}
+
+            {currentAction.type === "image-pick-2" && (
+              <div className={styles.imagePick2Container}>
+                <div className={styles.imagePick2Top}>
+                  <img
+                    src={currentAction.topImage}
+                    className={styles.imagePick2}
+                    onClick={(e) => { e.stopPropagation(); handleImagePick2Select("top"); }}
+                  />
+                </div>
+                <div className={styles.imagePick2Bottom}>
+                  <img
+                    src={currentAction.bottomImage}
+                    className={styles.imagePick2}
+                    onClick={(e) => { e.stopPropagation(); handleImagePick2Select("bottom"); }}
+                  />
+                </div>
+              </div>
+            )}
+
+            {currentAction.type === "order-messages" && orderLocal && (
+              <div className={styles.orderMessagesContainer}>
+                <OrderMessagesView
+                  items={orderLocal.currentOrder}
+                  correctOrder={currentAction.messages}
+                  checked={orderLocal.checked}
+                  onReorder={handleOrderMessagesReorder}
+                  onCheck={() => handleOrderMessagesCheck()}
+                />
+              </div>
+            )}
+
+            {currentAction.type === "multi-choice" && (
+              <div className={styles.multiChoiceContainer}>
+                <MultiChoiceView
+                  action={currentAction}
+                  onSelect={handleMultiChoiceSelect}
+                  onSubmit={() => handleMultiChoiceSubmit()}
                 />
               </div>
             )}

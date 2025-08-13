@@ -22,6 +22,14 @@ export function useSlidesNavigation(
     goNext: storeGoNext,
     handleActionButtonClick: storeHandleActionButtonClick,
     handleChoiceSelect: storeHandleChoiceSelect,
+    // новое
+    backgroundOverrideSrc,
+    handleImagePick2Select: storeHandleImagePick2Select,
+    initOrderMessages: storeInitOrderMessages,
+    handleOrderMessagesReorder: storeHandleOrderMessagesReorder,
+    handleOrderMessagesCheck: storeHandleOrderMessagesCheck,
+    handleMultiChoiceSelect: storeHandleMultiChoiceSelect,
+    handleMultiChoiceSubmit: storeHandleMultiChoiceSubmit,
   } = useStoryStore();
 
   // Инициализируем слайды при первом рендере и при их изменении
@@ -41,15 +49,28 @@ export function useSlidesNavigation(
     storeHandleActionButtonClick(action, playSceneSound);
   }, [storeHandleActionButtonClick, playSceneSound]);
 
-  const handleChoiceSelect = useCallback((option: string) => {
-    storeHandleChoiceSelect(option, playSceneSound);
+  const handleChoiceSelect = useCallback((option: string, idx: number) => {
+    storeHandleChoiceSelect(option, idx, playSceneSound);
   }, [storeHandleChoiceSelect, playSceneSound]);
+
+  const handleImagePick2Select = useCallback((pos: "top" | "bottom") => {
+    storeHandleImagePick2Select(pos, playSceneSound);
+  }, [storeHandleImagePick2Select, playSceneSound]);
+
+  const handleOrderMessagesCheck = useCallback(() => {
+    storeHandleOrderMessagesCheck(playSceneSound);
+  }, [storeHandleOrderMessagesCheck, playSceneSound]);
+
+  const handleMultiChoiceSubmit = useCallback(() => {
+    storeHandleMultiChoiceSubmit(playSceneSound);
+  }, [storeHandleMultiChoiceSubmit, playSceneSound]);
 
   return {
     slideIndex,
     actionIndex,
     currentSlide: currentSlide || slides[slideIndex] || { actions: [] },
     currentActions,
+    backgroundOverrideSrc,
     imageLoaded,
     setImageLoaded,
     canSkip,
@@ -58,5 +79,11 @@ export function useSlidesNavigation(
     handleActionButtonClick,
     handleChoiceSelect,
     processUpdate,
+    handleImagePick2Select,
+    initOrderMessages: storeInitOrderMessages,
+    handleOrderMessagesReorder: storeHandleOrderMessagesReorder,
+    handleOrderMessagesCheck,
+    handleMultiChoiceSelect: storeHandleMultiChoiceSelect,
+    handleMultiChoiceSubmit,
   };
 }

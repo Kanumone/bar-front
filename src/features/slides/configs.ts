@@ -20,7 +20,7 @@ export const introSlidesConfig: SlidesConfig = {
 export const railwayStationSlidesConfig: SlidesConfig = {
   getSlides: getRailwayStationSlides,
   sceneConfig: {
-    scene: "to-train-move",
+    scene: "railway-station",
     backgroundMusic: "Звук утреннего города.mp3",
     effects: {
       canSkipDelay: 800,
@@ -33,7 +33,7 @@ export const railwayStationSlidesConfig: SlidesConfig = {
 export const moscowSlidesConfig: SlidesConfig = {
   getSlides: getMoscowSlides,
   sceneConfig: {
-    scene: "to-train-move",
+    scene: "moscow",
     backgroundMusic: "Звук утреннего города.mp3",
     effects: {
       canSkipDelay: 800,
