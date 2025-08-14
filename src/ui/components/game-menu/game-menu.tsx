@@ -31,9 +31,6 @@ export const GameMenu: React.FC<GameMenuProps> = ({
     case "cooking":
       gameFlowManager.showGameCooking();
       break;
-    case "game-2048":
-      gameFlowManager.showGame2048();
-      break;
     case "after-train":
       gameFlowManager.showMoveAfterTrain();
       break;
@@ -59,7 +56,7 @@ export const GameMenu: React.FC<GameMenuProps> = ({
       gameFlowManager.showMoscow();
       break;
     case "tretyakov":
-      gameFlowManager.showTretyakovGame();
+      gameFlowManager.showMoveToGallery();
       break;
     case "kazan":
       gameFlowManager.showKazan();

@@ -8,21 +8,18 @@ import {
   GameMapSceneWrapper,
   Game2048SceneWrapper,
   SlidesWrapper,
-  MoveAfterTrainWrapper,
   CookingGameSceneWrapper,
 } from "./ui/scenes";
 import { DetectiveGame, TretyakovGame } from "$features/detective-game";
 import { useAuth } from "./core/hooks";
 import { FlyingGameSceneWrapper } from "./ui/scenes/flying-game-scene-wrapper";
 import { GameScene } from "@core/types/common-types";
-import { MoveToTrainSceneWrapper } from "./ui/scenes/move-to-train-scene-wrapper";
-import { MoveToVdnhSceneWrapper } from "./ui/scenes/move-to-vdnh-wrapper";
-import { MoveToGallerySceneWrapper } from "./ui/scenes/move-to-gallery-wrapper";
 import { Layout } from "./ui/layout/";
 import { introSlidesConfig, railwayStationSlidesConfig, moscowSlidesConfig, kazanSlidesConfig } from "$features/slides/configs";
+import { MoveWrapper } from "$ui/scenes/move-wrapper";
 
 export const App: React.FC = () => {
-  useAuth();  
+  useAuth();
   const phaserCanvasRef = useRef<HTMLDivElement>(null);
   const currentScene = useSceneStore((state) => state.currentScene);
 
@@ -37,45 +34,44 @@ export const App: React.FC = () => {
 
   const renderSceneWrapper = useCallback(() => {
     switch (currentScene) {
-    // novel slides
-    case GameScene.Intro:
-      return <SlidesWrapper config={introSlidesConfig} />;
-    case GameScene.RailwayStation:
-      return <SlidesWrapper config={railwayStationSlidesConfig} />;
-    case GameScene.Moscow:
-      return <SlidesWrapper config={moscowSlidesConfig} />;
-    case GameScene.Kazan:
-      return <SlidesWrapper config={kazanSlidesConfig} />;
+      // novel slides
+      case GameScene.Intro:
+        return <SlidesWrapper config={introSlidesConfig} />;
+      case GameScene.RailwayStation:
+        return <SlidesWrapper config={railwayStationSlidesConfig} />;
+      case GameScene.Moscow:
+        return <SlidesWrapper config={moscowSlidesConfig} />;
+      case GameScene.Kazan:
+        return <SlidesWrapper config={kazanSlidesConfig} />;
       // games
-    case GameScene.CookingGame:
-      return <CookingGameSceneWrapper />;
-    case GameScene.FlyingGame:
-      return <FlyingGameSceneWrapper />;
-    case GameScene.DetectiveGame:
-      return <DetectiveGame />;
-    case GameScene.TretyakovGame:
-      return <TretyakovGame />;
+      case GameScene.CookingGame:
+        return <CookingGameSceneWrapper />;
+      case GameScene.FlyingGame:
+        return <FlyingGameSceneWrapper />;
+      case GameScene.DetectiveGame:
+        return <DetectiveGame />;
+      case GameScene.TretyakovGame:
+        return <TretyakovGame />;
 
       // move scenes
-    case GameScene.MoveToTrain:
-      return <MoveToTrainSceneWrapper />;
-    case GameScene.MoveAfterTrain:
-      return <MoveAfterTrainWrapper />;
-    case GameScene.MoveToVdnh:
-      return <MoveToVdnhSceneWrapper />;
-    case GameScene.MoveToGallery:
-      return <MoveToGallerySceneWrapper />;
+      case GameScene.MoveToTrain:
+      case GameScene.MoveAfterTrain:
+      case GameScene.MoveToVdnh:
+      case GameScene.MoveToGallery:
+      case GameScene.MoveToKazan:
+        return <MoveWrapper />;
+
 
       // others
-    case GameScene.GameMap:
-      return <GameMapSceneWrapper />;
-    case GameScene.Game2048:
-      return <Game2048SceneWrapper />;
-    case GameScene.Auth:
-      return <AuthSceneWrapper />;
+      case GameScene.GameMap:
+        return <GameMapSceneWrapper />;
+      case GameScene.Game2048:
+        return <Game2048SceneWrapper />;
+      case GameScene.Auth:
+        return <AuthSceneWrapper />;
 
-    default:
-      return null;
+      default:
+        return null;
     }
   }, [currentScene]);
 

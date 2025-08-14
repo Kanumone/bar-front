@@ -85,8 +85,6 @@ export const useStoryStore = create<StoryState>((set, get) => ({
     if (slides.length === 0) return;
 
     const { slidesScene, slideIndex } = get();
-    console.log("slideScene", slidesScene);
-    console.log("sceneName", sceneName);
 
     if (slidesScene === sceneName) {
       const safeSlideIndex = Math.min(Math.max(slideIndex, 0), slides.length - 1);
@@ -109,8 +107,6 @@ export const useStoryStore = create<StoryState>((set, get) => ({
   },
 
   processUpdate: (playSceneSound) => {
-    console.log("processUpdate");
-    console.log(get());
     const { slideIndex, actionIndex, currentActions, slides } = get();
 
     const currentAction: Action | undefined = currentActions[actionIndex];
@@ -136,9 +132,6 @@ export const useStoryStore = create<StoryState>((set, get) => ({
     } else if (slideIndex === slides.length - 1 && (currentActions.length === 0 || actionIndex >= currentActions.length - 1)) {
       console.log("Сцена завершена, последний слайд проигран");
     }
-
-    console.log("processUpdate end");
-    console.log(get());
   },
 
   goNext: (playSceneSound) => {

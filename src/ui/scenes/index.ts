@@ -10,12 +10,6 @@ export * from "./game-map-scene-wrapper";
 
 export * from "./slides-wrapper";
 
-export * from "./move-to-train-scene-wrapper";
-
-export * from "./move-after-train-wrapper";
-
 export * from "./cooking-game-scene-wrapper";
 
-export * from "./move-to-vdnh-wrapper";
-
-export * from "./move-to-gallery-wrapper";
+export * from "./move-wrapper";
