@@ -6,7 +6,6 @@ import { useSceneStore } from "./scene-store";
 import { GameConstants } from "$/core/constants/constants";
 import { usePlayerState } from "./player-store";
 
-const TIMEOUT_FOR_QUESTION = GameConstants.TIMEOUT_FOR_QUESTION;
 
 async function sendAnswerToServer(questionId: string, answerId: string): Promise<void> {
   try {
@@ -53,7 +52,7 @@ export const useMoveSceneStore = create<MoveSceneState>((set, get) => ({
   stage: "hidden",
   selected: null,
   canSkip: false,
-  remainTime: TIMEOUT_FOR_QUESTION,
+  remainTime: GameConstants.TIMEOUT_FOR_QUESTION,
   timerId: null,
   isMoving: false,
   backgroundMusic: null,
@@ -120,7 +119,7 @@ export const useMoveSceneStore = create<MoveSceneState>((set, get) => ({
       clearInterval(timerId);
     }
 
-    set({ remainTime: TIMEOUT_FOR_QUESTION });
+    set({ remainTime: GameConstants.TIMEOUT_FOR_QUESTION });
 
     if (get().isMoving) {
       const newTimerId = setInterval(() => {
@@ -210,7 +209,7 @@ export const useMoveSceneStore = create<MoveSceneState>((set, get) => ({
       stage: initialStage,
       selected: null,
       canSkip: false,
-      remainTime: TIMEOUT_FOR_QUESTION,
+      remainTime: GameConstants.TIMEOUT_FOR_QUESTION,
     });
 
     // Если сразу показываем вопрос, разрешаем пропуск
@@ -221,7 +220,7 @@ export const useMoveSceneStore = create<MoveSceneState>((set, get) => ({
         if (get().isQuizVisible && get().currentIndex === index) {
           set({ canSkip: true });
         }
-      }, TIMEOUT_FOR_QUESTION);
+      },  GameConstants.SLIDE_TIMEOUT);
     }
   },
 

@@ -3,9 +3,9 @@ function seconds(sec: number) {
 }
 
 export const GameConstants = {
-  SLIDE_TIMEOUT: 1500,
-  TIMEOUT_FOR_QUESTION: 1500,
-  SHOW_ITEMS_DESCRIPTION_TIMEOUT: 3500,
+  SLIDE_TIMEOUT: seconds(2),
+  TIMEOUT_FOR_QUESTION: seconds(15),
+  SHOW_ITEMS_DESCRIPTION_TIMEOUT: seconds(4),
 
   // player stats
   MAX_ENERGY: 100,
