@@ -16,19 +16,6 @@ export function GameContent() {
 
   const renderCurrentScreen = () => {
     switch (state.currentScreen) {
-      case "tetris":
-        return (<>
-          <TetrisGame />
-          <div className={styles.infoSection}>
-            <div className={styles.scoreSection}>
-              <Score score={state.score} />
-              <div className={styles.actionButtons}>
-                <img src={shopIcon} alt="shop" onClick={goToShop} />
-                <img src={bookIcon} alt="book" onClick={goToRecipeBook} />
-              </div>
-            </div>
-          </div>
-        </>);
       case "recipe-book":
         return (
           <div className={styles.recipeBookContainer}>
@@ -45,14 +32,25 @@ export function GameContent() {
           </>
         );
       default:
-        return <TetrisGame />;
+        return (<>
+          <TetrisGame />
+          <div className={styles.infoSection}>
+            <div className={styles.scoreSection}>
+              <Score score={state.score} />
+              <div className={styles.actionButtons}>
+                <img src={shopIcon} alt="shop" onClick={goToShop} />
+                <img src={bookIcon} alt="book" onClick={goToRecipeBook} />
+              </div>
+            </div>
+            <Button text="Закончить" onClick={() => useSceneStore.getState().backToPrevScene()} />
+          </div>
+        </>);
     }
   };
 
   return (
     <div className={styles.gameContainer}>
       {renderCurrentScreen()}
-      <Button text="Закончить" onClick={() => useSceneStore.getState().backToPrevScene()} />
     </div>
   );
 }

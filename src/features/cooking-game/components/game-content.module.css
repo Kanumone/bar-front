@@ -2,7 +2,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-around;
+  justify-content: center;
+  gap: 5%;
   height: 100vh;
   background: url('/src/assets/images/scenes/cooking/10x10/background.jpg') no-repeat center center;
   background-size: cover;
@@ -62,6 +63,7 @@
   width: 100%;
   padding: 15px;
   gap: 10%;
+  margin-top: 10%;
 }
 
 .gameBoardSection {
@@ -75,8 +77,10 @@
   flex: 0 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 8px;
   width: 90vw;
+  justify-content: center;
+  align-items: center;
 }
 
 .nextPiecesSection {
