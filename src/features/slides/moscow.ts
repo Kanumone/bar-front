@@ -4,6 +4,22 @@ import { Episode, type EpisodeConfig } from "./common";
 
 const moscowSlides: EpisodeConfig[] = [
   {
+    slideIndex: 0,
+    filename: "Screen_1.jpg",
+    actions: [
+      {
+        type: "image-pick-2",
+        topImage: "Screen_1.jpg",
+        bottomImage: "Screen_2.jpg",
+        correct: "top",
+        feedback: {
+          correct: "Правильно!",
+          wrong: "Неправильно!",
+        },
+      }
+    ]
+  },
+  {
     slideIndex: 1,
     filename: "Screen_1.jpg",
     backgroundSound: "moscow-station-ambient.mp3",

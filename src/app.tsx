@@ -32,7 +32,10 @@ export const App: React.FC = () => {
       gameFlowManager.initializeGame(phaserCanvasRef.current.id)
       .catch(() => {})
       .finally(() => {
-        setIsInitializing(false);
+        const timeout = setTimeout(() => {
+          setIsInitializing(false);
+          clearTimeout(timeout);
+        }, 1000);
       });
     }
 

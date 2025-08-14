@@ -13,6 +13,12 @@ import { MovePhaserScene, MoveSceneMapper } from "@features/move-phaser-scene";
 import { FlyingGameScene } from "@features/flying-game/flying-game-scene";
 import { introSlidesConfig, kazanSlidesConfig, moscowSlidesConfig, railwayStationSlidesConfig } from "../../features/slides/configs";
 
+const phaserScenes = {
+  [GameScene.FlyingGame]: FlyingGameScene,
+  [GameScene.GameMap]: GameMapPhaserScene,
+  [GameScene.Move]: MovePhaserScene,
+}
+
 class GameFlowManager {
   private game: Phaser.Game | null = null;
 
@@ -59,12 +65,11 @@ class GameFlowManager {
       this.game = new Phaser.Game({
         ...gameConfig,
         parent,
-        scene: [
-          FlyingGameScene,
-          GameMapPhaserScene,
-          MovePhaserScene,
-        ],
       });
+      
+      for (const [key, scene] of Object.entries(phaserScenes)) {
+        this.game.scene.add(key, scene);
+      }
 
       this.game.events.on(Phaser.Core.Events.READY, () => {
         if (!restored || !hasProfile) {
@@ -146,16 +151,12 @@ class GameFlowManager {
 
     this.stopActiveScenes();
     this.game.scene.start(GameScene.Move, sceneData);
-
-    console.log("▶️ Запущена логическая сцена MoveAfterTrain (Phaser: Move)", sceneData);
   }
 
   // ✅ Обновленный метод для движения к поезду
   showMoveToTrainScene() {
-    console.log("showMoveToTrainScene");
     if (!this.game) return;
 
-    console.log("showMoveToTrainScene have game");
     const sceneData = MoveSceneMapper.createSceneData("MoveToTrain", {});
 
     useSceneStore.setState({
@@ -170,8 +171,6 @@ class GameFlowManager {
 
     this.stopActiveScenes();
     this.game.scene.start(GameScene.Move, sceneData);
-
-    console.log("▶️ Запущена логическая сцена MoveToTrain (Phaser: Move)", sceneData);
   }
 
   // ✅ Новая сцена: движение к ВДНХ
@@ -188,8 +187,6 @@ class GameFlowManager {
 
     this.stopActiveScenes();
     this.game.scene.start(GameScene.Move, sceneData);
-
-    console.log("▶️ Запущена логическая сцена MoveToVdnh (Phaser: Move)", sceneData);
   }
 
   // ✅ Новая сцена: движение к Галерее
@@ -206,8 +203,6 @@ class GameFlowManager {
 
     this.stopActiveScenes();
     this.game.scene.start(GameScene.Move, sceneData);
-
-    console.log("▶️ Запущена логическая сцена MoveToGallery (Phaser: Move)", sceneData);
   }
 
   // ✅ Новая сцена: движение к Казани
@@ -224,8 +219,6 @@ class GameFlowManager {
 
     this.stopActiveScenes();
     this.game.scene.start(GameScene.Move, sceneData);
-
-    console.log("▶️ Запущена логическая сцена MoveToKazan (Phaser: Move)", sceneData);
   }
 
   // ✅ Новый метод для переключения сцены во время работы
@@ -242,7 +235,6 @@ class GameFlowManager {
     }
 
     moveScene.switchToScene(scene, customData);
-    console.log(`▶️ Переключено на логическую сцену: ${scene}`);
   }
 
   showFlyingGame() {

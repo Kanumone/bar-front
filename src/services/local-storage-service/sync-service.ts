@@ -88,7 +88,6 @@ export class SyncService {
     try {
       const snapshot = this.buildSnapshot();
       localStorage.setItem(SyncService.PERSIST_KEY, JSON.stringify(snapshot));
-      console.log("[SyncService]: Autosaved stores at", new Date(snapshot.lastSaved).toISOString());
     } catch (error) {
       logAppError("SyncService.saveAllStores", error);
       throw error;
@@ -179,7 +178,6 @@ export class SyncService {
       const raw = localStorage.getItem(SyncService.PERSIST_KEY);
       if (!raw) return false;
       const parsed = JSON.parse(raw) as Record<string, unknown> & { lastSaved?: number };
-      console.log("parsed", parsed);
 
       type StoreLike = { setState: (updater: (state: unknown) => unknown) => void };
       const mergeIntoStore = (store: StoreLike | unknown, incoming: unknown) => {
