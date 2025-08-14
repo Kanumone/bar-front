@@ -191,6 +191,8 @@ export const useMoveSceneStore = create<MoveSceneState>((set, get) => ({
   openQuiz: (index) => {
     const { questions, pauseTimer } = get();
     pauseTimer();
+    // Останавливаем движение и потребление, пока открыт квиз
+    get().setMoving(false);
 
     if (index >= questions.length) {
       get().completeQuiz();
@@ -235,13 +237,13 @@ export const useMoveSceneStore = create<MoveSceneState>((set, get) => ({
     const { currentIndex, questions, pauseTimer } = get();
     pauseTimer();
 
-    const questionId = questions[currentIndex].id;
+    // const questionId = questions[currentIndex].id;
     set({ selected: answerId });
 
     // ✅ сразу отправляем ответ на сервер (заглушка)
-    sendAnswerToServer(questionId, answerId).catch((err) => {
-      console.error("Ошибка отправки ответа на сервер", err);
-    });
+    // sendAnswerToServer(questionId, answerId).catch((err) => {
+    //   console.error("Ошибка отправки ответа на сервер", err);
+    // });
 
     setTimeout(() => {
       set({
@@ -265,11 +267,11 @@ export const useMoveSceneStore = create<MoveSceneState>((set, get) => ({
 
     const currentScene = useSceneStore.getState().currentScene;
     switch (currentScene) {
-      case GameScene.MoveAfterTrain:
-        gameFlowManager.showMoscow();
-        break;
       case GameScene.MoveToTrain:
         gameFlowManager.showRailwayStation();
+        break;
+      case GameScene.MoveAfterTrain:
+        gameFlowManager.showMoscow();
         break;
       case GameScene.MoveToVdnh:
         useSceneStore.getState().backToPrevScene();

@@ -13,11 +13,21 @@
 #root,
 html,
 body {
-  height: 100dvh;
+  /* Используем small viewport для стабильной высоты в iOS/Telegram */
+  height: 100svh;
   overflow: hidden;
   margin: 0;
   padding: 0;
   touch-action: none;
+}
+
+@supports not (height: 100svh) {
+  :root,
+  #root,
+  html,
+  body {
+    height: 100dvh;
+  }
 }
 
 body {

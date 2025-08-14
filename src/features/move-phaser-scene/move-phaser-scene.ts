@@ -343,6 +343,7 @@ export class MovePhaserScene extends Scene {
   // === Blocking handlers ===
   private handleQuizBlocking(): boolean {
     if (!useMoveSceneStore.getState().isQuizVisible) return false;
+
     this.stopMovement();
     this.player?.anims.stop();
     if (this.player && this.player.anims.currentAnim?.key !== `${this.prefix}-idle`) {

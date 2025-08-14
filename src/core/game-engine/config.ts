@@ -2,8 +2,9 @@ import Phaser from "phaser";
 
 export const gameConfig: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
-  width: window.innerWidth,
-  height: window.innerHeight,
+  // Стартуем с минимального размера — далее режим RESIZE подгонит под родителя
+  width: 1,
+  height: 1,
   backgroundColor: "#f9f6f2",
   physics: {
     default: "arcade",
@@ -15,5 +16,6 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
   },
   scale: {
     mode: Phaser.Scale.RESIZE,
+    autoCenter: Phaser.Scale.CENTER_BOTH,
   },
 };

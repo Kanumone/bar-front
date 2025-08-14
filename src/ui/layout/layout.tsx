@@ -80,7 +80,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             onSettings={() => { setMenuOpen(false); /* открыть настройки позже */ }}
             onToggleSound={onToggleSound}
             soundEnabled={isSoundEnabled}
-            onDebugAction={(action) => { console.log("DEBUG:", action); setMenuOpen(false); }}
+            onDebugAction={() => { setMenuOpen(false); }}
           />
         </>
       }
