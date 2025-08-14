@@ -1,6 +1,6 @@
 import { useDroppable } from "@dnd-kit/core";
 import { useGameContext, type VegetablePiece } from "./game-provider";
-import { getVegetableImagePath } from "$/utils/get-assets-path";
+import { getVegetableImagePath } from "./ingredients";
 import styles from "./game-board.module.css";
 
 interface GameBoardProps {

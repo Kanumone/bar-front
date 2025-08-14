@@ -1,4 +1,5 @@
-import { getAssetsPathByType, getIngredientImage } from "$/utils";
+import { getAssetsPathByType } from "$/utils";
+import { getIngredientImage } from "./ingredients";
 import type { Recipe } from "$features/cooking-game/types";
 
 export const recipes: Recipe[] = [

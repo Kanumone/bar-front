@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useDraggable } from "@dnd-kit/core";
 import { type VegetablePiece, vegetableShapes } from "./game-provider.tsx";
-import { getVegetableImagePath } from "../../../utils/get-assets-path";
+import { getVegetableImagePath } from "./ingredients";
 import styles from "./next-piece.module.css";
 
 interface NextPieceProps {

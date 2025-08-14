@@ -5,7 +5,8 @@ import { logAppError } from "@utils/log-app-error";
 import { LocalStorageService } from "$/services/local-storage-service";
 import { syncService } from "$services/local-storage-service/sync-service";
 import { GameConstants } from "$/core/constants/constants";
-import { getIngredientImage } from "$utils";
+import { getIngredientImage } from "$/features/cooking-game/components/ingredients";
+import type { IngredientID } from "$features/cooking-game/types";
 
 interface PlayerState {
   playerName: string;
@@ -285,7 +286,7 @@ export const usePlayerState = create<PlayerState>((set, get) => ({
       const inventory = player.inventory.map((item) => ({
         id: item.name,
         name: item.name,
-        image: getIngredientImage(item.name),
+        image: getIngredientImage(item.name as IngredientID),
         quantity: item.quantity,
       }));
 
