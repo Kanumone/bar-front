@@ -155,8 +155,10 @@ class GameFlowManager {
 
   // ✅ Обновленный метод для движения к поезду
   showMoveToTrainScene() {
+    console.log("showMoveToTrainScene");
     if (!this.game) return;
 
+    console.log("showMoveToTrainScene have game");
     const sceneData = MoveSceneMapper.createSceneData("MoveToTrain", {});
 
     useSceneStore.setState({

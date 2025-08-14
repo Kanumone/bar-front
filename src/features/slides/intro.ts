@@ -197,7 +197,7 @@ const introConfig: EpisodeConfig[] = [
         type: "button",
         button: {
           text: "▶ В коридор",
-          action: () => { void 0; },
+          action: () => { },
         },
       },
     ],
@@ -222,9 +222,7 @@ const introConfig: EpisodeConfig[] = [
         type: "button",
         button: {
           text: "► Открыть уведомления",
-          action: () => {
-            console.log("Открыть уведомления");
-          },
+          action: () => {},
         },
       },
     ],
@@ -329,7 +327,6 @@ const introConfig: EpisodeConfig[] = [
       },
       {
         type: "thoughts",
-        characterName: "Мама",
         text: "Она не обнимает на прощание. Просто даёт инструкции. Надёжнее не придумаешь.",
       },
       // Добавить реакции на каждый вариант ответа

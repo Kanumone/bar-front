@@ -3,8 +3,8 @@ function seconds(sec: number) {
 }
 
 export const GameConstants = {
-  SLIDE_TIMEOUT: 2500,
-  TIMEOUT_FOR_QUESTION: 2500,
+  SLIDE_TIMEOUT: 1,
+  TIMEOUT_FOR_QUESTION: 1,
   SHOW_ITEMS_DESCRIPTION_TIMEOUT: 3500,
 
   // player stats
@@ -20,5 +20,5 @@ export const GameConstants = {
   MAX_RETRY_ATTEMPTS: 3, // Максимальное количество попыток синхронизации при ошибке
   RETRY_DELAY: seconds(5), // Задержка между попытками при ошибке
 
-  DEBUG_MODE: false,
+  DEBUG_MODE: true,
 };
