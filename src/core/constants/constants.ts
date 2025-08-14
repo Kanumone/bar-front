@@ -3,22 +3,22 @@ function seconds(sec: number) {
 }
 
 export const GameConstants = {
-  SLIDE_TIMEOUT: 1,
-  TIMEOUT_FOR_QUESTION: 1,
-  SHOW_ITEMS_DESCRIPTION_TIMEOUT: 2000,
+  SLIDE_TIMEOUT: 2500,
+  TIMEOUT_FOR_QUESTION: 2500,
+  SHOW_ITEMS_DESCRIPTION_TIMEOUT: 3500,
 
   // player stats
-  MAX_ENERGY: 1000,
-  MAX_HUNGER: 500,
+  MAX_ENERGY: 100,
+  MAX_HUNGER: 50,
   ENERGY_FOR_SHEEP: 4,
 
   ENERGY_POINTS_PER_SECOND: 1,
   HUNGER_POINTS_PER_SECOND: 1,
 
   // system
-  SYNC_INTERVAL: seconds(60), // Интервал синхронизации данных на сервер
+  SYNC_INTERVAL: seconds(30), // Интервал синхронизации данных на сервер
   MAX_RETRY_ATTEMPTS: 3, // Максимальное количество попыток синхронизации при ошибке
   RETRY_DELAY: seconds(5), // Задержка между попытками при ошибке
 
-  DEBUG_MODE: true,
+  DEBUG_MODE: false,
 };

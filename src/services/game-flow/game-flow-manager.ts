@@ -1,7 +1,8 @@
 import Phaser from "phaser";
 import { gameConfig } from "@core/game-engine/config";
-import { useAuthStore, useMoveSceneStore, useSceneStore } from "@core/state";
+import { useMoveSceneStore, useSceneStore } from "@core/state";
 import { usePlayerState } from "@core/state/player-store";
+import { syncService } from "$services/local-storage-service/sync-service";
 import {
   type MoveScene,
   type MoveSceneData,
@@ -60,22 +61,35 @@ class GameFlowManager {
         console.log("Phaser Game Ready");
       });
 
-      // ✅ загрузка будет выполнена после аутентификации через useAuth
+      // 1) Пробуем восстановить состояние сторов из localStorage
+      const restored = syncService.loadAllStoresFromLocal();
 
-      const { sessionId } = useAuthStore.getState();
-      if (!sessionId) {
+      // 2) Решаем, что показывать: если нет данных или нет username/gender → Auth, иначе текущую сцену
+      const { playerName, playerGender, checkPoint } = usePlayerState.getState();
+      const restoredScene = useSceneStore.getState().currentScene;
+      const hasProfile = Boolean(playerName && playerName.trim().length > 0 && playerGender);
+
+      if (!restored || !hasProfile) {
         this.showAuth();
-        return;
-      }
-      const { checkPoint } = usePlayerState.getState();
-      if (checkPoint) {
-        console.log(`Восстанавливаем сцену: ${checkPoint}`);
-        // this.startScene(checkPoint as GameScene);
-        // сделать мапу сцены на show функции
+      } else if (restoredScene && restoredScene !== GameScene.Auth) {
+        try {
+          this.startScene(restoredScene as GameScene);
+        } catch {
+          this.showIntro();
+        }
+      } else if (checkPoint) {
+        try {
+          this.startScene(checkPoint as GameScene);
+        } catch {
+          // если сцена неизвестна — откатываемся на интро
+          this.showIntro();
+        }
       } else {
-        console.log("Нет сохранённой сцены, показываем интро");
         this.showIntro();
       }
+
+      // 3) Стартуем воркер автосохранения
+      syncService.start();
     }
   }
 

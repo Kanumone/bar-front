@@ -1,8 +1,7 @@
-import React, { useEffect, useRef, useState, type PropsWithChildren } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { gameFlowManager } from "$services/game-flow";
 import { usePlayerState } from "@core/state/player-store";
 import styles from "./auth-scene-wrapper.module.css";
-import { useAuthStore } from "../../core/state";
 
 interface Firefly {
   id: string;
@@ -84,7 +83,6 @@ export const AuthSceneWrapper: React.FC = () => {
   const [showInput, setShowInput] = useState(false);
   const [isAnimating, setIsAnimating] = useState<"boy" | "girl" | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const { isVerifying } = useAuthStore();
 
   useEffect(() => {
     if (selectedGender) {

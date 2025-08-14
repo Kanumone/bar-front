@@ -38,69 +38,69 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   authenticateUser: async () => {
-    if (!WebApp.initData) {
-      if (!GameConstants.DEBUG_MODE) {
-        set({ isTelegram: false });
-        console.error("Telegram initData not available");
-        return;
-      }
-    }
-    console.log("authenticateUser", get().userID);
+    // if (!WebApp.initData) {
+    //   if (!GameConstants.DEBUG_MODE) {
+    //     set({ isTelegram: false });
+    //     console.error("Telegram initData not available");
+    //     return;
+    //   }
+    // }
+    // console.log("authenticateUser", get().userID);
 
-    set({ isTelegram: true });
+    // set({ isTelegram: true });
 
-    if (!get().userID) {
-      set({ userID: String(WebApp.initDataUnsafe.user?.id) });
-    }
+    // if (!get().userID) {
+    //   set({ userID: String(WebApp.initDataUnsafe.user?.id) });
+    // }
 
-    try {
-      const existingSessionId = get().sessionId;
-      let sessionId = "";
+    // try {
+    //   const existingSessionId = get().sessionId;
+    //   let sessionId = "";
 
-      if (existingSessionId) {
-        const { data: validation } = await apiClient.auth.authControllerValidateSession(existingSessionId);
-        if (!validation.valid) {
-          sessionId = await get().requestSession();
-        }
-      } else {
-        sessionId = await get().requestSession();
-      }
-      console.log("sessionId", sessionId);
+    //   if (existingSessionId) {
+    //     const { data: validation } = await apiClient.auth.authControllerValidateSession(existingSessionId);
+    //     if (!validation.valid) {
+    //       sessionId = await get().requestSession();
+    //     }
+    //   } else {
+    //     sessionId = await get().requestSession();
+    //   }
+    //   console.log("sessionId", sessionId);
 
-      try {
-        const details: Record<string, string> = {
-          userAgent: navigator.userAgent,
-          userId: String(get().userID ?? "unknown"),
-          telegramVersion: WebApp.version,
-          sessionId: sessionId,
-        };
+    //   try {
+    //     const details: Record<string, string> = {
+    //       userAgent: navigator.userAgent,
+    //       userId: String(get().userID ?? "unknown"),
+    //       telegramVersion: WebApp.version,
+    //       sessionId: sessionId,
+    //     };
 
-        await logActivity("user_authenticated", details, "Auth");
+    //     await logActivity("user_authenticated", details, "Auth");
 
-        console.log("Logged user agent and Telegram version on authentication.");
-      } catch (logError: unknown) {
-        logAppError("Authentication Logging", logError);
-      }
+    //     console.log("Logged user agent and Telegram version on authentication.");
+    //   } catch (logError: unknown) {
+    //     logAppError("Authentication Logging", logError);
+    //   }
 
-      // ✅ после успешной аутентификации загружаем состояние игрока
-      try {
-        // Сначала загружаем из localStorage
-        usePlayerState.getState().loadPlayerStateFromLocal();
+    //   // ✅ после успешной аутентификации загружаем состояние игрока
+    //   try {
+    //     // Сначала загружаем из localStorage
+    //     usePlayerState.getState().loadPlayerStateFromLocal();
 
-        // Затем загружаем с сервера и запускаем автосинхронизацию
-        await usePlayerState.getState().loadPlayerStateFromServer();
-        usePlayerState.getState().startAutoSync();
+    //     // Затем загружаем с сервера и запускаем автосинхронизацию
+    //     await usePlayerState.getState().loadPlayerStateFromServer();
+    //     usePlayerState.getState().startAutoSync();
 
-        // Отправляем накопленные логи
-        const { LoggingService } = await import("$services/local-storage-service/logging-service");
-        LoggingService.sendPendingLogs();
-      } catch (loadError: unknown) {
-        logAppError("LoadPlayerState", loadError);
-      }
-    } catch (error: unknown) {
-      logAppError("Authentication", error);
-      get().logout();
-    }
+    //     // Отправляем накопленные логи
+    //     const { LoggingService } = await import("$services/local-storage-service/logging-service");
+    //     LoggingService.sendPendingLogs();
+    //   } catch (loadError: unknown) {
+    //     logAppError("LoadPlayerState", loadError);
+    //   }
+    // } catch (error: unknown) {
+    //   logAppError("Authentication", error);
+    //   get().logout();
+    // }
   },
 
   requestSession: async () => {

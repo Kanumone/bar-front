@@ -174,10 +174,10 @@ export class SyncService {
   /**
    * Восстановить все zustand-сторы из localStorage
    */
-  loadAllStoresFromLocal(): void {
+  loadAllStoresFromLocal(): boolean {
     try {
       const raw = localStorage.getItem(SyncService.PERSIST_KEY);
-      if (!raw) return;
+      if (!raw) return false;
       const parsed = JSON.parse(raw) as Record<string, unknown> & { lastSaved?: number };
 
       type StoreLike = { setState: (updater: (state: unknown) => unknown) => void };
@@ -201,8 +201,10 @@ export class SyncService {
       useMoveSceneStore.setState({ timerId: null, consumptionTimerId: null, isMoving: false });
 
       console.log("[SyncService]: Restored stores from localStorage", parsed.lastSaved ? new Date(parsed.lastSaved).toISOString() : "");
+      return true;
     } catch (error) {
       logAppError("SyncService.loadAllStoresFromLocal", error);
+      return false;
     }
   }
 
