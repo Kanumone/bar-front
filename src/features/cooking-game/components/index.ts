@@ -14,6 +14,4 @@ export { DraggedPiece } from "./dragged-piece.tsx";
 
 export { RecipeCard } from "./recipe-card.tsx";
 
-export { RecipeNavigation } from "./recipe-navigation.tsx";
-
 export { RecipeSelector } from "./recipe-selector.tsx";

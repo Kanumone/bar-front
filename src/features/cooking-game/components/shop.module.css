@@ -20,6 +20,7 @@
   position: relative;
   overflow: hidden;
   flex-direction: column;
+  margin-top: 10%;
 }
 
 .backButton {

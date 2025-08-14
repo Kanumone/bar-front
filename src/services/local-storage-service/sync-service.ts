@@ -1,18 +1,23 @@
-import { apiClient, UpdateGameProgressDtoCurrentSceneEnum } from "$/api";
-import { LocalStorageService } from "./local-storage-service";
 import { logAppError } from "$utils/log-app-error";
-import { useAuthStore } from "$core/state";
 import { GameConstants } from "$core/constants/constants";
+import { useAuthStore } from "$core/state/auth-store";
+import { usePlayerState } from "$core/state/player-store";
+import { useSceneStore } from "$core/state/scene-store";
+import { useSettingsStore } from "$core/state/settings-store";
+import { useMoveSceneStore } from "$core/state/move-scene-store";
+import { useStoryStore } from "$core/state/story-store";
 
 /**
- * Сервис для автоматической синхронизации данных с backend
- * Отправляет накопленные изменения каждую минуту
+ * Сервис автосохранения локального состояния.
+ * Раз в минуту сохраняет все zustand-сторы в localStorage.
+ * Также умеет восстановить все состояния из localStorage.
  */
 export class SyncService {
   private static instance: SyncService | null = null;
   private syncIntervalId: number | null = null;
   private isRunning = false;
-  private retryCount = 0;
+
+  private static readonly PERSIST_KEY = "bar-game-stores-v1";
 
   /**
    * Получить единственный экземпляр сервиса (Singleton)
@@ -25,7 +30,7 @@ export class SyncService {
   }
 
   /**
-   * Запустить автоматическую синхронизацию
+   * Запустить автосохранение
    */
   start(): void {
     if (this.isRunning) {
@@ -34,19 +39,19 @@ export class SyncService {
     }
 
     this.isRunning = true;
-    console.log("[SyncService]: Starting automatic sync every", GameConstants.SYNC_INTERVAL / 1000, "seconds");
+    console.log("[SyncService]: Starting autosave every", GameConstants.SYNC_INTERVAL / 1000, "seconds");
 
-    // Запускаем первую синхронизацию сразу
-    this.performSync();
+    // Сразу выполняем первое сохранение
+    this.saveAllStores();
 
-    // Устанавливаем интервал для регулярной синхронизации
+    // Устанавливаем интервал для регулярного сохранения
     this.syncIntervalId = setInterval(() => {
-      this.performSync();
+      this.saveAllStores();
     }, GameConstants.SYNC_INTERVAL);
   }
 
   /**
-   * Остановить автоматическую синхронизацию
+   * Остановить автосохранение
    */
   stop(): void {
     if (!this.isRunning) {
@@ -64,118 +69,140 @@ export class SyncService {
   }
 
   /**
-   * Выполнить принудительную синхронизацию
+   * Принудительно сохранить все сторы сейчас
    */
   async forcSync(): Promise<boolean> {
-    return this.performSync();
-  }
-
-  /**
-   * Основной метод синхронизации
-   */
-  private async performSync(): Promise<boolean> {
     try {
-      // Проверяем, авторизован ли пользователь
-      const { user, sessionId } = useAuthStore.getState();
-      if (!user?.id || !sessionId) {
-        console.log("[SyncService]: Skipping sync - user not authenticated");
-        return false;
-      }
-
-      // Проверяем, есть ли данные для синхронизации
-      if (!LocalStorageService.needsSynchronization()) {
-        console.log("[SyncService]: No data to sync");
-        return true;
-      }
-
-      console.log("[SyncService]: Starting sync...");
-
-      // Получаем данные для синхронизации
-      const { playerState, gameProgress } = LocalStorageService.getDataForSync();
-
-      // Синхронизируем состояние игрока, если нужно
-      if (playerState) {
-        await this.syncPlayerState(playerState);
-        console.log("[SyncService]: Player state synchronized");
-      }
-
-      // Синхронизируем прогресс игры, если нужно
-      if (gameProgress) {
-        await this.syncGameProgress(gameProgress.checkPoint);
-        console.log("[SyncService]: Game progress synchronized");
-      }
-
-      // Отмечаем данные как синхронизированные
-      LocalStorageService.markAsSynced();
-
-      // Сбрасываем счетчик попыток при успешной синхронизации
-      this.retryCount = 0;
-
-      console.log("[SyncService]: Sync completed successfully");
+      this.saveAllStores();
       return true;
-
     } catch (error) {
-      logAppError("SyncService", error);
-
-      // Увеличиваем счетчик неудачных попыток
-      this.retryCount++;
-
-      // Если превышено максимальное количество попыток, ждем до следующего интервала
-      if (this.retryCount >= GameConstants.MAX_RETRY_ATTEMPTS) {
-        console.error("[SyncService]: Max retry attempts reached. Will retry on next interval.");
-        this.retryCount = 0;
-        return false;
-      }
-
-      // Повторяем попытку через задержку
-      console.log(`[SyncService]: Retry attempt ${this.retryCount}/${GameConstants.MAX_RETRY_ATTEMPTS} in ${GameConstants.RETRY_DELAY / 1000} seconds`);
-      setTimeout(() => {
-        if (this.isRunning) {
-          this.performSync();
-        }
-      }, GameConstants.RETRY_DELAY);
-
+      logAppError("SyncService.forceSync", error);
       return false;
     }
   }
 
   /**
-   * Синхронизация состояния игрока с backend
+   * Сохранить все zustand-сторы в localStorage
    */
-  private async syncPlayerState(playerState: any): Promise<void> {
+  private saveAllStores(): void {
     try {
-      await apiClient.gameState.gameStateControllerUpdatePlayerState({
-        energy: playerState.energy,
-        hunger: playerState.hunger,
-        money: playerState.money,
-        inventory: playerState.inventory,
-      });
+      const snapshot = this.buildSnapshot();
+      localStorage.setItem(SyncService.PERSIST_KEY, JSON.stringify(snapshot));
+      console.log("[SyncService]: Autosaved stores at", new Date(snapshot.lastSaved).toISOString());
     } catch (error) {
-      throw new Error(`Failed to sync player state: ${error}`);
+      logAppError("SyncService.saveAllStores", error);
+      throw error;
     }
   }
 
   /**
-   * Синхронизация прогресса игры с backend
+   * Построить снимок состояния для сохранения
    */
-  private async syncGameProgress(checkPoint: string | null): Promise<void> {
-    try {
-      const sceneValue: UpdateGameProgressDtoCurrentSceneEnum | undefined = (() => {
-        switch (checkPoint) {
-        case UpdateGameProgressDtoCurrentSceneEnum.Intro:
-        case UpdateGameProgressDtoCurrentSceneEnum.Moscow:
-        case UpdateGameProgressDtoCurrentSceneEnum.Kazan:
-          return checkPoint as UpdateGameProgressDtoCurrentSceneEnum;
-        default:
-          return UpdateGameProgressDtoCurrentSceneEnum.Intro;
-        }
-      })();
+  private buildSnapshot(): { auth: unknown; player: unknown; scene: unknown; settings: unknown; move: unknown; story: unknown; lastSaved: number } {
+    const authState = useAuthStore.getState();
+    const playerState = usePlayerState.getState();
+    const sceneState = useSceneStore.getState();
+    const settingsState = useSettingsStore.getState();
+    const moveState = useMoveSceneStore.getState();
+    const storyState = useStoryStore.getState();
 
-      await apiClient.gameState.gameStateControllerUpdateGameProgress({
-        currentScene: sceneValue,
-      });
+    const auth = {
+      isTelegram: authState.isTelegram,
+      userID: authState.userID,
+      user: authState.user,
+      sessionId: authState.sessionId,
+      isAuthenticated: authState.isAuthenticated,
+    };
+
+    const player = {
+      playerName: playerState.playerName,
+      playerGender: playerState.playerGender,
+      energy: playerState.energy,
+      hunger: playerState.hunger,
+      money: playerState.money,
+      inventory: playerState.inventory,
+      checkPoint: playerState.checkPoint,
+    };
+
+    const scene = {
+      prevScene: sceneState.prevScene,
+      currentScene: sceneState.currentScene,
+      sceneData: sceneState.sceneData,
+      backgroundLayers: sceneState.backgroundLayers,
+      slidesConfig: sceneState.slidesConfig,
+    };
+
+    const settings = {
+      isSoundEnabled: settingsState.isSoundEnabled,
+    };
+
+    const move = {
+      questions: moveState.questions,
+      currentIndex: moveState.currentIndex,
+      isQuizVisible: moveState.isQuizVisible,
+      stage: moveState.stage,
+      selected: moveState.selected,
+      canSkip: moveState.canSkip,
+      remainTime: moveState.remainTime,
+      backgroundMusic: moveState.backgroundMusic,
+    };
+
+    const story = {
+      slideIndex: storyState.slideIndex,
+      actionIndex: storyState.actionIndex,
+      imageLoaded: storyState.imageLoaded,
+      canSkip: storyState.canSkip,
+      currentActions: storyState.currentActions,
+      slides: storyState.slides,
+      slidesScene: storyState.slidesScene,
+      backgroundOverrideSrc: storyState.backgroundOverrideSrc,
+      backgroundOverrideCarry: storyState.backgroundOverrideCarry,
+      actionLocalState: storyState.actionLocalState,
+    };
+
+    return {
+      auth,
+      player,
+      scene,
+      settings,
+      move,
+      story,
+      lastSaved: Date.now(),
+    };
+  }
+
+  /**
+   * Восстановить все zustand-сторы из localStorage
+   */
+  loadAllStoresFromLocal(): void {
+    try {
+      const raw = localStorage.getItem(SyncService.PERSIST_KEY);
+      if (!raw) return;
+      const parsed = JSON.parse(raw) as Record<string, unknown> & { lastSaved?: number };
+
+      type StoreLike = { setState: (updater: (state: unknown) => unknown) => void };
+      const mergeIntoStore = (store: StoreLike | unknown, incoming: unknown) => {
+        if (!incoming || typeof incoming !== "object") return;
+        const st = store as StoreLike | undefined;
+        if (!st || typeof st.setState !== "function") return;
+        const data = incoming as Record<string, unknown>;
+        st.setState((prev: unknown) => ({ ...(prev as Record<string, unknown>), ...data }));
+      };
+
+      // Восстанавливаем по частям
+      mergeIntoStore(useAuthStore, parsed.auth);
+      mergeIntoStore(usePlayerState, parsed.player);
+      mergeIntoStore(useSceneStore, parsed.scene);
+      mergeIntoStore(useSettingsStore, parsed.settings);
+      mergeIntoStore(useMoveSceneStore, parsed.move);
+      mergeIntoStore(useStoryStore, parsed.story);
+
+      // Гарантируем безопасное состояние таймеров и движения
+      useMoveSceneStore.setState({ timerId: null, consumptionTimerId: null, isMoving: false });
+
+      console.log("[SyncService]: Restored stores from localStorage", parsed.lastSaved ? new Date(parsed.lastSaved).toISOString() : "");
     } catch (error) {
-      throw new Error(`Failed to sync game progress: ${error}`);
+      logAppError("SyncService.loadAllStoresFromLocal", error);
     }
   }
 
@@ -184,15 +211,21 @@ export class SyncService {
    */
   getStatus(): {
     isRunning: boolean;
-    needsSync: boolean;
     lastSaveTimestamp: number;
-    retryCount: number;
   } {
+    let lastSaved = 0;
+    try {
+      const raw = localStorage.getItem(SyncService.PERSIST_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw) as { lastSaved?: number };
+        lastSaved = parsed.lastSaved || 0;
+      }
+    } catch {
+      lastSaved = 0;
+    }
     return {
       isRunning: this.isRunning,
-      needsSync: LocalStorageService.needsSynchronization(),
-      lastSaveTimestamp: LocalStorageService.getLastSaveTimestamp(),
-      retryCount: this.retryCount,
+      lastSaveTimestamp: lastSaved,
     };
   }
 }
