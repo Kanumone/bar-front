@@ -3,15 +3,15 @@ import styles from "./cooking-notification.module.css";
 
 interface CookingNotificationProps {
   isVisible: boolean;
-  currentEnergy: number;
-  maxEnergy: number;
+  currentHunger: number;
+  maxHunger: number;
   onAnimationComplete: () => void;
 }
 
 export const CookingNotification = ({
   isVisible,
-  currentEnergy,
-  maxEnergy,
+  currentHunger,
+  maxHunger,
   onAnimationComplete,
 }: CookingNotificationProps) => {
   const [shouldRender, setShouldRender] = useState(false);
@@ -37,9 +37,9 @@ export const CookingNotification = ({
       <div className={styles.notification}>
         <div className={styles.title}>Приготовлено!</div>
         <div className={styles.energyDisplay}>
-          <span className={styles.energyIcon}>⚡</span>
+          <span className={styles.energyIcon}>🍗</span>
           <span className={styles.energyText}>
-            {currentEnergy}/{maxEnergy}
+            {currentHunger}/{maxHunger}
           </span>
         </div>
       </div>

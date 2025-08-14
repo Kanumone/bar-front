@@ -13,7 +13,7 @@ export const recipes: Recipe[] = [
     }),
     ingredients: [
       {
-        id: "yeast",
+        id: "yeast_dough",
         imageSrc: getIngredientImage("yeast_dough"),
         count: 1,
         color: "#90CAF9"
@@ -44,7 +44,7 @@ export const recipes: Recipe[] = [
     }),
     ingredients: [
       {
-        id: "eggs",
+        id: "egg",
         imageSrc: getIngredientImage("egg"),
         count: 2,
         color: "#90CAF9"
@@ -56,7 +56,7 @@ export const recipes: Recipe[] = [
         color: "#90CAF9"
       },
       {
-        id: "frying_oil",
+        id: "oil",
         imageSrc: getIngredientImage("oil"),
         count: 1,
         color: "#90CAF9"

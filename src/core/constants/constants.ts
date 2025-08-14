@@ -22,3 +22,9 @@ export const GameConstants = {
 
   DEBUG_MODE: false,
 };
+
+if (GameConstants.DEBUG_MODE) {
+  GameConstants.SLIDE_TIMEOUT = 1;
+  GameConstants.TIMEOUT_FOR_QUESTION = 1;
+  GameConstants.SHOW_ITEMS_DESCRIPTION_TIMEOUT = 1;
+}

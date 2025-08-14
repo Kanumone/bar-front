@@ -23,9 +23,7 @@ export const RecipeSelector = ({
 }: RecipeSelectorProps) => {
   const [showNotification, setShowNotification] = useState(false);
 
-  const { energy, inventory, addEnergy } = usePlayerState();
-
-  // список целиком, без страниц
+  const { hunger, inventory, removeHunger, removeFromInventory } = usePlayerState();
 
   // Мемоизированные рецепты с проверкой доступности
   const recipesWithAvailability = useMemo(() => {
@@ -45,7 +43,10 @@ export const RecipeSelector = ({
   const currentRecipes = recipesWithAvailability;
 
   const handleRecipeCook = (recipe: Recipe) => {
-    addEnergy(recipe.energy);
+    removeHunger(recipe.energy);
+    recipe.ingredients.forEach((ingredient) => {
+      removeFromInventory(ingredient.id, ingredient.count);
+    });
     setShowNotification(true);
   };
 
@@ -63,9 +64,9 @@ export const RecipeSelector = ({
         <button className={styles.backButton} onClick={back} aria-label="Назад">
           <span className={styles.backArrow}>←</span>
         </button>
-        <div className={styles.energyCounter} aria-label={`Энергия: ${energy}`}>
-          <span className={styles.energyIcon}>⚡</span>
-          <span className={styles.energyAmount}>{energy}</span>
+        <div className={styles.energyCounter} aria-label={`Голод: ${hunger}`}>
+          <span className={styles.energyIcon}>🍗</span>
+          <span className={styles.energyAmount}>{hunger}</span>
         </div>
       </div>
 
@@ -109,8 +110,8 @@ export const RecipeSelector = ({
       {/* Уведомление о готовке */}
       <CookingNotification
         isVisible={showNotification}
-        currentEnergy={energy}
-        maxEnergy={GameConstants.MAX_ENERGY}
+        currentHunger={hunger}
+        maxHunger={GameConstants.MAX_HUNGER}
         onAnimationComplete={handleNotificationComplete}
       />
     </div>

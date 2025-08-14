@@ -19,13 +19,15 @@ interface PlayerState {
   setPlayerName: (name: string) => void;
   setPlayerGender: (gender: "boy" | "girl" | null) => void;
 
-  setEnergy: (value: number) => void;
   setHunger: (value: number) => void;
   addHunger: (amount: number) => void;
+  removeHunger: (amount: number) => void;
 
+  setEnergy: (value: number) => void;
   increaseEnergy: () => void;
   decreaseEnergy: () => void;
   addEnergy: (amount: number) => void;
+  removeEnergy: (amount: number) => void;
 
   setMoney: (value: number) => void;
   addMoney: (amount: number) => void;
@@ -91,7 +93,12 @@ export const usePlayerState = create<PlayerState>((set, get) => ({
     set((state) => ({
       energy: Math.min(GameConstants.MAX_ENERGY, state.energy + amount),
     }));
+  },
 
+  removeEnergy: (amount) => {
+    set((state) => ({
+      energy: Math.max(0, state.energy - amount),
+    }));
   },
 
   setHunger: (value) => {
@@ -104,7 +111,12 @@ export const usePlayerState = create<PlayerState>((set, get) => ({
     set((state) => ({
       hunger: Math.max(0, Math.min(GameConstants.MAX_HUNGER, state.hunger + amount)),
     }));
+  },
 
+  removeHunger: (amount) => {
+    set((state) => ({
+      hunger: Math.max(0, Math.min(GameConstants.MAX_HUNGER, state.hunger - amount)),
+    }));
   },
 
   setMoney: (value) => {

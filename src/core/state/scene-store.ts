@@ -25,10 +25,13 @@ export const useSceneStore = create<SceneState>((set, get) => ({
   slidesConfig: undefined,
 
   setScene: async (scene, data) => {
-    const prevScene = get().currentScene;
+    const prev = get().currentScene;
+    if (prev === scene) {
+      return;
+    }
 
     set({
-      prevScene,
+      prevScene: prev,
       currentScene: scene,
       sceneData: data,
     });
