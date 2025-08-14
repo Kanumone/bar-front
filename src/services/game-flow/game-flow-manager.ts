@@ -26,6 +26,24 @@ class GameFlowManager {
     [GameScene.MoveToKazan]: GameScene.Move,
   };
 
+  private readonly startMap: Partial<Record<GameScene, () => void>> = {
+    [GameScene.GameMap]: this.showGameMap,
+    [GameScene.FlyingGame]: this.showFlyingGame,
+    [GameScene.MoveToTrain]: this.showMoveToTrainScene,
+    [GameScene.MoveAfterTrain]: this.showMoveAfterTrain,
+    [GameScene.MoveToVdnh]: this.showMoveToVdnh,
+    [GameScene.Intro]: this.showIntro,
+    [GameScene.RailwayStation]: this.showRailwayStation,
+    [GameScene.Moscow]: this.showMoscow,
+    [GameScene.Kazan]: this.showKazan,
+    [GameScene.DetectiveGame]: this.showDetectiveGame,
+    [GameScene.TretyakovGame]: this.showTretyakovGame,
+    [GameScene.CookingGame]: this.showGameCooking,
+    [GameScene.MoveToGallery]: this.showMoveToGallery,
+    [GameScene.MoveToKazan]: this.showMoveToKazan,
+    [GameScene.Auth]: this.showAuth,
+  };
+
   async initializeGame(parent: string | HTMLElement) {
     if (!this.game) {
       this.game = new Phaser.Game({
@@ -77,10 +95,6 @@ class GameFlowManager {
     const payload = (data && typeof data === "object") ? data : {};
     this.stopActiveScenes();
     this.game.scene.start(phaserKey, payload);
-    useSceneStore.setState({
-      currentScene: scene,
-      sceneData: data || null,
-    });
 
     console.log(`▶️ Запущена логическая сцена ${scene} (Phaser: ${phaserKey})`, data);
   }
@@ -91,6 +105,10 @@ class GameFlowManager {
         this.game.scene.stop(scene);
       }
     });
+  }
+
+  startScene(scene: GameScene) {
+    this.startMap[scene]?.call(this)
   }
 
   showAuth() {
@@ -122,10 +140,10 @@ class GameFlowManager {
   }
 
   // ✅ Обновленный метод для движения к поезду
-  showMoveToTrainScene(data?: MoveSceneData) {
+  showMoveToTrainScene() {
     if (!this.game) return;
 
-    const sceneData = MoveSceneMapper.createSceneData("MoveToTrain", data);
+    const sceneData = MoveSceneMapper.createSceneData("MoveToTrain", {});
 
     useSceneStore.setState({
       currentScene: GameScene.MoveToTrain,
@@ -144,10 +162,10 @@ class GameFlowManager {
   }
 
   // ✅ Новая сцена: движение к ВДНХ
-  showMoveToVdnh(data?: Omit<MoveSceneData, "backgroundLayers">) {
+  showMoveToVdnh() {
     if (!this.game) return;
 
-    const sceneData = MoveSceneMapper.createSceneData("MoveToVdnh", data);
+    const sceneData = MoveSceneMapper.createSceneData("MoveToVdnh", {});
 
     useSceneStore.setState({
       currentScene: GameScene.MoveToVdnh,
@@ -162,10 +180,10 @@ class GameFlowManager {
   }
 
   // ✅ Новая сцена: движение к Галерее
-  showMoveToGallery(data?: Omit<MoveSceneData, "backgroundLayers">) {
+  showMoveToGallery() {
     if (!this.game) return;
 
-    const sceneData = MoveSceneMapper.createSceneData("MoveToGallery", data);
+    const sceneData = MoveSceneMapper.createSceneData("MoveToGallery", {});
 
     useSceneStore.setState({
       currentScene: GameScene.MoveToGallery,
@@ -180,10 +198,10 @@ class GameFlowManager {
   }
 
   // ✅ Новая сцена: движение к Казани
-  showMoveToKazan(data?: Omit<MoveSceneData, "backgroundLayers">) {
+  showMoveToKazan() {
     if (!this.game) return;
 
-    const sceneData = MoveSceneMapper.createSceneData("MoveToKazan", data);
+    const sceneData = MoveSceneMapper.createSceneData("MoveToKazan", {});
 
     useSceneStore.setState({
       currentScene: GameScene.MoveToKazan,
@@ -214,10 +232,9 @@ class GameFlowManager {
     console.log(`▶️ Переключено на логическую сцену: ${scene}`);
   }
 
-  showGame2048() { }
-
   showFlyingGame() {
     this.startPhaserScene(GameScene.FlyingGame);
+    useSceneStore.getState().setScene(GameScene.FlyingGame, null);
   }
 
   showGameCooking() {

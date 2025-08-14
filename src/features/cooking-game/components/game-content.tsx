@@ -7,6 +7,8 @@ import shopIcon from "$/assets/images/scenes/cooking/icons/shop.png";
 import bookIcon from "$/assets/images/scenes/cooking/icons/book.png";
 import { Shop } from "./shop";
 import { recipes } from "./recipes.tsx";
+import { Button } from "$ui/components/button/button.tsx";
+import { useSceneStore } from "$core/state/scene-store.ts";
 
 export function GameContent() {
   const { state } = useGameContext();
@@ -50,6 +52,7 @@ export function GameContent() {
   return (
     <div className={styles.gameContainer}>
       {renderCurrentScreen()}
+      <Button text="Закончить" onClick={() => useSceneStore.getState().backToPrevScene()} />
     </div>
   );
 }

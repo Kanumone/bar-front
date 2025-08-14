@@ -1,15 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useSceneStore } from "../../core/state/scene-store";
-import { GameScene } from "@core/types/common-types";
 import styles from "./flying-game-scene-wrapper.module.css";
 
 export const FlyingGameSceneWrapper: React.FC = () => {
   const [gameOver, setGameOver] = useState<{ score: number } | null>(null);
-  const sceneStore = useSceneStore.getState();
-
-  useEffect(() => {
-    void sceneStore.setScene(GameScene.FlyingGame, null);
-  }, [sceneStore]);
 
   useEffect(() => {
     const handleGameOver = (e: Event) => {
@@ -25,9 +19,9 @@ export const FlyingGameSceneWrapper: React.FC = () => {
     window.dispatchEvent(new Event("flying-game-restart"));
   };
 
-  const goToMap = () => {
+  const wakeUp = () => {
     setGameOver(null);
-    void sceneStore.setScene(GameScene.GameMap, {}); // ✅ переход на карту
+    useSceneStore.getState().backToPrevScene();
   };
 
   return (
@@ -39,7 +33,7 @@ export const FlyingGameSceneWrapper: React.FC = () => {
             <p>Очки: {gameOver.score}</p>
             <div className={styles.buttons}>
               <button onClick={restart}>Рестарт</button>
-              <button onClick={goToMap}>Перейти к карте</button>
+              <button onClick={wakeUp}>Проснуться</button>
             </div>
           </div>
         </div>

@@ -2,6 +2,7 @@ import { Scene } from "phaser";
 import { getAssetsPathByType } from "../../utils/get-assets-path";
 import { usePlayerState } from "../../core/state";
 import { GameScene } from "$core/types/common-types";
+import { GameConstants } from "$core/constants/constants";
 
 const PLAYER_SIZE = 60;
 const PLAYER_BODY_W = PLAYER_SIZE;
@@ -87,6 +88,15 @@ export class FlyingGameScene extends Scene {
 
   /* ──────────────────────────────── CREATE ──────────────────────────────── */
   create(): void {
+    /* Гарантируем чистое состояние при повторном запуске сцены */
+    this.gameOver = false;
+    this.score = 0;
+    this.tapTargetX = null;
+    this.isDraggingPlayer = false;
+    this.currentAngle = 0;
+    this.prevX = 0;
+    this.physics.resume();
+
     /* Мир и камера */
     this.physics.world.setBounds(-this.worldSize, 0, this.worldSize * 2, this.scale.height);
     this.cameras.main.setBounds(-this.worldSize, 0, this.worldSize * 2, this.scale.height);
@@ -147,7 +157,23 @@ export class FlyingGameScene extends Scene {
     this.prevX = this.player.x;
 
     /* UI */
-    this.scoreText = this.add.text(16, 16, "Очки: 0", SCORE_TEXT_STYLE).setScrollFactor(0);
+    // Создаем группу для UI счета
+    const scoreGroup = this.add.group();
+    
+    // Добавляем иконку овечки (позиционируем внизу экрана)
+    const sheepIcon = this.add.image(16, this.scale.height - 40, "sheep")
+      .setOrigin(0, 0)
+      .setDisplaySize(24, 24)
+      .setScrollFactor(0);
+    
+    // Добавляем текст счета справа от иконки
+    this.scoreText = this.add.text(sheepIcon.x + sheepIcon.displayWidth + 8, this.scale.height - 40, "0", SCORE_TEXT_STYLE)
+      .setOrigin(0, 0)
+      .setScrollFactor(0);
+    
+    // Добавляем элементы в группу для удобного управления
+    scoreGroup.add(sheepIcon);
+    scoreGroup.add(this.scoreText);
     this.cursors = this.input.keyboard ? this.input.keyboard.createCursorKeys()
                                          : ({} as Phaser.Types.Input.Keyboard.CursorKeys);
 
@@ -166,7 +192,12 @@ export class FlyingGameScene extends Scene {
     this.physics.add.collider(this.player, this.rocks, this.hitObstacle, undefined, this);
     this.physics.add.overlap(this.player, this.sheeps, this.collectSheep, undefined, this);
 
-    this.events.on("shutdown", () => window.removeEventListener("flying-game-restart", this.restart));
+    this.events.on("shutdown", () => {
+      window.removeEventListener("flying-game-restart", this.restart);
+      this.input.off("pointerdown", this.onPointerDown);
+      this.input.off("pointermove", this.onPointerMove);
+      this.input.off("pointerup", this.onPointerUp);
+    });
     window.addEventListener("flying-game-restart", this.restart);
 
   }
@@ -338,7 +369,7 @@ export class FlyingGameScene extends Scene {
       rock.y = y;
 
       /* ✅ добавляем коэффициент увеличения */
-      const kScale = Phaser.Math.FloatBetween(0.7, 1.5);
+      const kScale = Phaser.Math.FloatBetween(1, 2.5);
 
       /* ✅ масштабируем картинку (видимый размер) */
       rock.setDisplaySize(OBSTACLE_HEIGHT * kScale, OBSTACLE_HEIGHT * kScale);
@@ -389,14 +420,15 @@ export class FlyingGameScene extends Scene {
     if (!(sheepObj instanceof Phaser.GameObjects.Sprite)) return;
     const s = sheepObj as PooledObject; s.disableBody(true, true);
     this.score += 1;
-    this.scoreText.setText(`Очки: ${this.score}`);
-    console.log(`Очки: ${this.score}`);
-    if (this.score % 10 === 0) usePlayerState.getState().increaseEnergy();
+    this.scoreText.setText(`${this.score}`);
+    usePlayerState.getState().addEnergy(GameConstants.ENERGY_FOR_SHEEP);
   };
 
   /* ────────────────────────────── РЕСТАРТ ────────────────────────────── */
   private restart = (): void => {
-    this.gameOver = false; this.score = 0;
+    this.gameOver = false;
+    this.score = 0;
+    this.scoreText.setText("0");
     this.player.clearTint(); this.player.setAngle(0); this.currentAngle = 0;
     this.player.setPosition(0, this.scale.height - PLAYER_SIZE * 3); this.prevX = this.player.x;
     this.tapTargetX = null; this.isDraggingPlayer = false;

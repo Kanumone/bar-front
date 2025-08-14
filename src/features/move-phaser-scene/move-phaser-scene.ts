@@ -4,7 +4,6 @@ import { GameScene } from "@core/types/common-types";
 import type { MoveScene, MoveSceneData, SceneBackground } from "@core/types/common-types";
 import { useMoveSceneStore } from "$/core/state/move-scene-store";
 import { usePlayerState } from "$/core/state/player-store";
-import { GameConstants } from "$/core/constants/constants";
 import { MoveSceneMapper } from "./move-scene-mapper";
 
 const GROUND_HEIGHT = 50;
@@ -27,7 +26,6 @@ export class MovePhaserScene extends Scene {
   private currentConfig: MoveSceneData | null = null;
 
   private player!: Phaser.Physics.Arcade.Sprite;
-  // Управление ввода курсорами больше не используется
   private isMove = false;
   private isMovingInternal = false;
   private playerSpeed = 0;
@@ -43,9 +41,6 @@ export class MovePhaserScene extends Scene {
   backgroundLayers: SceneBackground | null = null;
 
   private blockedBubble?: Phaser.GameObjects.Container;
-
-  // Расход ресурсов при движении
-  private movementConsumptionAccumulatorMs = 0;
 
   constructor() {
     super(GameScene.Move);
@@ -313,6 +308,8 @@ export class MovePhaserScene extends Scene {
     // === Frame pipeline ===
     if (this.handleQuizBlocking()) return;
     if (!this.player || !this.player.body) return;
+    // Авто-остановка при нехватке энергии или максимальном голоде
+    if (this.handleCharacterConstraintsBlocking()) return;
 
     this.handleMovementState(this.isMove);
 
@@ -323,18 +320,6 @@ export class MovePhaserScene extends Scene {
       if (this.parallaxPreBackground) this.parallaxPreBackground.tilePositionX += k * parallaxFactors.preBackground;
       if (this.parallaxLight) this.parallaxLight.tilePositionX += k * parallaxFactors.light;
       if (this.parallaxFront) this.parallaxFront.tilePositionX += k * parallaxFactors.front;
-
-      // расход ресурсов
-      this.movementConsumptionAccumulatorMs += _delta;
-      if (this.movementConsumptionAccumulatorMs >= 1000) {
-        const steps = Math.floor(this.movementConsumptionAccumulatorMs / 1000);
-        this.movementConsumptionAccumulatorMs -= steps * 1000;
-        const { addHunger, setEnergy, energy: currentEnergy } = usePlayerState.getState();
-        addHunger(steps * GameConstants.HUNGER_POINTS_PER_SECOND);
-        setEnergy(currentEnergy - steps * GameConstants.ENERGY_POINTS_PER_SECOND);
-      }
-    } else {
-      this.movementConsumptionAccumulatorMs = 0;
     }
   }
 

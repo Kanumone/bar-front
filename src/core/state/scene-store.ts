@@ -1,8 +1,6 @@
 import { create } from "zustand";
-import { type SceneName, type SceneDataMap, type SceneBackground, type SlidesConfig } from "@core/types/common-types";
-import { useAuthStore } from "./auth-store";
-import { logAppError } from "@utils/log-app-error";
-import { logActivity } from "$/api/log-activity";
+import { type SceneName, type SceneDataMap, type SceneBackground, type SlidesConfig, GameScene } from "@core/types/common-types";
+import { gameFlowManager } from "$services/game-flow";
 
 interface SceneState {
   prevScene: SceneName | null;
@@ -34,27 +32,6 @@ export const useSceneStore = create<SceneState>((set, get) => ({
       currentScene: scene,
       sceneData: data,
     });
-
-    try {
-      const { user, sessionId } = useAuthStore.getState();
-
-      if (user?.id && sessionId) {
-        await logActivity("scene_change", {
-          userId: user.id,
-          sessionId,
-          action: "scene_change",
-          fromScene: prevScene,
-          toScene: scene,
-          sceneData: data,
-        }, scene);
-
-        console.log(`[Scene Change]: ${prevScene} → ${scene}`);
-      } else {
-        console.warn("[Scene Change]: Activity not logged (no user/session).");
-      }
-    } catch (err: unknown) {
-      logAppError("Scene Change Logging", err);
-    }
   },
 
   setBackgroundLayers: (layers) => set({ backgroundLayers: layers }),
@@ -63,11 +40,12 @@ export const useSceneStore = create<SceneState>((set, get) => ({
 
   backToPrevScene: () => {
     const { prevScene, currentScene } = get();
+
     if (prevScene) {
       set({
         prevScene: currentScene,
-        currentScene: prevScene,
       });
+      gameFlowManager.startScene(prevScene as GameScene);
     }
   },
 }));
