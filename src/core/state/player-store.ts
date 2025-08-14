@@ -61,7 +61,7 @@ interface PlayerState {
 export const usePlayerState = create<PlayerState>((set, get) => ({
   playerName: "",
   playerGender: null,
-  energy: 20,
+  energy: GameConstants.MAX_ENERGY,
   hunger: 0,
   money: 0,
   inventory: [],

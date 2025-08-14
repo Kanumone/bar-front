@@ -196,10 +196,6 @@ const marketData: MarketItem[] = [
     name: "дрожжевое тесто",
     price: 50,
     image: getIngredientImage("yeast_dough") },
-  { id: "pickled_cucumber",
-    name: "солёные огурцы",
-    price: 30,
-    image: getIngredientImage("pickled_cucumber") },
 ];
 
 interface ShopProps {

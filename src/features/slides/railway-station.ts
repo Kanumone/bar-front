@@ -409,7 +409,7 @@ const railwayStationSlides: EpisodeConfig[] = [
         type: "button",
         button: {
           text: "В путь",
-          action: () => { gameFlowManager.showGameMap(); },
+          action: () => { gameFlowManager.showMoveAfterTrain(); },
         },
       },
     ],

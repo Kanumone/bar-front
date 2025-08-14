@@ -6,6 +6,7 @@ import { RecipeCard } from "./recipe-card";
 import { CookingNotification } from "./cooking-notification";
 import { usePlayerState } from "$core/state";
 import styles from "./recipe-selector.module.css";
+import { GameConstants } from "$core/constants/constants";
 
 interface RecipeSelectorProps {
   recipes: Recipe[];
@@ -109,7 +110,7 @@ export const RecipeSelector = ({
       <CookingNotification
         isVisible={showNotification}
         currentEnergy={energy}
-        maxEnergy={20}
+        maxEnergy={GameConstants.MAX_ENERGY}
         onAnimationComplete={handleNotificationComplete}
       />
     </div>
