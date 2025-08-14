@@ -11,6 +11,7 @@ export const Button = ({ className, text, onClick }: Props) => {
 
   const clickHandler = (event: React.MouseEvent) => {
     event.preventDefault();
+    event.stopPropagation();
     onClick();
   };
 

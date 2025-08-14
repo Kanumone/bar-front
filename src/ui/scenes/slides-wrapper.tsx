@@ -80,6 +80,11 @@ export const SlidesWrapper = ({ config }: { config: SlidesConfig }) => {
   const translateX = -currentSlide.originX * 100;
   const translateY = -currentSlide.originY * 100;
 
+  // Простая обработка клика по фону для перехода к следующему слайду/action
+  const handleWrapperClick = () => {
+    goNext();
+  };
+
   // Инициализация порядка сообщений при входе в action
   useEffect(() => {
     if (currentAction?.type === "order-messages") {
@@ -88,7 +93,10 @@ export const SlidesWrapper = ({ config }: { config: SlidesConfig }) => {
   }, [currentAction, initOrderMessages]);
 
   return (
-    <div className={styles.wrapper} onPointerDown={goNext}>
+    <div
+      className={styles.wrapper}
+      onClick={handleWrapperClick}
+    >
       <AnimatePresence mode="wait">
         <motion.div
           key={currentSlide.key}
@@ -126,7 +134,7 @@ export const SlidesWrapper = ({ config }: { config: SlidesConfig }) => {
                 type: "spring",
                 stiffness: 280,
               }}
-              onPointerDown={(e) => {
+              onClick={(e) => {
                 e.stopPropagation();
                 goNext();
               }}
