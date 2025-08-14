@@ -46,50 +46,47 @@ class GameFlowManager {
   };
 
   async initializeGame(parent: string | HTMLElement) {
+    // 1) Пробуем восстановить состояние сторов из localStorage
+    const restored = syncService.loadAllStoresFromLocal();
+
+    // 2) Решаем, что показывать: если нет данных или нет username/gender → Auth, иначе текущую сцену
+    const { playerName, playerGender, checkPoint } = usePlayerState.getState();
+    const restoredScene = useSceneStore.getState().currentScene;
+    const hasProfile = Boolean(playerName && playerName.trim().length > 0 && playerGender);
+
+    // 3) Запускаем Phaser
     if (!this.game) {
       this.game = new Phaser.Game({
         ...gameConfig,
         parent,
         scene: [
+          FlyingGameScene,
           GameMapPhaserScene,
           MovePhaserScene,
-          FlyingGameScene,
         ],
       });
 
       this.game.events.on(Phaser.Core.Events.READY, () => {
-        console.log("Phaser Game Ready");
+        if (!restored || !hasProfile) {
+          this.showAuth();
+        } else if (restoredScene && restoredScene !== GameScene.Auth) {
+          try {
+            this.startScene(restoredScene as GameScene);
+          } catch {
+            this.showIntro();
+          }
+        } else if (checkPoint) {
+          try {
+            this.startScene(checkPoint as GameScene);
+          } catch {
+            // если сцена неизвестна — откатываемся на интро
+            this.showIntro();
+          }
+        } else {
+          this.showIntro();
+        }
+        syncService.start();
       });
-
-      // 1) Пробуем восстановить состояние сторов из localStorage
-      const restored = syncService.loadAllStoresFromLocal();
-
-      // 2) Решаем, что показывать: если нет данных или нет username/gender → Auth, иначе текущую сцену
-      const { playerName, playerGender, checkPoint } = usePlayerState.getState();
-      const restoredScene = useSceneStore.getState().currentScene;
-      const hasProfile = Boolean(playerName && playerName.trim().length > 0 && playerGender);
-
-      if (!restored || !hasProfile) {
-        this.showAuth();
-      } else if (restoredScene && restoredScene !== GameScene.Auth) {
-        try {
-          this.startScene(restoredScene as GameScene);
-        } catch {
-          this.showIntro();
-        }
-      } else if (checkPoint) {
-        try {
-          this.startScene(checkPoint as GameScene);
-        } catch {
-          // если сцена неизвестна — откатываемся на интро
-          this.showIntro();
-        }
-      } else {
-        this.showIntro();
-      }
-
-      // 3) Стартуем воркер автосохранения
-      syncService.start();
     }
   }
 

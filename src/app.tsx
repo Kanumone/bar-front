@@ -19,7 +19,6 @@ import { introSlidesConfig, railwayStationSlidesConfig, moscowSlidesConfig, kaza
 import { MoveWrapper } from "$ui/scenes/move-wrapper";
 import { GameConstants } from "$core/constants/constants";
 import { getAssetsPathByType } from "$utils/get-assets-path";
-import { syncService } from "$services/local-storage-service/sync-service";
 
 export const App: React.FC = () => {
   useAuth();
@@ -34,7 +33,6 @@ export const App: React.FC = () => {
       .catch(() => {})
       .finally(() => {
         setIsInitializing(false);
-        syncService.start();
       });
     }
 

@@ -41,9 +41,13 @@ export class MoveSceneMapper {
         background: getAssetsPathByType({
           type: "images",
           scene: "moscow-move",
-          filename: "khimki.png",
+          filename: "khimki_background.png",
         }),
-        preBackground: null,
+        preBackground: getAssetsPathByType({
+          type: "images",
+          scene: "moscow-move",
+          filename: "khimki_pre.png",
+        }),
         light: null,
         front: null,
         ground: getAssetsPath("images/platform.png"),

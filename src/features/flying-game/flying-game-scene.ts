@@ -4,9 +4,11 @@ import { usePlayerState } from "../../core/state";
 import { GameScene } from "$core/types/common-types";
 import { GameConstants } from "$core/constants/constants";
 
-const PLAYER_SIZE = 60;
+const PLAYER_SIZE = 90;
 const PLAYER_BODY_W = PLAYER_SIZE;
 const PLAYER_BODY_H = PLAYER_SIZE;
+const ROCK_SCALE_FACTOR = 3.5;
+const ROCK_MIN_SCALE_FACTOR = 2;
 
 const SHEEP_SIZE = 40;
 const PLAYER_SPEED = 300;
@@ -71,7 +73,7 @@ export class FlyingGameScene extends Scene {
       filename: "hero-flight.svg" }));
     this.load.image("rock", getAssetsPathByType({ type: "images",
       scene: "flying",
-      filename: "rock.png" }));
+      filename: "mountain.svg" }));
     this.load.image("sheep", getAssetsPathByType({ type: "images",
       scene: "flying",
       filename: "sheep.png" }));
@@ -369,13 +371,13 @@ export class FlyingGameScene extends Scene {
       rock.y = y;
 
       /* ✅ добавляем коэффициент увеличения */
-      const kScale = Phaser.Math.FloatBetween(1, 2.5);
+      const kScale = Phaser.Math.FloatBetween(ROCK_MIN_SCALE_FACTOR, ROCK_SCALE_FACTOR);
 
       /* ✅ масштабируем картинку (видимый размер) */
       rock.setDisplaySize(OBSTACLE_HEIGHT * kScale, OBSTACLE_HEIGHT * kScale);
 
       /* ✅ пересчёт hitbox через scaleX как в старом коде */
-      const kOpacity = 0.5;
+      const kOpacity = 0.3;
       const unscaled = (OBSTACLE_HEIGHT * kScale) / rock.scaleX * kOpacity;
 
       /* ✅ задаём физическое тело с корректной коррекцией */

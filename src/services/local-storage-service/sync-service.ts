@@ -179,6 +179,7 @@ export class SyncService {
       const raw = localStorage.getItem(SyncService.PERSIST_KEY);
       if (!raw) return false;
       const parsed = JSON.parse(raw) as Record<string, unknown> & { lastSaved?: number };
+      console.log("parsed", parsed);
 
       type StoreLike = { setState: (updater: (state: unknown) => unknown) => void };
       const mergeIntoStore = (store: StoreLike | unknown, incoming: unknown) => {
