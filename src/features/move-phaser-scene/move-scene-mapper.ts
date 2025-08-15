@@ -153,6 +153,24 @@ export class MoveSceneMapper {
       },
       playerSpeed: 150,
     },
+    [GameScene.MoveToEkb]: {
+      backgroundLayers: {
+        background: getAssetsPathByType({
+          type: "images",
+          scene: "ekb-move",
+          filename: "background.png",
+        }),
+        preBackground: getAssetsPathByType({
+          type: "images",
+          scene: "ekb-move",
+          filename: "pre-background.png",
+        }),
+        light: null,
+        front: null,
+        ground: getAssetsPath("images/platform.png"),
+      },
+      playerSpeed: 150,
+    },
   };
 
   // Получает конфигурацию для сцены

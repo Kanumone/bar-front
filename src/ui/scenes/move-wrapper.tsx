@@ -5,7 +5,7 @@ import { QuizOverlay } from "$/features/game-quiz/components/quiz-overlay";
 import { GameScene, type MoveScene, type QuizItem } from "@core/types/common-types";
 import { useBackgroundMusic } from "$/core/hooks/use-background-music/use-music";
 import { useSceneStore } from "$core/state";
-import { GameConstants, lifeStatsOff, lifeStatsOn } from "$core/constants/constants";
+import { lifeStatsOff, lifeStatsOn } from "$core/constants/constants";
 
 interface MoveParams {
     backgroundMusicPath: string;
@@ -41,7 +41,10 @@ const params: Partial<Record<MoveScene, MoveParams>> = {
         backgroundMusicPath: "Звук утреннего города.mp3",
         questionsPath: "move-to-kazan-village.json",
     },
-    
+    [GameScene.MoveInEkb]: {
+        backgroundMusicPath: "Звук утреннего города.mp3",
+        questionsPath: "move-ekb.json",
+    },
 }
 
 export const MoveWrapper = () => {

@@ -3,6 +3,7 @@ import { getIntroSlides } from "./intro";
 import { getRailwayStationSlides } from "./railway-station";
 import { getMoscowSlides } from "./moscow";
 import { getKazanSlides } from "./kazan";
+import { getEkbSlides } from "./ekb";
 
 // ✅ Конфигурация для Intro сцены
 export const introSlidesConfig: SlidesConfig = {
@@ -56,10 +57,18 @@ export const kazanSlidesConfig: SlidesConfig = {
   },
 };
 
+export const ekbSlidesConfig: SlidesConfig = {
+  getSlides: getEkbSlides,
+  sceneConfig: {
+    scene: "ekb",
+  },
+};
+
 // ✅ Фабрика конфигураций
 export const slidesConfigs = {
   intro: introSlidesConfig,
   railway: railwayStationSlidesConfig,
+  ekb: ekbSlidesConfig,
 } as const;
 
 export type SlidesConfigType = keyof typeof slidesConfigs;

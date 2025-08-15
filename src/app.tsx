@@ -15,10 +15,11 @@ import { useAuth } from "./core/hooks";
 import { FlyingGameSceneWrapper } from "./ui/scenes/flying-game-scene-wrapper";
 import { GameScene } from "@core/types/common-types";
 import { Layout } from "./ui/layout/";
-import { introSlidesConfig, railwayStationSlidesConfig, moscowSlidesConfig, kazanSlidesConfig } from "$features/slides/configs";
+import { introSlidesConfig, railwayStationSlidesConfig, moscowSlidesConfig, kazanSlidesConfig, ekbSlidesConfig } from "$features/slides/configs";
 import { MoveWrapper } from "$ui/scenes/move-wrapper";
 import { GameConstants } from "$core/constants/constants";
 import { getAssetsPathByType } from "$utils/get-assets-path";
+import styles from "./ui/scenes/auth-scene-wrapper.module.css";
 
 export const App: React.FC = () => {
   useAuth();
@@ -30,18 +31,12 @@ export const App: React.FC = () => {
     if (phaserCanvasRef.current) {
       // Стартуем воркер автосохранения на всякий случай (идемпотентно)
       gameFlowManager.initializeGame(phaserCanvasRef.current.id)
-      .catch(() => {})
-      .finally(() => {
-        const timeout = setTimeout(() => {
-          setIsInitializing(false);
-          clearTimeout(timeout);
-        }, 1000);
-      });
-    }
-
-    // Инициализация инструментов отладки
-    if (GameConstants.DEBUG_MODE) {
-      initDebugStores();
+        .catch(() => { console.error("Failed to initialize game"); })
+        .finally(() => {
+          if (GameConstants.DEBUG_MODE) {
+            initDebugStores();
+          }
+        });
     }
   }, []);
 
@@ -56,7 +51,9 @@ export const App: React.FC = () => {
         return <SlidesWrapper config={moscowSlidesConfig} />;
       case GameScene.Kazan:
         return <SlidesWrapper config={kazanSlidesConfig} />;
-        
+      case GameScene.Ekb:
+        return <SlidesWrapper config={ekbSlidesConfig} />;
+
       // games
       case GameScene.CookingGame:
         return <CookingGameSceneWrapper />;
@@ -94,7 +91,7 @@ export const App: React.FC = () => {
 
   return (
     <div id="game-container" ref={phaserCanvasRef}>
-      {isInitializing && (
+      {isInitializing ? (
         <div
           style={{
             position: "fixed",
@@ -104,9 +101,15 @@ export const App: React.FC = () => {
             backgroundPosition: "center",
             zIndex: 1000,
           }}
-        />
-      )}
-      {currentScene === GameScene.Auth ? scene : <Layout>{scene}</Layout>}
+          onClick={() => {
+            console.log("click");
+            setIsInitializing(false)
+          }}
+        >
+          <div className={styles.chooseCharacterPulse}>Нажми, чтобы начать</div>
+        </div>
+      ) :
+        currentScene === GameScene.Auth ? scene : <Layout>{scene}</Layout>}
     </div>
   );
 };

@@ -11,7 +11,7 @@ import {
 import { GameMapPhaserScene } from "@features/game-map";
 import { MovePhaserScene, MoveSceneMapper } from "@features/move-phaser-scene";
 import { FlyingGameScene } from "@features/flying-game/flying-game-scene";
-import { introSlidesConfig, kazanSlidesConfig, moscowSlidesConfig, railwayStationSlidesConfig } from "../../features/slides/configs";
+import { ekbSlidesConfig, introSlidesConfig, kazanSlidesConfig, moscowSlidesConfig, railwayStationSlidesConfig } from "../../features/slides/configs";
 
 const phaserScenes = {
   [GameScene.FlyingGame]: FlyingGameScene,
@@ -25,33 +25,45 @@ class GameFlowManager {
   /** ✅ Маппинг логическая → физическая Phaser-сцена */
   private readonly sceneMapping: Partial<Record<GameScene, GameScene>> = {
     [GameScene.GameMap]: GameScene.GameMap,
+
     [GameScene.FlyingGame]: GameScene.FlyingGame,
+
     [GameScene.MoveToTrain]: GameScene.Move,
     [GameScene.MoveAfterTrain]: GameScene.Move,
     [GameScene.MoveToVdnh]: GameScene.Move,
     [GameScene.MoveToGallery]: GameScene.Move,
     [GameScene.MoveToKazan]: GameScene.Move,
     [GameScene.MoveInKazan]: GameScene.Move,
+    [GameScene.MoveInKazanVillage]: GameScene.Move,
+    [GameScene.MoveToEkb]: GameScene.Move,
+    [GameScene.MoveInEkb]: GameScene.Move,
+
   };
 
   private readonly startMap: Partial<Record<GameScene, () => void>> = {
-    [GameScene.GameMap]: this.showGameMap,
-    [GameScene.FlyingGame]: this.showFlyingGame,
-    [GameScene.MoveToTrain]: this.showMoveToTrainScene,
-    [GameScene.MoveAfterTrain]: this.showMoveAfterTrain,
-    [GameScene.MoveToVdnh]: this.showMoveToVdnh,
-    [GameScene.Intro]: this.showIntro,
     [GameScene.RailwayStation]: this.showRailwayStation,
     [GameScene.Moscow]: this.showMoscow,
     [GameScene.Kazan]: this.showKazan,
+    [GameScene.Ekb]: this.showEkb,
+    
     [GameScene.DetectiveGame]: this.showDetectiveGame,
     [GameScene.TretyakovGame]: this.showTretyakovGame,
-    [GameScene.CookingGame]: this.showGameCooking,
+    [GameScene.CookingGame]: this.showCookingGame,
+    [GameScene.FlyingGame]: this.showFlyingGame,
+    
+    [GameScene.MoveToTrain]: this.showMoveToTrainScene,
+    [GameScene.MoveAfterTrain]: this.showMoveAfterTrain,
+    [GameScene.MoveToVdnh]: this.showMoveToVdnh,
     [GameScene.MoveToGallery]: this.showMoveToGallery,
     [GameScene.MoveToKazan]: this.showMoveToKazan,
     [GameScene.MoveInKazan]: this.showMoveInKazan,
     [GameScene.MoveInKazanVillage]: this.showMoveInKazanVillage,
+    [GameScene.MoveToEkb]: this.showMoveToEkb,
+    [GameScene.MoveInEkb]: this.showMoveInEkb,
+    
+    [GameScene.Intro]: this.showIntro,
     [GameScene.Auth]: this.showAuth,
+    [GameScene.GameMap]: this.showGameMap,
   };
 
   async initializeGame(parent: string | HTMLElement) {
@@ -152,8 +164,7 @@ class GameFlowManager {
 
   showGameMap() {
     this.startPhaserScene(GameScene.GameMap);
-    useSceneStore.getState().setScene(GameScene.GameMap, {
-    });
+    useSceneStore.getState().setScene(GameScene.GameMap, {});
   }
 
   // ✅ Обновленный метод для движения после поезда
@@ -250,12 +261,17 @@ class GameFlowManager {
     this.game.scene.start(GameScene.Move, sceneData);
   }
 
+  showMoveToEkb() {}
+
+  showMoveInEkb() {}
+
+  // Game scenes
   showFlyingGame() {
     this.startPhaserScene(GameScene.FlyingGame);
     useSceneStore.getState().setScene(GameScene.FlyingGame, null);
   }
 
-  showGameCooking() {
+  showCookingGame() {
     useSceneStore.getState().setScene(GameScene.CookingGame, null);
   }
 
@@ -286,6 +302,11 @@ class GameFlowManager {
   showKazan() {
     useSceneStore.getState().setScene(GameScene.Kazan, null);
     useSceneStore.getState().setSlidesConfig(kazanSlidesConfig);
+  }
+
+  showEkb() {
+    useSceneStore.getState().setScene(GameScene.Ekb, null);
+    useSceneStore.getState().setSlidesConfig(ekbSlidesConfig);
   }
 }
 

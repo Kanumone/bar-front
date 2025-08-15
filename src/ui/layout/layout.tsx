@@ -48,7 +48,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           >
             <SlidingPanel
               buttonText="СТРЯПАТЬ"
-              buttonAction={() => gameFlowManager.showGameCooking()}
+              buttonAction={() => gameFlowManager.showCookingGame()}
               infoText={`Голод: ${hunger}/${GameConstants.MAX_HUNGER}`}
               iconSrc={getAssetsPath("images/ui/hunger-icon.png")}
             />

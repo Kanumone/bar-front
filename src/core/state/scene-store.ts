@@ -20,7 +20,7 @@ interface SceneState {
 
 export const useSceneStore = create<SceneState>((set, get) => ({
   prevScene: null,
-  currentScene: "Auth",
+  currentScene: GameScene.Loading,
   sceneData: null,
   backgroundLayers: null,
   slidesConfig: undefined,

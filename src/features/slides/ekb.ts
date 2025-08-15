@@ -1,6 +1,6 @@
-import { type Action, type EpisodeConfig } from "./common";
+import { Episode, type Action, type EpisodeConfig } from "./common";
 
-export const ekbConfigs: EpisodeConfig[] = [
+export const ekbConfig: EpisodeConfig[] = [
     {
         slideIndex: 1,
         filename: "Screen_1.jpg",
@@ -125,7 +125,13 @@ export const ekbConfigs: EpisodeConfig[] = [
                     3: { actions: [{ type: "speech", text: "О, ты ещё и гастро-архивариус. Надо тебя на кухню ставить.", characterName: "Даша" }] },
                 }
             },
-            // Screen_4.1 Финал сцены
+        ],
+    },
+
+    {
+        slideIndex: 4,
+        filename: "Screen_4_1.jpg",
+        actions: [
             { type: "speech", text: "Вот он. Только будь осторожна — это не просто здание, а… инструмент. У башни своё звучание. Она резонирует с тем, кто к ней подходит не ради «селфи», а ради смысла.", characterName: "Папа Даши" },
             { type: "speech", text: "Угу. Алексей — настроен.", characterName: "Даша" },
             { type: "speech", text: "Посмотрим.", characterName: "Папа" },
@@ -1046,3 +1052,15 @@ export const ekbConfigs: EpisodeConfig[] = [
                 ],
     },
 ];
+
+export const getEkbSlides = (): Episode[] => {
+    const episodes: Episode[] = [];
+    ekbConfig.forEach((config) => {
+      const episode = new Episode({
+        ...config,
+        scene: "ekb-slides",
+      });
+      episodes.push(episode);
+    });
+    return episodes;
+  };

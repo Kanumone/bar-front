@@ -495,7 +495,7 @@ const moscowSlides: EpisodeConfig[] = [
         type: "button",
         button: {
           text: "Начать готовить",
-          action: () => gameFlowManager.showGameCooking(),
+          action: () => gameFlowManager.showCookingGame(),
         },
       },
     ],
@@ -1628,7 +1628,7 @@ const moscowSlides: EpisodeConfig[] = [
           text: "Начать готовить",
           action: () => {
             usePlayerState.getState().setEnergy(0);
-            gameFlowManager.showGameCooking();
+            gameFlowManager.showCookingGame();
           },
         },
       },

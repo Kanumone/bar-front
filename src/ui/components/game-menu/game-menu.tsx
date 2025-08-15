@@ -23,53 +23,59 @@ export const GameMenu: React.FC<GameMenuProps> = ({
 
   const onSceneSelection = (scene: string) => {
     switch (scene) {
-    case "flight":
-      gameFlowManager.showFlyingGame();
-      break;
-    case "game-map":
-      gameFlowManager.showGameMap();
-      break;
-    case "cooking":
-      gameFlowManager.showGameCooking();
-      break;
-    case "after-train":
-      gameFlowManager.showMoveAfterTrain();
-      break;
-    case "train-move":
-      gameFlowManager.showMoveToTrainScene();
-      break;
-    case "move-to-vdnh":
-      gameFlowManager.showMoveToVdnh();
-      break;
-    case "move-to-gallery":
-      gameFlowManager.showMoveToGallery();
-      break;
-    case "move-to-kazan":
-      gameFlowManager.showMoveToKazan();
-      break;
-    case "detective":
-      gameFlowManager.showDetectiveGame();
-      break;
-    case "railway-station":
-      gameFlowManager.showRailwayStation();
-      break;
-    case "moscow":
-      gameFlowManager.showMoscow();
-      break;
-    case "tretyakov":
-      gameFlowManager.showMoveToGallery();
-      break;
-    case "kazan":
-      gameFlowManager.showKazan();
-      break;
-    case "kazan-move":
-      gameFlowManager.showMoveInKazan();
-      break;
-    case "kazan-village":
-      gameFlowManager.showMoveInKazanVillage();
-      break;
-    default:
-      break;
+      case "flight":
+        gameFlowManager.showFlyingGame();
+        break;
+      case "game-map":
+        gameFlowManager.showGameMap();
+        break;
+      case "cooking":
+        gameFlowManager.showCookingGame();
+        break;
+      case "after-train":
+        gameFlowManager.showMoveAfterTrain();
+        break;
+      case "train-move":
+        gameFlowManager.showMoveToTrainScene();
+        break;
+      case "move-to-vdnh":
+        gameFlowManager.showMoveToVdnh();
+        break;
+      case "move-to-gallery":
+        gameFlowManager.showMoveToGallery();
+        break;
+      case "move-to-kazan":
+        gameFlowManager.showMoveToKazan();
+        break;
+      case "detective":
+        gameFlowManager.showDetectiveGame();
+        break;
+      case "railway-station":
+        gameFlowManager.showRailwayStation();
+        break;
+      case "moscow":
+        gameFlowManager.showMoscow();
+        break;
+      case "tretyakov":
+        gameFlowManager.showMoveToGallery();
+        break;
+      case "kazan":
+        gameFlowManager.showKazan();
+        break;
+      case "kazan-move":
+        gameFlowManager.showMoveInKazan();
+        break;
+      case "kazan-village":
+        gameFlowManager.showMoveInKazanVillage();
+        break;
+      case "ekb":
+        gameFlowManager.showEkb();
+        break;
+      case "ekb-move":
+        gameFlowManager.showMoveInEkb();
+        break;
+      default:
+        break;
     }
     onClose();
   };
@@ -90,14 +96,16 @@ export const GameMenu: React.FC<GameMenuProps> = ({
         <div className={styles.item} onClick={onToggleSound}>
           🔊 Звук: {soundEnabled ? "Вкл" : "Выкл"}
         </div>
-
-        <div className={styles.subHeader}>Debug</div>
         <div className={styles.item} onClick={() => localStorage.clear()}>Сбросить прогресс</div>
         <div className={styles.item} onClick={() => upFuel()}>Пополнить энергию и сытость</div>
+
+        <div className={styles.subHeader}>Debug</div>
+        <div className={styles.item} onClick={() => onSceneSelection("ekb")}>✅ Екатеринбург</div>
+        <div className={styles.item} onClick={() => onSceneSelection("ekb-move")}>✅ Екатеринбург: переход</div>
         <div className={styles.item} onClick={() => onSceneSelection("moscow")}>🇷🇺 Москва</div>
-        <div className={styles.item} onClick={() => onSceneSelection("kazan-village")}>🕌 Казань: деревня</div>
         <div className={styles.item} onClick={() => onSceneSelection("kazan")}>🕌 Казань</div>
-        <div className={styles.item} onClick={() => onSceneSelection("kazan-move")}>🕌 Казань: переход</div>
+        <div className={styles.item} onClick={() => onSceneSelection("kazan-village")}>🕌 Казань: деревня</div>
+        {/* <div className={styles.item} onClick={() => onSceneSelection("kazan-move")}>🕌 Казань: переход</div>
         <div className={styles.item} onClick={() => onSceneSelection("flight")}>🛩️ Игра полёт</div>
         <div className={styles.item} onClick={() => onSceneSelection("cooking")}>🍳 Игра готовка</div>
         <div className={styles.item} onClick={() => onSceneSelection("train-move")}>🚉 Сцена переход к вокзалу</div>
@@ -108,7 +116,7 @@ export const GameMenu: React.FC<GameMenuProps> = ({
         <div className={styles.item} onClick={() => onSceneSelection("detective")}>🕵️ Детектив</div>
         <div className={styles.item} onClick={() => onSceneSelection("game-map")}>🧭 Карта</div>
         <div className={styles.item} onClick={() => onSceneSelection("railway-station")}>🚉 Вокзал</div>
-        <div className={styles.item} onClick={() => onSceneSelection("tretyakov")}>🎨 Третьяков</div>
+        <div className={styles.item} onClick={() => onSceneSelection("tretyakov")}>🎨 Третьяков</div> */}
       </div>
     </div>
   );

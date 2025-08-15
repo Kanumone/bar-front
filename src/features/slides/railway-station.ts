@@ -97,7 +97,7 @@ const railwayStationSlides: EpisodeConfig[] = [
           text: "Готовить дошик",
           action: () => {
             usePlayerState.getState().setHunger(100);
-            gameFlowManager.showGameCooking();
+            gameFlowManager.showCookingGame();
           },
         },
       },
