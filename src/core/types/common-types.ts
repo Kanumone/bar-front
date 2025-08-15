@@ -1,4 +1,4 @@
-import type { Episode } from "../../features/slides";
+import type { Episode } from "$/features/slides";
 
 export type MoveScene =
   | typeof GameScene.MoveToTrain
@@ -10,6 +10,8 @@ export type MoveScene =
   | typeof GameScene.MoveInKazanVillage
   | typeof GameScene.MoveToEkb
   | typeof GameScene.MoveInEkb
+  | typeof GameScene.MoveToIrkutsk
+  | typeof GameScene.MoveInIrkutsk
   | typeof GameScene.Move;
 
 export interface MoveSceneData {
@@ -46,6 +48,9 @@ export interface SceneDataMap {
   Kazan: null;
   Moscow: null;
   Ekb: null;
+  Irkutsk: null;
+  Kamchatka: null;
+  Final: null;
 
   // move scenes
   Move: MoveSceneData | null;
@@ -59,6 +64,8 @@ export interface SceneDataMap {
   MoveInKazanVillage: MoveSceneData | null;
   MoveToEkb: MoveSceneData | null;
   MoveInEkb: MoveSceneData | null;
+  MoveToIrkutsk: MoveSceneData | null;
+  MoveInIrkutsk: MoveSceneData | null;
 
   // games
   GameMap: GameMapSceneData;
@@ -81,6 +88,9 @@ export const GameScene = {
   Moscow: "Moscow",
   Kazan: "Kazan",
   Ekb: "Ekb",
+  Irkutsk: "Irkutsk",
+  Kamchatka: "Kamchatka",
+  Final: "Final",
 
   // games
   FlyingGame: "FlyingGame",
@@ -100,6 +110,8 @@ export const GameScene = {
   MoveInKazanVillage: "MoveInKazanVillage",
   MoveToEkb: "MoveToEkb",
   MoveInEkb: "MoveInEkb",
+  MoveToIrkutsk: "MoveToIrkutsk",
+  MoveInIrkutsk: "MoveInIrkutsk",
 
   // others
   Auth: "Auth",

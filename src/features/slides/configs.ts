@@ -4,6 +4,9 @@ import { getRailwayStationSlides } from "./railway-station";
 import { getMoscowSlides } from "./moscow";
 import { getKazanSlides } from "./kazan";
 import { getEkbSlides } from "./ekb";
+import { getIrkutskSlides } from "./irkutsk";
+import { getKamchatkaSlides } from "./kamchatka";
+import { getFinalSlides } from "./final";
 
 // ✅ Конфигурация для Intro сцены
 export const introSlidesConfig: SlidesConfig = {
@@ -50,10 +53,6 @@ export const kazanSlidesConfig: SlidesConfig = {
   sceneConfig: {
     scene: "kazan",
     backgroundMusic: "kazan-city-ambient.mp3", // TODO: подтвердить имя файла
-    effects: {
-      canSkipDelay: 800,
-      imageLoadDelay: 300,
-    },
   },
 };
 
@@ -64,11 +63,35 @@ export const ekbSlidesConfig: SlidesConfig = {
   },
 };
 
+export const irkutskSlidesConfig: SlidesConfig = {
+  getSlides: getIrkutskSlides,
+  sceneConfig: {
+    scene: "irkutsk",
+  },
+};
+
+export const kamchatkaSlidesConfig: SlidesConfig = {
+  getSlides: getKamchatkaSlides,
+  sceneConfig: {
+    scene: "kamchatka",
+  },
+};
+
+export const finalSlidesConfig: SlidesConfig = {
+  getSlides: getFinalSlides,
+  sceneConfig: {
+    scene: "final",
+  },
+};
+
 // ✅ Фабрика конфигураций
 export const slidesConfigs = {
   intro: introSlidesConfig,
   railway: railwayStationSlidesConfig,
   ekb: ekbSlidesConfig,
+  irkutsk: irkutskSlidesConfig,
+  kamchatka: kamchatkaSlidesConfig,
+  final: finalSlidesConfig,
 } as const;
 
 export type SlidesConfigType = keyof typeof slidesConfigs;

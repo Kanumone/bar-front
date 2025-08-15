@@ -45,6 +45,14 @@ const params: Partial<Record<MoveScene, MoveParams>> = {
         backgroundMusicPath: "Звук утреннего города.mp3",
         questionsPath: "move-ekb.json",
     },
+    [GameScene.MoveToIrkutsk]: {
+        backgroundMusicPath: "Звук утреннего города.mp3",
+        questionsPath: "move-to-irkutsk.json",
+    },
+    [GameScene.MoveInIrkutsk]: {
+        backgroundMusicPath: "Звук утреннего города.mp3",
+        questionsPath: "move-to-irkutsk.json",
+    },
 }
 
 export const MoveWrapper = () => {

@@ -15,11 +15,11 @@ import { useAuth } from "./core/hooks";
 import { FlyingGameSceneWrapper } from "./ui/scenes/flying-game-scene-wrapper";
 import { GameScene } from "@core/types/common-types";
 import { Layout } from "./ui/layout/";
-import { introSlidesConfig, railwayStationSlidesConfig, moscowSlidesConfig, kazanSlidesConfig, ekbSlidesConfig } from "$features/slides/configs";
+import { introSlidesConfig, railwayStationSlidesConfig, moscowSlidesConfig, kazanSlidesConfig, ekbSlidesConfig, } from "$features/slides/configs";
+import { irkutskSlidesConfig, kamchatkaSlidesConfig, finalSlidesConfig } from "$features/slides/configs";
 import { MoveWrapper } from "$ui/scenes/move-wrapper";
 import { GameConstants } from "$core/constants/constants";
 import { getAssetsPathByType } from "$utils/get-assets-path";
-import styles from "./ui/scenes/auth-scene-wrapper.module.css";
 
 export const App: React.FC = () => {
   useAuth();
@@ -33,6 +33,9 @@ export const App: React.FC = () => {
       gameFlowManager.initializeGame(phaserCanvasRef.current.id)
         .catch(() => { console.error("Failed to initialize game"); })
         .finally(() => {
+          setTimeout(() => {
+            setIsInitializing(false);
+          }, 1000);
           if (GameConstants.DEBUG_MODE) {
             initDebugStores();
           }
@@ -53,6 +56,12 @@ export const App: React.FC = () => {
         return <SlidesWrapper config={kazanSlidesConfig} />;
       case GameScene.Ekb:
         return <SlidesWrapper config={ekbSlidesConfig} />;
+      case GameScene.Irkutsk:
+        return <SlidesWrapper config={irkutskSlidesConfig} />;
+      case GameScene.Kamchatka:
+        return <SlidesWrapper config={kamchatkaSlidesConfig} />;
+      case GameScene.Final:
+        return <SlidesWrapper config={finalSlidesConfig} />;
 
       // games
       case GameScene.CookingGame:
@@ -101,12 +110,7 @@ export const App: React.FC = () => {
             backgroundPosition: "center",
             zIndex: 1000,
           }}
-          onClick={() => {
-            console.log("click");
-            setIsInitializing(false)
-          }}
         >
-          <div className={styles.chooseCharacterPulse}>Нажми, чтобы начать</div>
         </div>
       ) :
         currentScene === GameScene.Auth ? scene : <Layout>{scene}</Layout>}

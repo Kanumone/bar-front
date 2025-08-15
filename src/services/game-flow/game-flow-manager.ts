@@ -11,7 +11,7 @@ import {
 import { GameMapPhaserScene } from "@features/game-map";
 import { MovePhaserScene, MoveSceneMapper } from "@features/move-phaser-scene";
 import { FlyingGameScene } from "@features/flying-game/flying-game-scene";
-import { ekbSlidesConfig, introSlidesConfig, kazanSlidesConfig, moscowSlidesConfig, railwayStationSlidesConfig } from "../../features/slides/configs";
+import { ekbSlidesConfig, introSlidesConfig, kazanSlidesConfig, moscowSlidesConfig, railwayStationSlidesConfig, irkutskSlidesConfig, kamchatkaSlidesConfig, finalSlidesConfig } from "../../features/slides/configs";
 
 const phaserScenes = {
   [GameScene.FlyingGame]: FlyingGameScene,
@@ -37,6 +37,8 @@ class GameFlowManager {
     [GameScene.MoveInKazanVillage]: GameScene.Move,
     [GameScene.MoveToEkb]: GameScene.Move,
     [GameScene.MoveInEkb]: GameScene.Move,
+    [GameScene.MoveToIrkutsk]: GameScene.Move,
+    [GameScene.MoveInIrkutsk]: GameScene.Move,
 
   };
 
@@ -45,6 +47,9 @@ class GameFlowManager {
     [GameScene.Moscow]: this.showMoscow,
     [GameScene.Kazan]: this.showKazan,
     [GameScene.Ekb]: this.showEkb,
+    [GameScene.Irkutsk]: this.showIrkutsk,
+    [GameScene.Kamchatka]: this.showKamchatka,
+    [GameScene.Final]: this.showFinal,
     
     [GameScene.DetectiveGame]: this.showDetectiveGame,
     [GameScene.TretyakovGame]: this.showTretyakovGame,
@@ -60,6 +65,8 @@ class GameFlowManager {
     [GameScene.MoveInKazanVillage]: this.showMoveInKazanVillage,
     [GameScene.MoveToEkb]: this.showMoveToEkb,
     [GameScene.MoveInEkb]: this.showMoveInEkb,
+    [GameScene.MoveToIrkutsk]: this.showMoveToIrkutsk,
+    [GameScene.MoveInIrkutsk]: this.showMoveInIrkutsk,
     
     [GameScene.Intro]: this.showIntro,
     [GameScene.Auth]: this.showAuth,
@@ -261,9 +268,43 @@ class GameFlowManager {
     this.game.scene.start(GameScene.Move, sceneData);
   }
 
+  showMoveToIrkutsk() {
+    if (!this.game) return;
+
+    const sceneData = MoveSceneMapper.createSceneData("MoveToIrkutsk", {});
+
+    useSceneStore.getState().setScene(GameScene.MoveToIrkutsk, sceneData);
+    useSceneStore.getState().setBackgroundLayers(sceneData.backgroundLayers);
+
+    this.stopActiveScenes();
+    this.game.scene.start(GameScene.Move, sceneData);
+  }
+
+  showMoveInIrkutsk() {
+    if (!this.game) return;
+
+    const sceneData = MoveSceneMapper.createSceneData("MoveInIrkutsk", {});
+
+    useSceneStore.getState().setScene(GameScene.MoveInIrkutsk, sceneData);
+    useSceneStore.getState().setBackgroundLayers(sceneData.backgroundLayers);
+
+    this.stopActiveScenes();
+    this.game.scene.start(GameScene.Move, sceneData);
+  }
+
   showMoveToEkb() {}
 
-  showMoveInEkb() {}
+  showMoveInEkb() {
+    if (!this.game) return;
+
+    const sceneData = MoveSceneMapper.createSceneData("MoveInEkb", {});
+
+    useSceneStore.getState().setScene(GameScene.MoveInEkb, sceneData);
+    useSceneStore.getState().setBackgroundLayers(sceneData.backgroundLayers);
+
+    this.stopActiveScenes();
+    this.game.scene.start(GameScene.Move, sceneData);
+  }
 
   // Game scenes
   showFlyingGame() {
@@ -307,6 +348,21 @@ class GameFlowManager {
   showEkb() {
     useSceneStore.getState().setScene(GameScene.Ekb, null);
     useSceneStore.getState().setSlidesConfig(ekbSlidesConfig);
+  }
+
+  showIrkutsk() {
+    useSceneStore.getState().setScene(GameScene.Irkutsk, null);
+    useSceneStore.getState().setSlidesConfig(irkutskSlidesConfig);
+  }
+
+  showKamchatka() {
+    useSceneStore.getState().setScene(GameScene.Kamchatka, null);
+    useSceneStore.getState().setSlidesConfig(kamchatkaSlidesConfig);
+  }
+
+  showFinal() {
+    useSceneStore.getState().setScene(GameScene.Final, null);
+    useSceneStore.getState().setSlidesConfig(finalSlidesConfig);
   }
 }
 

@@ -62,28 +62,28 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           </PanelStack>
         </>}
 
-      {GameConstants.DEBUG_MODE &&
-        <>
-          <PanelStack
-            side="left"
-            position={{
-              top: "var(--tg-safe-top)",
-              left: "0",
-            }}
-            gap="12px"
-          >
-            <MenuButton onOpen={() => setMenuOpen(true)} />
-          </PanelStack>
-          <GameMenu
-            visible={menuOpen}
-            onClose={() => setMenuOpen(false)}
-            onSettings={() => { setMenuOpen(false); /* открыть настройки позже */ }}
-            onToggleSound={onToggleSound}
-            soundEnabled={isSoundEnabled}
-            onDebugAction={() => { setMenuOpen(false); }}
-          />
-        </>
-      }
+
+      <>
+        <PanelStack
+          side="left"
+          position={{
+            top: "calc(var(--tg-safe-top) + 30px)",
+            left: "0",
+          }}
+          gap="16px"
+        >
+          <MenuButton onOpen={() => setMenuOpen(true)} />
+        </PanelStack>
+        <GameMenu
+          visible={menuOpen}
+          onClose={() => setMenuOpen(false)}
+          onSettings={() => { setMenuOpen(false); /* открыть настройки позже */ }}
+          onToggleSound={onToggleSound}
+          soundEnabled={isSoundEnabled}
+          onDebugAction={() => { setMenuOpen(false); }}
+        />
+      </>
+
 
       {children}
     </>
