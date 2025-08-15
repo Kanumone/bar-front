@@ -404,7 +404,7 @@ const kazanSlides: EpisodeConfig[] = [
   },
   {
     slideIndex: 12,
-    filename: "Screen_7_5.jpg",
+    filename: "Screen_12.jpg",
     // TODO: Подтвердить имя файла для тёмного экрана (возможно, отдельный ассет под тёмный фон)
     startSound: "alarm-clock.mp3", // TODO: Подтвердить точное имя аудио с будильником и нужна ли петля (backgroundSound)
     actions: [
@@ -428,10 +428,27 @@ const kazanSlides: EpisodeConfig[] = [
         characterName: "Рустам",
         text: "А чтобы всё успеть и не умереть с голоду — держи. Сегодня немного проспали и не успели позавтракать"
       },
+      {
+        type: "message",
+        text: "Рустам вдруг отпускает руль одной рукой, тянется за сиденье и достаёт бумажный свёрток."
+      }
     ],
   },
   {
-    slideIndex: 13,
+    slideIndex: 12,
+    filename: "Screen_13_1.jpg",
+    actions: [
+      {
+        type: "button",
+        button: {
+          text: "Взять",
+          action: () => { },
+        },
+      },
+    ],
+  },
+  {
+    slideIndex: 12,
     filename: "Screen_13.jpg",
     actions: [
       {
