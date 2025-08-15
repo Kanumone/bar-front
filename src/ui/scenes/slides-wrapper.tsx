@@ -80,8 +80,12 @@ export const SlidesWrapper = ({ config }: { config: SlidesConfig }) => {
   const translateX = -currentSlide.originX * 100;
   const translateY = -currentSlide.originY * 100;
 
-  // Простая обработка клика по фону для перехода к следующему слайду/action
+  // Обработка клика по фону для перехода к следующему слайду/action
   const handleWrapperClick = () => {
+    // Проверяем, что текущий action не требует взаимодействия
+    if (currentAction?.type === "order-messages" && orderLocal && !orderLocal.correct) {
+      return; // Блокируем переход, пока не собран правильный порядок
+    }
     goNext();
   };
 
@@ -236,7 +240,10 @@ export const SlidesWrapper = ({ config }: { config: SlidesConfig }) => {
                   correctOrder={currentAction.messages}
                   checked={orderLocal.checked}
                   onReorder={handleOrderMessagesReorder}
-                  onCheck={() => handleOrderMessagesCheck()}
+                  onCheck={() => {
+                    const isCorrect = handleOrderMessagesCheck();
+                    return isCorrect;
+                  }}
                 />
               </div>
             )}

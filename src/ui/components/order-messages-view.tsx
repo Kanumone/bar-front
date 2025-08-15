@@ -10,7 +10,7 @@ export interface OrderMessagesViewProps {
   correctOrder: string[];
   checked?: boolean;
   onReorder: (fromIndex: number, toIndex: number) => void;
-  onCheck: () => void;
+  onCheck: () => boolean;
 }
 
 export const OrderMessagesView = ({ items, correctOrder, checked, onReorder, onCheck }: OrderMessagesViewProps) => {
@@ -49,7 +49,13 @@ export const OrderMessagesView = ({ items, correctOrder, checked, onReorder, onC
           })}
         </SortableContext>
       </DndContext>
-      <button className={`${styles.actionButton} ${styles.checkButton}`} onClick={(e) => { e.stopPropagation(); onCheck(); }}>
+      <button className={styles.checkButton} onClick={(e) => { 
+        e.stopPropagation(); 
+        const isCorrect = onCheck();
+        if (!isCorrect) {
+          e.preventDefault();
+        }
+      }}>
         Проверить
       </button>
     </div>

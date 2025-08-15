@@ -58,7 +58,7 @@ export function useSlidesNavigation(
   }, [storeHandleImagePick2Select, playSceneSound]);
 
   const handleOrderMessagesCheck = useCallback(() => {
-    storeHandleOrderMessagesCheck(playSceneSound);
+    return storeHandleOrderMessagesCheck(playSceneSound);
   }, [storeHandleOrderMessagesCheck, playSceneSound]);
 
   const handleMultiChoiceSubmit = useCallback(() => {
