@@ -4,6 +4,7 @@ import styles from "./flying-game-scene-wrapper.module.css";
 
 export const FlyingGameSceneWrapper: React.FC = () => {
   const [gameOver, setGameOver] = useState<{ score: number } | null>(null);
+  const firstSleep = useSceneStore.getState().isTripStart();
 
   useEffect(() => {
     const handleGameOver = (e: Event) => {
@@ -29,11 +30,11 @@ export const FlyingGameSceneWrapper: React.FC = () => {
       {gameOver && (
         <div className={styles.overlay}>
           <div className={styles.modal}>
-            <h2>Игра окончена!</h2>
-            <p>Очки: {gameOver.score}</p>
+            <h2>{firstSleep ? "В поезде сон крепкий! Нужно 10 овечек, чтобы проснуться" : "Сон сбился, и ты почти проснулся!"}</h2>
+            <p>Пойманные овечки: {gameOver.score}</p>
             <div className={styles.buttons}>
-              <button onClick={restart}>Рестарт</button>
-              <button onClick={wakeUp}>Проснуться</button>
+              <button onClick={restart}>Спать дальше</button>
+              {(!firstSleep || gameOver.score >= 10) && <button onClick={wakeUp}>Проснуться</button>}
             </div>
           </div>
         </div>

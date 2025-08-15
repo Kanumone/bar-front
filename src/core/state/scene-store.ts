@@ -9,12 +9,13 @@ interface SceneState {
   backgroundLayers: SceneBackground | null;
 
   slidesConfig?: SlidesConfig;
-
+  
   /** === Методы === */
   setScene: <T extends SceneName>(scene: T, data: SceneDataMap[T] | null) => Promise<void>;
   setBackgroundLayers: (layers: SceneBackground) => void;
   setSlidesConfig: (config?: SlidesConfig) => void;
   backToPrevScene: () => void;
+  isTripStart: () => boolean;
 }
 
 export const useSceneStore = create<SceneState>((set, get) => ({
@@ -51,4 +52,6 @@ export const useSceneStore = create<SceneState>((set, get) => ({
       gameFlowManager.startScene(prevScene as GameScene);
     }
   },
+
+  isTripStart: () => get().prevScene === GameScene.RailwayStation,
 }));
