@@ -250,11 +250,19 @@ export const useStoryStore = create<StoryState>((set, get) => ({
 
     // Вставляем postActions при необходимости
     const toInsert = correct ? curr.postActions?.correct ?? [] : curr.postActions?.wrong ?? [];
-    if (toInsert.length > 0) {
-      const updated = [...currentActions];
-      updated.splice(actionIndex + 1, 0, ...toInsert);
-      set({ currentActions: updated });
+    // Вставляем message с feedback сразу после action, затем postActions (если есть)
+    const feedbackText = correct ? curr.feedback?.correct : curr.feedback?.wrong;
+    const updated = [...currentActions];
+    const feedbackAction: Action | null = feedbackText ? ({ type: "message", text: feedbackText } as Action) : null;
+    let insertPos = actionIndex + 1;
+    if (feedbackAction) {
+      updated.splice(insertPos, 0, feedbackAction);
+      insertPos += 1;
     }
+    if (toInsert.length > 0) {
+      updated.splice(insertPos, 0, ...toInsert);
+    }
+    set({ currentActions: updated });
 
     if (correct || !curr.allowRetry) {
       processUpdate(playSceneSound);

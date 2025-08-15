@@ -117,13 +117,12 @@
 
 /* image-pick-2 */
 .imagePick2Container {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  grid-template-rows: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   gap: 1rem;
   padding: 2rem;
-  z-index: 20;
 }
 
 .imagePick2Top,

@@ -159,6 +159,7 @@ export const SlidesWrapper = ({ config }: { config: SlidesConfig }) => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
+            style={{ zIndex: 5 }}
           >
             {currentAction.type === "message" && currentAction.text && (
               <div className={styles.messageContainer}>
@@ -216,6 +217,7 @@ export const SlidesWrapper = ({ config }: { config: SlidesConfig }) => {
 
             {currentAction.type === "image-pick-2" && (
               <div className={styles.imagePick2Container}>
+                <div className={styles.orderItem}>Какая картина шедевр?</div>
                 <div className={styles.imagePick2Top}>
                   <img
                     src={currentAction.topImage}
