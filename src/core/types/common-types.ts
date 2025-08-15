@@ -44,10 +44,10 @@ export interface SceneDataMap {
   Moscow: null;
 
   // move scenes
-  Move: MoveSceneData;
-  MoveScene: MoveSceneData;
+  Move: MoveSceneData | null;
+  MoveScene: MoveSceneData | null;
   MoveToTrain: MoveSceneData | null;
-  MoveAfterTrain: null;
+  MoveAfterTrain: MoveSceneData | null;
   MoveToVdnh: MoveSceneData | null;
   MoveToGallery: MoveSceneData | null;
   MoveToKazan: MoveSceneData | null;

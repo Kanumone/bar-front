@@ -145,11 +145,8 @@ class GameFlowManager {
 
     const sceneData = MoveSceneMapper.createSceneData("MoveAfterTrain", data);
 
-    useSceneStore.setState({
-      currentScene: GameScene.MoveAfterTrain,
-      sceneData: sceneData,
-      backgroundLayers: sceneData.backgroundLayers,
-    });
+    useSceneStore.getState().setScene(GameScene.MoveAfterTrain, sceneData);
+    useSceneStore.getState().setBackgroundLayers(sceneData.backgroundLayers);
 
     this.stopActiveScenes();
     this.game.scene.start(GameScene.Move, sceneData);
@@ -161,11 +158,8 @@ class GameFlowManager {
 
     const sceneData = MoveSceneMapper.createSceneData("MoveToTrain", {});
 
-    useSceneStore.setState({
-      currentScene: GameScene.MoveToTrain,
-      sceneData: sceneData,
-      backgroundLayers: sceneData.backgroundLayers,
-    });
+    useSceneStore.getState().setScene(GameScene.MoveToTrain, sceneData);
+    useSceneStore.getState().setBackgroundLayers(sceneData.backgroundLayers);
 
     useMoveSceneStore.setState({
       backgroundMusic: "Andrey Bakt - Rainy Hanoi.mp3",
@@ -181,11 +175,8 @@ class GameFlowManager {
 
     const sceneData = MoveSceneMapper.createSceneData("MoveToVdnh", {});
 
-    useSceneStore.setState({
-      currentScene: GameScene.MoveToVdnh,
-      sceneData: sceneData,
-      backgroundLayers: sceneData.backgroundLayers,
-    });
+    useSceneStore.getState().setScene(GameScene.MoveToVdnh, sceneData);
+    useSceneStore.getState().setBackgroundLayers(sceneData.backgroundLayers);
 
     this.stopActiveScenes();
     this.game.scene.start(GameScene.Move, sceneData);
@@ -197,11 +188,8 @@ class GameFlowManager {
 
     const sceneData = MoveSceneMapper.createSceneData("MoveToGallery", {});
 
-    useSceneStore.setState({
-      currentScene: GameScene.MoveToGallery,
-      sceneData: sceneData,
-      backgroundLayers: sceneData.backgroundLayers,
-    });
+    useSceneStore.getState().setScene(GameScene.MoveToGallery, sceneData);
+    useSceneStore.getState().setBackgroundLayers(sceneData.backgroundLayers);
 
     this.stopActiveScenes();
     this.game.scene.start(GameScene.Move, sceneData);
@@ -213,11 +201,8 @@ class GameFlowManager {
 
     const sceneData = MoveSceneMapper.createSceneData("MoveToKazan", {});
 
-    useSceneStore.setState({
-      currentScene: GameScene.MoveToKazan,
-      sceneData: sceneData,
-      backgroundLayers: sceneData.backgroundLayers,
-    });
+    useSceneStore.getState().setScene(GameScene.MoveToKazan, sceneData);
+    useSceneStore.getState().setBackgroundLayers(sceneData.backgroundLayers);
 
     this.stopActiveScenes();
     this.game.scene.start(GameScene.Move, sceneData);
@@ -229,11 +214,8 @@ class GameFlowManager {
 
     const sceneData = MoveSceneMapper.createSceneData("MoveInKazan", {});
 
-    useSceneStore.setState({
-      currentScene: GameScene.MoveInKazan,
-      sceneData: sceneData,
-      backgroundLayers: sceneData.backgroundLayers,
-    });
+    useSceneStore.getState().setScene(GameScene.MoveInKazan, sceneData);
+    useSceneStore.getState().setBackgroundLayers(sceneData.backgroundLayers);
 
     this.stopActiveScenes();
     this.game.scene.start(GameScene.Move, sceneData);
@@ -244,11 +226,8 @@ class GameFlowManager {
 
     const sceneData = MoveSceneMapper.createSceneData("MoveInKazanVillage", {});
 
-    useSceneStore.setState({
-      currentScene: GameScene.MoveInKazanVillage,
-      sceneData: sceneData,
-      backgroundLayers: sceneData.backgroundLayers,
-    });
+    useSceneStore.getState().setScene(GameScene.MoveInKazanVillage, sceneData);
+    useSceneStore.getState().setBackgroundLayers(sceneData.backgroundLayers);
 
     this.stopActiveScenes();
     this.game.scene.start(GameScene.Move, sceneData);
