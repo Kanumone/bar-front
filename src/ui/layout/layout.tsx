@@ -7,14 +7,14 @@ import { GameMenu } from "../components/game-menu";
 import { usePlayerState, useSceneStore, useSettingsStore } from "$core/state";
 import { MenuButton } from "$ui/components/menu-button";
 import { GameConstants } from "$core/constants/constants";
-import { type SceneName } from "$core/types/common-types";
+import { GameScene, type SceneName } from "$core/types/common-types";
 
 interface LayoutProps {
   children: React.ReactNode;
 }
 
 const needShowMenu = (scene: SceneName) => {
-  return scene.startsWith("Move");
+  return scene.startsWith("Move") && scene !== GameScene.MoveToTrain;
 };
 
 export const Layout: React.FC<LayoutProps> = ({ children }) => {

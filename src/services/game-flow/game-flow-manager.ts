@@ -125,6 +125,22 @@ class GameFlowManager {
     });
   }
 
+  // ✅ Новый метод для переключения сцены во время работы
+  switchMoveScene(scene: MoveScene, customData?: Partial<MoveSceneData>): void {
+    if (!this.game) {
+      console.warn("Game not initialized");
+      return;
+    }
+
+    const moveScene = this.game.scene.getScene(GameScene.Move) as MovePhaserScene;
+    if (!moveScene) {
+      console.warn("Move scene not found");
+      return;
+    }
+
+    moveScene.switchToScene(scene, customData);
+  }
+
   startScene(scene: GameScene) {
     this.startMap[scene]?.call(this)
   }
@@ -231,22 +247,6 @@ class GameFlowManager {
 
     this.stopActiveScenes();
     this.game.scene.start(GameScene.Move, sceneData);
-  }
-
-  // ✅ Новый метод для переключения сцены во время работы
-  switchMoveScene(scene: MoveScene, customData?: Partial<MoveSceneData>): void {
-    if (!this.game) {
-      console.warn("Game not initialized");
-      return;
-    }
-
-    const moveScene = this.game.scene.getScene(GameScene.Move) as MovePhaserScene;
-    if (!moveScene) {
-      console.warn("Move scene not found");
-      return;
-    }
-
-    moveScene.switchToScene(scene, customData);
   }
 
   showFlyingGame() {

@@ -140,6 +140,7 @@ export const useMoveSceneStore = create<MoveSceneState>((set, get) => ({
   },
 
   startTimer: () => {
+    console.log("startTimer");
     const { timerId } = get();
     if (timerId !== null) {
       clearInterval(timerId);
@@ -181,7 +182,7 @@ export const useMoveSceneStore = create<MoveSceneState>((set, get) => ({
 
   resumeTimer: () => {
     const { timerId, remainTime } = get();
-    if (timerId === null && remainTime > 0 && get().isMoving) {
+    if (timerId === null && remainTime >= 0 && get().isMoving) {
       const newTimerId = setInterval(() => {
         const { remainTime: currentRemainTime } = get();
         if (!get().isMoving) {

@@ -5,6 +5,7 @@ import { QuizOverlay } from "$/features/game-quiz/components/quiz-overlay";
 import { GameScene, type MoveScene, type QuizItem } from "@core/types/common-types";
 import { useBackgroundMusic } from "$/core/hooks/use-background-music/use-music";
 import { useSceneStore } from "$core/state";
+import { GameConstants, lifeStatsOff, lifeStatsOn } from "$core/constants/constants";
 
 interface MoveParams {
     backgroundMusicPath: string;
@@ -66,6 +67,10 @@ export const MoveWrapper = () => {
     });
 
     useEffect(() => {
+        if (scene === GameScene.MoveToTrain) {
+            lifeStatsOff();
+        }
+
         // Если для сцены нет пути к вопросам — сбросить состояние и ничего не запускать
         if (!sceneParams?.questionsPath) {
             setQuestions([]);
@@ -85,6 +90,10 @@ export const MoveWrapper = () => {
                 // При ошибке загрузки очищаем состояние, чтобы не остались старые вопросы/флаги
                 setQuestions([]);
             });
+
+        return () => {
+            lifeStatsOn();
+        }
     }, [setQuestions, startQuizCycle, scene]);
 
     if (!questions.length) return null;

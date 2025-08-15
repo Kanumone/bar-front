@@ -31,3 +31,13 @@ if (GameConstants.DEBUG_MODE) {
 
   // GameConstants.MAX_HUNGER = 5;
 }
+
+export function lifeStatsOff() {
+  GameConstants.HUNGER_POINTS_PER_SECOND = 0;
+  GameConstants.ENERGY_POINTS_PER_SECOND = 0;
+}
+
+export function lifeStatsOn() {
+  GameConstants.HUNGER_POINTS_PER_SECOND = 1;
+  GameConstants.ENERGY_POINTS_PER_SECOND = 1;
+}
