@@ -16,15 +16,18 @@ export const GameConstants = {
   HUNGER_POINTS_PER_SECOND: 1,
 
   // system
-  SYNC_INTERVAL: seconds(30), // Интервал синхронизации данных на сервер
+  SYNC_INTERVAL: seconds(20), // Интервал синхронизации данных на сервер
   MAX_RETRY_ATTEMPTS: 3, // Максимальное количество попыток синхронизации при ошибке
   RETRY_DELAY: seconds(5), // Задержка между попытками при ошибке
 
-  DEBUG_MODE: true,
+  DEBUG_MODE: false,
 };
 
 if (GameConstants.DEBUG_MODE) {
   GameConstants.SLIDE_TIMEOUT = 1;
   GameConstants.TIMEOUT_FOR_QUESTION = 1;
   GameConstants.SHOW_ITEMS_DESCRIPTION_TIMEOUT = 1;
+  // GameConstants.SYNC_INTERVAL = 1000;
+
+  // GameConstants.MAX_HUNGER = 5;
 }

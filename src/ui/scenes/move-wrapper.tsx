@@ -67,7 +67,7 @@ export const MoveWrapper = () => {
 
     useEffect(() => {
         fetch(getAssetsPath(`data/${sceneParams?.questionsPath}`))
-            .then((res) => (console.log(res), res.json()))
+            .then((res) => (res.json()))
             .then(({ questions }: { questions: QuizItem[] }) => {
                 setQuestions(questions);
                 if (questions.length) {
