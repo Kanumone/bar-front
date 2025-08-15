@@ -6,7 +6,7 @@ export const recipes: Recipe[] = [
   {
     id: "kalach",
     title: "Калач",
-    energy: 3,
+    energy: 30,
     imageSrc: getAssetsPathByType({
       type: "images",
       scene: "cooking",
@@ -37,7 +37,7 @@ export const recipes: Recipe[] = [
   {
     id: "chak_chak",
     title: "Чак-чак",
-    energy: 5,
+    energy: 35,
     imageSrc: getAssetsPathByType({
       type: "images",
       scene: "cooking",
@@ -68,7 +68,7 @@ export const recipes: Recipe[] = [
   {
     id: "yukola",
     title: "Юкола",
-    energy: 4,
+    energy: 50,
     imageSrc: getAssetsPathByType({
       type: "images",
       scene: "cooking",

@@ -118,6 +118,25 @@ export class MoveSceneMapper {
       playerSpeed: 150,
     },
 
+    [GameScene.MoveInKazan]: {
+      backgroundLayers: {
+        background: getAssetsPathByType({
+          type: "images",
+          scene: "kazan-move",
+          filename: "background.png",
+        }),
+        preBackground: getAssetsPathByType({
+          type: "images",
+          scene: "kazan-move",
+          filename: "pre_background.png",
+        }),
+        light: null,
+        front: null,
+        ground: getAssetsPath("images/platform.png"),
+      },
+      playerSpeed: 150,
+    },
+
     // Сцена движения по городу
     // [GameScene.CityMove]: {
     //   backgroundLayers: {

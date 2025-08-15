@@ -31,6 +31,7 @@ class GameFlowManager {
     [GameScene.MoveToVdnh]: GameScene.Move,
     [GameScene.MoveToGallery]: GameScene.Move,
     [GameScene.MoveToKazan]: GameScene.Move,
+    [GameScene.MoveInKazan]: GameScene.Move,
   };
 
   private readonly startMap: Partial<Record<GameScene, () => void>> = {
@@ -48,6 +49,7 @@ class GameFlowManager {
     [GameScene.CookingGame]: this.showGameCooking,
     [GameScene.MoveToGallery]: this.showMoveToGallery,
     [GameScene.MoveToKazan]: this.showMoveToKazan,
+    [GameScene.MoveInKazan]: this.showMoveInKazan,
     [GameScene.Auth]: this.showAuth,
   };
 
@@ -213,6 +215,22 @@ class GameFlowManager {
 
     useSceneStore.setState({
       currentScene: GameScene.MoveToKazan,
+      sceneData: sceneData,
+      backgroundLayers: sceneData.backgroundLayers,
+    });
+
+    this.stopActiveScenes();
+    this.game.scene.start(GameScene.Move, sceneData);
+  }
+
+  // Новая сцена: движение внутри Казани
+  showMoveInKazan() {
+    if (!this.game) return;
+
+    const sceneData = MoveSceneMapper.createSceneData("MoveInKazan", {});
+
+    useSceneStore.setState({
+      currentScene: GameScene.MoveInKazan,
       sceneData: sceneData,
       backgroundLayers: sceneData.backgroundLayers,
     });

@@ -1,3 +1,4 @@
+import { gameFlowManager } from "$services/game-flow";
 import { Episode, type EpisodeConfig } from "./common";
 
 // Конфигурация слайдов для сцены "Казань"
@@ -582,8 +583,7 @@ const kazanSlides: EpisodeConfig[] = [
         type: "button",
         button: {
           text: "ПОЙТИ",
-          // TODO: Привязать действие к переходу на следующую локацию (экскурсия по городу)
-          action: () => { /* переход к следующему слайду/сцене */ },
+          action: () => { gameFlowManager.showMoveInKazan() },
         },
       },
     ],

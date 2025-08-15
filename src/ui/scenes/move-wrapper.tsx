@@ -32,6 +32,11 @@ const params: Partial<Record<MoveScene, MoveParams>> = {
         backgroundMusicPath: "Звук утреннего города.mp3",
         questionsPath: "move-to-kazan.json",
     },
+    [GameScene.MoveInKazan]: {
+        backgroundMusicPath: "Звук утреннего города.mp3",
+        questionsPath: "move-to-kazan-quiz.json",
+    },
+    
 }
 
 export const MoveWrapper = () => {
@@ -58,7 +63,7 @@ export const MoveWrapper = () => {
 
     useEffect(() => {
         fetch(getAssetsPath(`data/${sceneParams?.questionsPath}`))
-            .then((res) => res.json())
+            .then((res) => (console.log(res), res.json()))
             .then(({ questions }: { questions: QuizItem[] }) => {
                 setQuestions(questions);
                 if (questions.length) {
