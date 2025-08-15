@@ -18,42 +18,6 @@ const aboutTretiakovka: Outcome = {
 
 const moscowSlides: EpisodeConfig[] = [
   {
-    slideIndex: 0,
-    filename: "Screen_1.jpg",
-    actions: [
-      {
-        type: "image-pick-2",
-        topImage: "shedevr_1.jpg",
-        bottomImage: "shedevr_2.jpg",
-        correct: "bottom",
-        feedback: {
-          correct: "Блинки Палермо «Без названия» – 1,7 миллиона долларов",
-          wrong: "Нет, это стена поъезда",
-        },
-      },
-      {
-        type: "image-pick-2",
-        topImage: "shedevr_4.jpg",
-        bottomImage: "shedevr_3.jpg",
-        correct: "top",
-        feedback: {
-          correct: "Cy Twombly «Без названия» предварительная оценка стоимости несколько миллионв долларов",
-          wrong: "Нет, это страница из детской  раскраски ребенка",
-        },
-      },
-      {
-        type: "image-pick-2",
-        topImage: "shedevr_5.jpg",
-        bottomImage: "shedevr_6.jpg",
-        correct: "bottom",
-        feedback: {
-          correct: "«Собака», Джоан Миро – 2,2 миллиона долларов",
-          wrong: "Нет, это автопортрет 3-него ребенка",
-        },
-      }
-    ]
-  },
-  {
     slideIndex: 1,
     filename: "Screen_1.jpg",
     backgroundSound: "moscow-station-ambient.mp3",
