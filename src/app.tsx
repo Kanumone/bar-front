@@ -5,7 +5,6 @@ import { useSceneStore } from "./core/state/scene-store";
 import { initDebugStores } from "./utils/debug-stores";
 import {
   AuthSceneWrapper,
-  GameMapSceneWrapper,
   Game2048SceneWrapper,
   SlidesWrapper,
   CookingGameSceneWrapper,
@@ -35,7 +34,7 @@ export const App: React.FC = () => {
         .finally(() => {
           setTimeout(() => {
             setIsInitializing(false);
-          }, 1000);
+          }, 1500);
           if (GameConstants.DEBUG_MODE) {
             initDebugStores();
           }
@@ -84,8 +83,6 @@ export const App: React.FC = () => {
         return <MoveWrapper />;
 
       // others
-      case GameScene.GameMap:
-        return <GameMapSceneWrapper />;
       case GameScene.Game2048:
         return <Game2048SceneWrapper />;
       case GameScene.Auth:

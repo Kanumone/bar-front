@@ -2,65 +2,129 @@ import { Scene } from "phaser";
 import { getAssetsPathByType } from "@utils/get-assets-path";
 import { GameScene } from "@core/types/common-types";
 import { logActivity } from "$/api/log-activity";
-import { useSceneStore } from "../../core/state";
-
-const CITY_RADIUS = 100;
+import { useSceneStore } from "$core/state";
 const TAP_THRESHOLD = 10;
 
-const START_POINT = {
-  x: 1450,
-  y: 1500,
-};
-
 interface City {
+  id: string;
   name: string;
   x: number;
   y: number;
-  object: Phaser.GameObjects.Arc | null;
 }
 
 export default class GameMapPhaserScene extends Scene {
   private mapImage!: Phaser.GameObjects.Image;
   private player!: Phaser.GameObjects.Image;
-  private cities: City[] = [
-    { name: "Москва",
+  private cities: Record<string, City> = {
+    "moscow": {
+      id: "moscow",
+      name: "Москва",
       x: 400,
       y: 850,
-      object: null },
-    { name: "Санкт-Петербург",
-      x: 400,
-      y: 550,
-      object: null },
-    { name: "Казань",
+    },
+    "kazan": {
+      id: "kazan",
+      name: "Казань",
       x: 600,
-      y: 1100,
-      object: null },
-  ];
+      y: 1100
+    },
+    "irkutsk": {
+      id: "irkutsk",
+      name: "Иркутск",
+      x: 1800,
+      y: 1400,
+    },
+    "kamchatka": {
+      id: "kamchatka",
+      name: "Камчатка",
+      x: 2500,
+      y: 2500,
+    },
+    "ekb": {
+      id: "ekb",
+      name: "Екатеринбург",
+      x: 950,
+      y: 1250,
+    },
+    "nsk": {
+      id: "nsk",
+      name: "Новосибирск",
+      x: 1450,
+      y: 1500,
+    },
+  };
 
   private lastTouchDistance = 0;
   private minZoom = 0.5;
   private maxZoom = 3;
   private currentZoom = 1;
-  private selectedCity = "";
 
   constructor() {
     super(GameScene.GameMap);
   }
 
+  private getCityByScene(scene: GameScene | string): City {
+    const sceneKey = String(scene);
+    const sceneToCityId: Record<string, string> = {
+      // slides
+      [GameScene.Moscow]: "moscow",
+      [GameScene.Kazan]: "kazan",
+      [GameScene.Ekb]: "ekb",
+      [GameScene.Irkutsk]: "irkutsk",
+      [GameScene.Kamchatka]: "kamchatka",
+      // slides without explicit city => Новосибирск
+      [GameScene.Intro]: "nsk",
+      [GameScene.Final]: "nsk",
+      // explicit move scenes
+      [GameScene.MoveToKazan]: "kazan",
+      [GameScene.MoveInKazan]: "kazan",
+      [GameScene.MoveInKazanVillage]: "kazan",
+      [GameScene.MoveToEkb]: "ekb",
+      [GameScene.MoveInEkb]: "ekb",
+      [GameScene.MoveToIrkutsk]: "irkutsk",
+      [GameScene.MoveInIrkutsk]: "irkutsk",
+    };
+
+    // точное сопоставление
+    let cityId = sceneToCityId[sceneKey];
+
+    // если нет точного, попробуем распознать move-сцену по имени
+    if (!cityId) {
+      const moveMatch = sceneKey.match(/^Move(?:To|In)(.+)$/);
+      if (moveMatch && moveMatch[1]) {
+        const suffix = moveMatch[1].toLowerCase();
+        if (suffix.includes("kazan")) cityId = "kazan";
+        else if (suffix.includes("ekb") || suffix.includes("ekaterin")) cityId = "ekb";
+        else if (suffix.includes("irkutsk")) cityId = "irkutsk";
+        else if (suffix.includes("kamchatka")) cityId = "kamchatka";
+        else if (suffix.includes("moscow") || suffix.includes("train") || suffix.includes("vdnh") || suffix.includes("gallery")) cityId = "moscow";
+      }
+    }
+
+    cityId = cityId ?? sceneKey;
+    return this.cities[cityId] || this.cities["nsk"];
+  }
+
   preload(): void {
     // ✅ Загружаем одну большую карту SVG/PNG
     // this.load.image("map_image", getAssetsPath("images/map.svg"));
-    this.load.svg("map_image", getAssetsPathByType({ type: "images",
+    this.load.svg("map_image", getAssetsPathByType({
+      type: "images",
       scene: "game-map",
-      filename: "map.svg" }));
+      filename: "map.svg"
+    }));
 
-    this.load.svg("player_marker", getAssetsPathByType({ type: "images",
+    this.load.svg("player_marker", getAssetsPathByType({
+      type: "images",
       scene: "game-map",
-      filename: "player-pointer.svg" }));
+      filename: "player-pointer.svg"
+    }));
   }
 
   create(): void {
-    const playerPlace = START_POINT;
+    const { currentScene } = useSceneStore.getState();
+    const playerCity = this.getCityByScene(currentScene);
+    const playerPlace = { x: playerCity.x, y: playerCity.y };
     // ✅ Отображаем карту
     this.mapImage = this.add.image(0, 0, "map_image").setOrigin(0, 0);
 
@@ -75,36 +139,7 @@ export default class GameMapPhaserScene extends Scene {
     this.player.setScrollFactor(1);
 
     // ✅ Города
-    this.cities.forEach((city) => {
-      city.object = this.add.circle(city.x, city.y, CITY_RADIUS, 0xffe600, 0.2)
-        .setScrollFactor(1)
-        .setAlpha(1)
-        .setInteractive();
-
-      city.object.on("pointerup", (pointer: Phaser.Input.Pointer) => {
-        const distance = Phaser.Math.Distance.Between(pointer.downX, pointer.downY, pointer.upX, pointer.upY);
-
-        if (distance < TAP_THRESHOLD) {
-          void logActivity("city_tapped_success", { cityName: city.name,
-            tapDistance: distance }, GameScene.GameMap);
-
-          camera.centerOn(city.x, city.y);
-          if (city.name !== this.selectedCity) {
-            this.startPulseAnimation(city.object as Phaser.GameObjects.Arc);
-          }
-          useSceneStore.setState({
-            currentScene: GameScene.GameMap,
-            sceneData: { selectedCity: city.name,
-              targetX: city.x,
-              targetY: city.y },
-          });
-          this.selectedCity = city.name;
-        } else {
-          void logActivity("city_tapped_fail_drag", { cityName: city.name,
-            tapDistance: distance }, GameScene.GameMap);
-        }
-      });
-    });
+    // точки городов удалены
 
     camera.centerOn(this.player.x, this.player.y);
 
@@ -151,25 +186,6 @@ export default class GameMapPhaserScene extends Scene {
 
     this.input.on("pointerup", () => {
       this.lastTouchDistance = 0;
-    });
-  }
-
-  private startPulseAnimation(circle: Phaser.GameObjects.Arc): void {
-    this.tweens.killTweensOf(circle);
-
-    this.tweens.add({
-      targets: circle,
-      scaleX: 1.2,
-      scaleY: 1.2,
-      alpha: 1,
-      duration: 300,
-      ease: "Linear",
-      repeat: 0,
-      yoyo: true,
-      onComplete: () => {
-        circle.setAlpha(0.000001);
-        circle.setScale(1);
-      },
     });
   }
 
