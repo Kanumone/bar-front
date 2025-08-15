@@ -81,6 +81,8 @@ export const GameMenu: React.FC<GameMenuProps> = ({
         </div>
 
         <div className={styles.subHeader}>Debug</div>
+        <div className={styles.item} onClick={() => onSceneSelection("moscow")}>🇷🇺 Москва</div>
+        <div className={styles.item} onClick={() => onSceneSelection("kazan")}>🕌 Казань</div>
         <div className={styles.item} onClick={() => onSceneSelection("flight")}>🛩️ Игра полёт</div>
         <div className={styles.item} onClick={() => onSceneSelection("cooking")}>🍳 Игра готовка</div>
         <div className={styles.item} onClick={() => onSceneSelection("train-move")}>🚉 Сцена переход к вокзалу</div>
@@ -91,9 +93,7 @@ export const GameMenu: React.FC<GameMenuProps> = ({
         <div className={styles.item} onClick={() => onSceneSelection("detective")}>🕵️ Детектив</div>
         <div className={styles.item} onClick={() => onSceneSelection("game-map")}>🧭 Карта</div>
         <div className={styles.item} onClick={() => onSceneSelection("railway-station")}>🚉 Вокзал</div>
-        <div className={styles.item} onClick={() => onSceneSelection("moscow")}>🇷🇺 Москва</div>
         <div className={styles.item} onClick={() => onSceneSelection("tretyakov")}>🎨 Третьяков</div>
-        <div className={styles.item} onClick={() => onSceneSelection("kazan")}>🕌 Казань</div>
       </div>
     </div>
   );

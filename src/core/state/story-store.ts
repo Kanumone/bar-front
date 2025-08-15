@@ -48,7 +48,7 @@ interface StoryState {
   handleImagePick2Select: (pos: "top" | "bottom", playSceneSound: (url?: string) => void) => void;
   initOrderMessages: () => void;
   handleOrderMessagesReorder: (from: number, to: number) => void;
-  handleOrderMessagesCheck: (playSceneSound: (url?: string) => void) => void;
+  handleOrderMessagesCheck: (playSceneSound: (url?: string) => void) => boolean;
   handleMultiChoiceSelect: (groupId: string, option: string) => void;
   handleMultiChoiceSubmit: (playSceneSound: (url?: string) => void) => void;
 
@@ -240,15 +240,16 @@ export const useStoryStore = create<StoryState>((set, get) => ({
     const arr: Array<{ id: string; text: string }> = [...st.currentOrder];
     const [moved] = arr.splice(from, 1);
     arr.splice(to, 0, moved);
-    setActionLocalState(key, { ...st, currentOrder: arr });
+    // При перемещении сбрасываем флаг проверки
+    setActionLocalState(key, { ...st, currentOrder: arr, checked: false });
   },
   handleOrderMessagesCheck: (playSceneSound) => {
     const { slideIndex, actionIndex, currentActions, getActionKey, actionLocalState, setActionLocalState, processUpdate } = get();
     const curr = currentActions[actionIndex] as Action | undefined;
-    if (!curr || curr.type !== "order-messages") return;
+    if (!curr || curr.type !== "order-messages") return false;
     const key = getActionKey(slideIndex, actionIndex);
     const st = actionLocalState[key] as any;
-    if (!st || st.kind !== "order-messages") return;
+    if (!st || st.kind !== "order-messages") return false;
     const current = (st.currentOrder as Array<{ id: string; text: string }>).map((x) => x.text);
     const correct = JSON.stringify(current) === JSON.stringify(curr.messages);
     setActionLocalState(key, { ...st, checked: true, correct });
@@ -264,6 +265,8 @@ export const useStoryStore = create<StoryState>((set, get) => ({
     if (correct || curr.allowRetry !== true) {
       processUpdate(playSceneSound);
     }
+    
+    return correct;
   },
 
   // multi-choice
