@@ -65,6 +65,9 @@ export const GameMenu: React.FC<GameMenuProps> = ({
     case "kazan-move":
       gameFlowManager.showMoveInKazan();
       break;
+    case "kazan-village":
+      gameFlowManager.showMoveInKazanVillage();
+      break;
     default:
       break;
     }
@@ -92,6 +95,7 @@ export const GameMenu: React.FC<GameMenuProps> = ({
         <div className={styles.item} onClick={() => localStorage.clear()}>Сбросить прогресс</div>
         <div className={styles.item} onClick={() => upFuel()}>Пополнить энергию и сытость</div>
         <div className={styles.item} onClick={() => onSceneSelection("moscow")}>🇷🇺 Москва</div>
+        <div className={styles.item} onClick={() => onSceneSelection("kazan-village")}>🕌 Казань: деревня</div>
         <div className={styles.item} onClick={() => onSceneSelection("kazan")}>🕌 Казань</div>
         <div className={styles.item} onClick={() => onSceneSelection("kazan-move")}>🕌 Казань: переход</div>
         <div className={styles.item} onClick={() => onSceneSelection("flight")}>🛩️ Игра полёт</div>

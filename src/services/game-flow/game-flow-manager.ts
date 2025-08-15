@@ -50,6 +50,7 @@ class GameFlowManager {
     [GameScene.MoveToGallery]: this.showMoveToGallery,
     [GameScene.MoveToKazan]: this.showMoveToKazan,
     [GameScene.MoveInKazan]: this.showMoveInKazan,
+    [GameScene.MoveInKazanVillage]: this.showMoveInKazanVillage,
     [GameScene.Auth]: this.showAuth,
   };
 

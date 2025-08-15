@@ -74,6 +74,7 @@ export const App: React.FC = () => {
       case GameScene.MoveToGallery:
       case GameScene.MoveToKazan:
       case GameScene.MoveInKazan:
+      case GameScene.MoveInKazanVillage:
         return <MoveWrapper />;
 
       // others
