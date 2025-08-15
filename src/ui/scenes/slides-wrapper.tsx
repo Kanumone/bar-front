@@ -252,7 +252,7 @@ export const SlidesWrapper = ({ config }: { config: SlidesConfig }) => {
               <div className={styles.multiChoiceContainer}>
                 <MultiChoiceView
                   action={currentAction}
-                  onSelect={handleMultiChoiceSelect}
+                  onSelect={(option) => handleMultiChoiceSelect(option)}
                   onSubmit={() => handleMultiChoiceSubmit()}
                 />
               </div>

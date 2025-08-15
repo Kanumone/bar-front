@@ -55,17 +55,13 @@ export type Action =
       postActions?: { correct?: Action[]; wrong?: Action[] };
     } & ActionBase
   | {
-      // 4) Несколько групп choice, все должны быть отвечены
+      // 4) Мультивыбор как обычный choice, но нужно пройти все options
       type: "multi-choice";
-      groups: Array<{
-        id: string;
-        prompt?: string;
-        options: string[];
-        outcomes?: Record<string, Outcome>;
-      }>;
+      options: string[];
+      outcomes?: Record<string, Outcome>;
       submitMode?: "auto" | "button";
       submitButtonText?: string;
-      postActionsOrder?: "byGroups" | "bySelection";
+      postActionsOrder?: "bySelection"; // порядок агрегации: по порядку посещения
     } & ActionBase;
 
 export interface EpisodeConfig {

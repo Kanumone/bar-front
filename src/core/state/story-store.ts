@@ -49,11 +49,13 @@ interface StoryState {
   initOrderMessages: () => void;
   handleOrderMessagesReorder: (from: number, to: number) => void;
   handleOrderMessagesCheck: (playSceneSound: (url?: string) => void) => boolean;
-  handleMultiChoiceSelect: (groupId: string, option: string) => void;
+  handleMultiChoiceSelect: (option: string, playSceneSound: (url?: string) => void) => void;
   handleMultiChoiceSubmit: (playSceneSound: (url?: string) => void) => void;
 
   // селекторы локального состояния
   getOrderMessagesLocal: (slideIdx: number, actionIdx: number) => { currentOrder: Array<{ id: string; text: string }>; checked?: boolean; correct?: boolean } | null;
+  getMultiChoiceLocal: (slideIdx: number, actionIdx: number) => { visited: string[]; completed?: boolean } | null;
+  getMultiChoiceLocalByKey: (key: string) => { visited: string[]; completed?: boolean } | null;
 }
 
 export const useStoryStore = create<StoryState>((set, get) => ({
@@ -116,6 +118,23 @@ export const useStoryStore = create<StoryState>((set, get) => ({
     if (currentActions.length > 0 && actionIndex < currentActions.length - 1) {
       set({ actionIndex: actionIndex + 1 });
     } else if (slideIndex < slides.length - 1) {
+      // Перед переключением слайда проверим, есть ли на текущем слайде незавершённый multi-choice.
+      // Если есть — возвращаемся к нему (вставленные вложенные действия уже проиграны),
+      // чтобы пользователь мог продолжить проход оставшихся опций.
+      const { actionLocalState } = get();
+      for (const key of Object.keys(actionLocalState)) {
+        const m = key.match(/^s(\d+):a(\d+)$/);
+        if (!m) continue;
+        const keySlideIdx = Number(m[1]);
+        const keyActionIdx = Number(m[2]);
+        if (keySlideIdx !== slideIndex) continue;
+        const st = (actionLocalState as any)[key];
+        if (st && st.kind === "multi-choice" && !st.completed) {
+          set({ actionIndex: keyActionIdx });
+          return;
+        }
+      }
+
       const nextIndex = slideIndex + 1;
       const nextSlide = slides[nextIndex];
       set({
@@ -196,6 +215,29 @@ export const useStoryStore = create<StoryState>((set, get) => ({
     if (st && st.kind === "order-messages") return st as any;
     return null;
   },
+  getMultiChoiceLocal: (slideIdx, actionIdx) => {
+    const key = `s${slideIdx}:a${actionIdx}`;
+    const st = (get().actionLocalState as any)[key];
+    if (st && st.kind === "multi-choice") {
+      // приводим к новому формату: visited — массив option
+      const visitedArr: string[] = [];
+      if (st.visited) {
+        if (Array.isArray(st.visited)) visitedArr.push(...(st.visited as string[]));
+        else if (typeof st.visited === 'object') {
+          const vals = Object.values(st.visited as Record<string, any>).flat();
+          const strings = vals.filter((v): v is string => typeof v === 'string');
+          visitedArr.push(...strings);
+        }
+      }
+      return { visited: visitedArr, completed: st.completed } as any;
+    }
+    return null;
+  },
+  getMultiChoiceLocalByKey: (key) => {
+    const st = (get().actionLocalState as any)[key];
+    if (st && st.kind === "multi-choice") return st as any;
+    return null;
+  },
 
   // image-pick-2
   handleImagePick2Select: (pos, playSceneSound) => {
@@ -270,55 +312,63 @@ export const useStoryStore = create<StoryState>((set, get) => ({
   },
 
   // multi-choice
-  handleMultiChoiceSelect: (groupId, option) => {
-    const { slideIndex, actionIndex, getActionKey, actionLocalState, setActionLocalState } = get();
-    const key = getActionKey(slideIndex, actionIndex);
-    const prev = (actionLocalState[key] as any) || { kind: "multi-choice", selections: {}, completed: false };
-    if (prev.kind !== "multi-choice") {
-      setActionLocalState(key, { kind: "multi-choice", selections: { [groupId]: option }, completed: false });
-    } else {
-      setActionLocalState(key, { ...prev, selections: { ...prev.selections, [groupId]: option } });
-    }
-  },
-  handleMultiChoiceSubmit: (playSceneSound) => {
-    const { slideIndex, actionIndex, currentActions, actionLocalState, getActionKey, setActionLocalState, setBackgroundOverride, processUpdate } = get();
+  handleMultiChoiceSelect: (option, playSceneSound) => {
+    const { slideIndex, actionIndex, currentActions, setActionLocalState, getActionKey, actionLocalState, setBackgroundOverride, processUpdate } = get();
     const curr = currentActions[actionIndex] as Action | undefined;
     if (!curr || curr.type !== "multi-choice") return;
+
     const key = getActionKey(slideIndex, actionIndex);
-    const st = (actionLocalState[key] as any) || { kind: "multi-choice", selections: {}, completed: false };
-    if (st.kind !== "multi-choice") return;
+    const st = (actionLocalState as any)[key] || { kind: "multi-choice", visited: [], completed: false, order: [] };
+    const visited: string[] = Array.isArray(st.visited) ? [...st.visited] : [];
+    const order: string[] = Array.isArray(st.order) ? [...st.order] : [];
 
-    const allAnswered = curr.groups.every((g) => st.selections[g.id]);
-    if (!allAnswered) return;
+    if (visited.includes(option)) return; // уже посещено
 
-    const aggregated: Action[] = [];
-    const applyOutcome = (o?: { actions?: Action[]; background?: string | null; carryBackgroundToNextSlide?: boolean }) => {
-      if (!o) return;
-      if (typeof o.background !== "undefined") {
-        setBackgroundOverride(o.background, o.carryBackgroundToNextSlide ?? false);
-      }
-      if (Array.isArray(o.actions) && o.actions.length > 0) aggregated.push(...o.actions);
-    };
+    // добавляем в visited и порядок
+    visited.push(option);
+    order.push(option);
 
-    if (curr.postActionsOrder === "bySelection") {
-      // по мере выбранных
-      for (const g of curr.groups) {
-        const sel = st.selections[g.id];
-        applyOutcome(g.outcomes?.[sel]);
-      }
+    // Вставляем действия outcomes (если есть) сразу после multi-choice
+    const outcome = curr.outcomes?.[option];
+    const toInsert = outcome?.actions ?? [];
+    if (outcome?.background) {
+      // background может быть относительным именем — полагаемся на то, что конфиг проводит нормализацию
+      setBackgroundOverride(outcome.background as any, (outcome as any).carryBackgroundToNextSlide ?? false);
+    }
+
+    const updated = [...currentActions];
+    if (toInsert.length > 0) {
+      updated.splice(actionIndex + 1, 0, ...toInsert);
     } else {
-      // по группам (дефолт)
-      for (const g of curr.groups) {
-        const sel = st.selections[g.id];
-        applyOutcome(g.outcomes?.[sel]);
-      }
+      // если нет вложенных действий — показать выбранный текст как речь
+      updated.splice(actionIndex + 1, 0, { type: "speech", text: option, characterName: "Алексей" });
     }
 
-    if (aggregated.length > 0) {
-      const updated = [...currentActions];
-      updated.splice(actionIndex + 1, 0, ...aggregated);
-      set({ currentActions: updated });
+    // Сохраняем локальное состояние
+    const completed = visited.length >= curr.options.length;
+    setActionLocalState(key, { ...st, visited, order, completed });
+    set({ currentActions: updated });
+
+    // Если режим auto — запускаем проигрывание вложенных действий
+    if (curr.submitMode === "auto") {
+      // Если это была последняя опция — пометить completed (уже сделано выше) и позволить processUpdate продолжить
     }
+
+    processUpdate(playSceneSound);
+  },
+
+  handleMultiChoiceSubmit: (playSceneSound) => {
+    const { slideIndex, actionIndex, currentActions, actionLocalState, setActionLocalState, getActionKey, processUpdate } = get();
+    const curr = currentActions[actionIndex] as Action | undefined;
+    if (!curr || curr.type !== "multi-choice") return;
+
+    const key = getActionKey(slideIndex, actionIndex);
+    const st = (actionLocalState as any)[key];
+    const visited: string[] = st && Array.isArray(st.visited) ? st.visited : [];
+
+    if (visited.length < curr.options.length) return; // ещё не все варианты пройдены
+
+    // Отмечаем multi-choice как завершённый и даём продолжить
     setActionLocalState(key, { ...st, completed: true });
     processUpdate(playSceneSound);
   },

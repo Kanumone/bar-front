@@ -65,6 +65,10 @@ export function useSlidesNavigation(
     storeHandleMultiChoiceSubmit(playSceneSound);
   }, [storeHandleMultiChoiceSubmit, playSceneSound]);
 
+  const handleMultiChoiceSelect = useCallback((option: string) => {
+    storeHandleMultiChoiceSelect(option, playSceneSound);
+  }, [storeHandleMultiChoiceSelect, playSceneSound]);
+
   return {
     slideIndex,
     actionIndex,
@@ -83,7 +87,7 @@ export function useSlidesNavigation(
     initOrderMessages: storeInitOrderMessages,
     handleOrderMessagesReorder: storeHandleOrderMessagesReorder,
     handleOrderMessagesCheck,
-    handleMultiChoiceSelect: storeHandleMultiChoiceSelect,
+    handleMultiChoiceSelect,
     handleMultiChoiceSubmit,
   };
 }
