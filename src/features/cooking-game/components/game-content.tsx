@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Score } from "./score";
 import { TetrisGame } from "./tetris-game";
 import { RecipeSelector } from "./recipe-selector";
@@ -9,10 +10,24 @@ import { Shop } from "./shop";
 import { recipes } from "./recipes.tsx";
 import { Button } from "$ui/components/button/button.tsx";
 import { useSceneStore } from "$core/state/scene-store.ts";
+import { usePlayerState } from "$core/state/player-store.ts";
 
 export function GameContent() {
   const { state } = useGameContext();
   const { goToRecipeBook, goToTetris, goToShop } = useGameNavigation();
+  const [warn, setWarn] = useState(false);
+  const handleStopEating = () => {
+    const { hunger } = usePlayerState.getState();
+    if (hunger > 25) {
+      setWarn(true);
+      setTimeout(() => {
+        setWarn(false);
+      }, 1500);
+      return;
+    }
+    useSceneStore.getState().backToPrevScene();
+  };
+
 
   const renderCurrentScreen = () => {
     switch (state.currentScreen) {
@@ -42,8 +57,13 @@ export function GameContent() {
                 <img src={bookIcon} alt="book" onClick={goToRecipeBook} />
               </div>
             </div>
-            <Button text="Закончить" onClick={() => useSceneStore.getState().backToPrevScene()} />
+            <Button text="Закончить трапезу" onClick={handleStopEating} />
           </div>
+
+          {warn && <div className={styles.gameOver}>
+            Уходить, не поев? Живот перестает урчать на 25 еды!
+          </div>}
+
         </>);
     }
   };

@@ -1,3 +1,4 @@
+import { usePlayerState } from "$core/state";
 import { gameFlowManager } from "$services/game-flow";
 import { Episode, type EpisodeConfig } from "./common";
 
@@ -77,7 +78,7 @@ const railwayStationSlides: EpisodeConfig[] = [
         type: "button",
         button: {
           text: "Войти в поезд",
-          action: () => { console.error("TODO: добавить действие для кнопки \"Войти в поезд\""); },
+          action: () => { },
         },
       },
     ],
@@ -89,6 +90,16 @@ const railwayStationSlides: EpisodeConfig[] = [
       {
         type: "message",
         text: "Он пытался игнорировать журчание живота. Но потом — вспомнил про дошик.",
+      },
+      {
+        type: "button",
+        button: {
+          text: "Готовить дошик",
+          action: () => {
+            usePlayerState.getState().setHunger(100);
+            gameFlowManager.showGameCooking();
+          },
+        },
       },
     ],
   },

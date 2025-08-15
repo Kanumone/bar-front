@@ -2,6 +2,16 @@ function seconds(sec: number) {
   return sec * 1000;
 }
 
+export function lifeStatsOff() {
+  GameConstants.HUNGER_POINTS_PER_SECOND = 0;
+  GameConstants.ENERGY_POINTS_PER_SECOND = 0;
+}
+
+export function lifeStatsOn() {
+  GameConstants.HUNGER_POINTS_PER_SECOND = 1;
+  GameConstants.ENERGY_POINTS_PER_SECOND = 1;
+}
+
 export const GameConstants = {
   SLIDE_TIMEOUT: seconds(2),
   TIMEOUT_FOR_QUESTION: seconds(15),
@@ -24,20 +34,11 @@ export const GameConstants = {
 };
 
 if (GameConstants.DEBUG_MODE) {
-  GameConstants.SLIDE_TIMEOUT = 1;
-  GameConstants.TIMEOUT_FOR_QUESTION = 1;
-  GameConstants.SHOW_ITEMS_DESCRIPTION_TIMEOUT = 1;
+  // В режиме отладки используем секунды, а не миллисекунды
+  GameConstants.SLIDE_TIMEOUT = seconds(1);
+  GameConstants.TIMEOUT_FOR_QUESTION = seconds(1);
+  GameConstants.SHOW_ITEMS_DESCRIPTION_TIMEOUT = seconds(1);
   // GameConstants.SYNC_INTERVAL = 1000;
 
   // GameConstants.MAX_HUNGER = 5;
-}
-
-export function lifeStatsOff() {
-  GameConstants.HUNGER_POINTS_PER_SECOND = 0;
-  GameConstants.ENERGY_POINTS_PER_SECOND = 0;
-}
-
-export function lifeStatsOn() {
-  GameConstants.HUNGER_POINTS_PER_SECOND = 1;
-  GameConstants.ENERGY_POINTS_PER_SECOND = 1;
 }
