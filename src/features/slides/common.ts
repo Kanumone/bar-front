@@ -2,6 +2,12 @@ import { getAssetsPathByType } from "$/utils/get-assets-path";
 
 type ActionBase = { onNext?: { sound?: string } };
 
+export type Outcome = {
+  actions?: Action[];
+  background?: string | null; // null — оставить как было
+  carryBackgroundToNextSlide?: boolean;
+}
+
 export type Action =
   | {
       type: "thoughts";
@@ -25,12 +31,8 @@ export type Action =
       characterName?: string;
       options: string[];
       outcomes?: Record<
-        number,
-        {
-          actions?: Action[];
-          background?: string | null; // null — оставить как было
-          carryBackgroundToNextSlide?: boolean;
-        }
+        number,Outcome
+        
       >;
     } & ActionBase
   | {
@@ -59,7 +61,7 @@ export type Action =
         id: string;
         prompt?: string;
         options: string[];
-        outcomes?: Record<string, { actions?: Action[]; background?: string | null; carryBackgroundToNextSlide?: boolean }>;
+        outcomes?: Record<string, Outcome>;
       }>;
       submitMode?: "auto" | "button";
       submitButtonText?: string;
