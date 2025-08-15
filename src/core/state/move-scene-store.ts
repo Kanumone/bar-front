@@ -30,6 +30,7 @@ interface MoveSceneState {
   isMoving: boolean;
   backgroundMusic: string | null;
   consumptionTimerId: number | null;
+  setBackgroundMusic: (music: string) => void;
   setQuestions: (questions: QuizItem[]) => void;
   startQuizCycle: () => void;
   openQuiz: (index: number) => void;
@@ -43,6 +44,7 @@ interface MoveSceneState {
   setMoving: (moving: boolean) => void;
   startMovementConsumption: () => void;
   stopMovementConsumption: () => void;
+  resetQuizState: () => void;
 }
 
 export const useMoveSceneStore = create<MoveSceneState>((set, get) => ({
@@ -60,7 +62,31 @@ export const useMoveSceneStore = create<MoveSceneState>((set, get) => ({
 
   setBackgroundMusic: (music: string) => set({ backgroundMusic: music }),
 
-  setQuestions: (questions) => set({ questions }),
+  resetQuizState: () => {
+    const { timerId, consumptionTimerId } = get();
+    if (timerId !== null) {
+      clearInterval(timerId);
+    }
+    if (consumptionTimerId) {
+      clearInterval(consumptionTimerId);
+    }
+    set({
+      currentIndex: 0,
+      isQuizVisible: false,
+      stage: "hidden",
+      selected: null,
+      canSkip: false,
+      remainTime: GameConstants.TIMEOUT_FOR_QUESTION,
+      timerId: null,
+      consumptionTimerId: null,
+    });
+  },
+
+  setQuestions: (questions) => {
+    // Полный сброс состояния перед установкой нового набора вопросов
+    get().resetQuizState();
+    set({ questions, currentIndex: 0 });
+  },
 
   setMoving: (moving: boolean) => {
     set({ isMoving: moving });
@@ -135,7 +161,7 @@ export const useMoveSceneStore = create<MoveSceneState>((set, get) => ({
           set({ timerId: null });
           get().openQuiz(get().currentIndex);
         } else {
-          set((state) => ({ remainTime: state.remainTime - 1000 }));
+          set((state) => ({ remainTime: Math.max(0, state.remainTime - 1000) }));
         }
       }, 1000) as unknown as number;
 
@@ -169,7 +195,7 @@ export const useMoveSceneStore = create<MoveSceneState>((set, get) => ({
           set({ timerId: null });
           get().openQuiz(get().currentIndex);
         } else {
-          set((state) => ({ remainTime: state.remainTime - 1000 }));
+          set((state) => ({ remainTime: Math.max(0, state.remainTime - 1000) }));
         }
       }, 1000) as unknown as number;
 
@@ -259,9 +285,16 @@ export const useMoveSceneStore = create<MoveSceneState>((set, get) => ({
   },
 
   completeQuiz: () => {
+    // Останавливаем все таймеры/потребление и приводим стор в начальное состояние
+    get().pauseTimer();
+    get().stopMovementConsumption();
     set({
       isQuizVisible: false,
       stage: "hidden",
+      currentIndex: 0,
+      selected: null,
+      canSkip: false,
+      remainTime: GameConstants.TIMEOUT_FOR_QUESTION,
     });
 
     const currentScene = useSceneStore.getState().currentScene;

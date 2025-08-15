@@ -66,7 +66,13 @@ export const MoveWrapper = () => {
     });
 
     useEffect(() => {
-        fetch(getAssetsPath(`data/${sceneParams?.questionsPath}`))
+        // Если для сцены нет пути к вопросам — сбросить состояние и ничего не запускать
+        if (!sceneParams?.questionsPath) {
+            setQuestions([]);
+            return;
+        }
+
+        fetch(getAssetsPath(`data/${sceneParams.questionsPath}`))
             .then((res) => (res.json()))
             .then(({ questions }: { questions: QuizItem[] }) => {
                 setQuestions(questions);
@@ -76,6 +82,8 @@ export const MoveWrapper = () => {
             })
             .catch((error) => {
                 console.error("Error loading questions", error);
+                // При ошибке загрузки очищаем состояние, чтобы не остались старые вопросы/флаги
+                setQuestions([]);
             });
     }, [setQuestions, startQuizCycle, scene]);
 
