@@ -239,6 +239,21 @@ class GameFlowManager {
     this.game.scene.start(GameScene.Move, sceneData);
   }
 
+  showMoveInKazanVillage() {
+    if (!this.game) return;
+
+    const sceneData = MoveSceneMapper.createSceneData("MoveInKazanVillage", {});
+
+    useSceneStore.setState({
+      currentScene: GameScene.MoveInKazanVillage,
+      sceneData: sceneData,
+      backgroundLayers: sceneData.backgroundLayers,
+    });
+
+    this.stopActiveScenes();
+    this.game.scene.start(GameScene.Move, sceneData);
+  }
+
   // ✅ Новый метод для переключения сцены во время работы
   switchMoveScene(scene: MoveScene, customData?: Partial<MoveSceneData>): void {
     if (!this.game) {

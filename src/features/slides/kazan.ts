@@ -2353,9 +2353,11 @@ const kazanSlides: EpisodeConfig[] = [
         text: "Видел? Страх — это не враг, это внимание. Мы обошлись с ним по-людски — и он отпустил.",
       },
       {
-        type: "speech",
-        characterName: "Алексей",
-        text: "Понял. Идём.",
+        type: "button",
+        button: {
+          text: "Понял. Идём.",
+          action: () => { gameFlowManager.showMoveInKazanVillage() },
+        },
       },
     ],
   },

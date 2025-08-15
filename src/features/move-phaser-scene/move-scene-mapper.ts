@@ -117,7 +117,6 @@ export class MoveSceneMapper {
       },
       playerSpeed: 150,
     },
-
     [GameScene.MoveInKazan]: {
       backgroundLayers: {
         background: getAssetsPathByType({
@@ -136,23 +135,24 @@ export class MoveSceneMapper {
       },
       playerSpeed: 150,
     },
-
-    // Сцена движения по городу
-    // [GameScene.CityMove]: {
-    //   backgroundLayers: {
-    //     background: getAssetsPathByType({
-    //       type: "images",
-    //       scene: "moscow",
-    //       filename: "background.jpg",
-    //     }),
-    //     preBackground: null,
-    //     light: null,
-    //     front: null,
-    //     ground: getAssetsPath("images/platform.png"),
-    //   },
-    //   playerSpeed: 120,
-    //   targetX: 150,
-    // },
+    [GameScene.MoveInKazanVillage]: {
+      backgroundLayers: {
+        background: getAssetsPathByType({
+          type: "images",
+          scene: "kazan-move",
+          filename: "kazan_village_background.png",
+        }),
+        preBackground: getAssetsPathByType({
+          type: "images",
+          scene: "kazan-move",
+          filename: "kazan_village_pre_background.png",
+        }),
+        light: null,
+        front: null,
+        ground: getAssetsPath("images/platform.png"),
+      },
+      playerSpeed: 150,
+    },
   };
 
   // Получает конфигурацию для сцены

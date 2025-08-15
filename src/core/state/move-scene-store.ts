@@ -220,7 +220,7 @@ export const useMoveSceneStore = create<MoveSceneState>((set, get) => ({
         if (get().isQuizVisible && get().currentIndex === index) {
           set({ canSkip: true });
         }
-      },  GameConstants.SLIDE_TIMEOUT);
+      }, GameConstants.SLIDE_TIMEOUT);
     }
   },
 
@@ -273,9 +273,9 @@ export const useMoveSceneStore = create<MoveSceneState>((set, get) => ({
         gameFlowManager.showMoscow();
         break;
       case GameScene.MoveToVdnh:
-        useSceneStore.getState().backToPrevScene();
-        break;
       case GameScene.MoveToGallery:
+      case GameScene.MoveInKazan:
+      case GameScene.MoveInKazanVillage:
         useSceneStore.getState().backToPrevScene();
         break;
       case GameScene.MoveToKazan:

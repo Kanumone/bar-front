@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./style.module.css";
 import { gameFlowManager } from "$services/game-flow";
+import { usePlayerState } from "$core/state";
 
 interface GameMenuProps {
   visible: boolean;
@@ -69,6 +70,10 @@ export const GameMenu: React.FC<GameMenuProps> = ({
     }
     onClose();
   };
+  const upFuel = () => {
+    usePlayerState.getState().addEnergy(1000);
+    usePlayerState.getState().removeHunger(1000);
+  };
 
   return (
     <div className={styles.overlay} onClick={onClose}>
@@ -85,6 +90,7 @@ export const GameMenu: React.FC<GameMenuProps> = ({
 
         <div className={styles.subHeader}>Debug</div>
         <div className={styles.item} onClick={() => localStorage.clear()}>Сбросить прогресс</div>
+        <div className={styles.item} onClick={() => upFuel()}>Пополнить энергию и сытость</div>
         <div className={styles.item} onClick={() => onSceneSelection("moscow")}>🇷🇺 Москва</div>
         <div className={styles.item} onClick={() => onSceneSelection("kazan")}>🕌 Казань</div>
         <div className={styles.item} onClick={() => onSceneSelection("kazan-move")}>🕌 Казань: переход</div>

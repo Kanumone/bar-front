@@ -36,6 +36,10 @@ const params: Partial<Record<MoveScene, MoveParams>> = {
         backgroundMusicPath: "Звук утреннего города.mp3",
         questionsPath: "move-to-kazan-quiz.json",
     },
+    [GameScene.MoveInKazanVillage]: {
+        backgroundMusicPath: "Звук утреннего города.mp3",
+        questionsPath: "move-to-kazan-village.json",
+    },
     
 }
 

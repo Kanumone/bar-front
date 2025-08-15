@@ -7,6 +7,7 @@ export type MoveScene =
   | typeof GameScene.MoveToGallery
   | typeof GameScene.MoveToKazan
   | typeof GameScene.MoveInKazan
+  | typeof GameScene.MoveInKazanVillage
   | typeof GameScene.Move;
 
 export interface MoveSceneData {
@@ -51,6 +52,7 @@ export interface SceneDataMap {
   MoveToGallery: MoveSceneData | null;
   MoveToKazan: MoveSceneData | null;
   MoveInKazan: MoveSceneData | null;
+  MoveInKazanVillage: MoveSceneData | null;
 
   // games
   GameMap: GameMapSceneData;
@@ -88,6 +90,7 @@ export const GameScene = {
   MoveToGallery: "MoveToGallery",
   MoveToKazan: "MoveToKazan",
   MoveInKazan: "MoveInKazan",
+  MoveInKazanVillage: "MoveInKazanVillage",
 
   // others
   Auth: "Auth",
