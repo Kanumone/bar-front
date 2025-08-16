@@ -318,6 +318,9 @@ export const useMoveSceneStore = create<MoveSceneState>((set, get) => ({
       case GameScene.MoveToKazan:
         gameFlowManager.showKazan();
         break;
+      case GameScene.MoveInKamchatka:
+        gameFlowManager.showFinal();
+        break;
     }
   },
 
