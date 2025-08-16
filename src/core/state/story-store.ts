@@ -45,6 +45,7 @@ interface StoryState {
   setActionLocalState: (key: string, partial: unknown) => void;
 
   // Новые обработчики
+  handleSwitchBack: () => void;
   handleImagePick2Select: (pos: "top" | "bottom", playSceneSound: (url?: string) => void) => void;
   initOrderMessages: () => void;
   handleOrderMessagesReorder: (from: number, to: number) => void;
@@ -116,6 +117,7 @@ export const useStoryStore = create<StoryState>((set, get) => ({
     if (nextSound) playSceneSound(nextSound);
 
     if (currentActions.length > 0 && actionIndex < currentActions.length - 1) {
+      get().handleSwitchBack();
       set({ actionIndex: actionIndex + 1 });
     } else if (slideIndex < slides.length - 1) {
       // Перед переключением слайда проверим, есть ли на текущем слайде незавершённый multi-choice.
@@ -154,10 +156,22 @@ export const useStoryStore = create<StoryState>((set, get) => ({
   },
 
   goNext: (playSceneSound) => {
+    console.log("goNext");
     const { canSkip, processUpdate } = get();
     if (!canSkip) return;
     set({ canSkip: false });
     processUpdate(playSceneSound);
+  },
+
+  handleSwitchBack: () => {
+    const { currentActions, actionIndex } = get();
+    if (currentActions.length > actionIndex + 1) {
+      const nextAction = currentActions[actionIndex + 1];
+      console.log("nextAction", nextAction);
+      if (nextAction?.type === "switchback") {
+        get().setBackgroundOverride(nextAction.background);
+      }
+    }
   },
 
   handleActionButtonClick: (action, playSceneSound) => {

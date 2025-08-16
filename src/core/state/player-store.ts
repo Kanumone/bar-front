@@ -54,11 +54,6 @@ interface PlayerState {
   // Методы для работы с backend (загрузка и сброс)
   loadPlayerStateFromServer: () => Promise<void>;
   resetProgress: () => Promise<void>;
-
-  // Управление синхронизацией
-  startAutoSync: () => void;
-  stopAutoSync: () => void;
-  forceSync: () => Promise<boolean>;
 }
 
 export const usePlayerState = create<PlayerState>((set, get) => ({
@@ -303,19 +298,6 @@ export const usePlayerState = create<PlayerState>((set, get) => ({
     } catch (err) {
       logAppError("loadPlayerStateFromServer", err);
     }
-  },
-
-  // Управление синхронизацией
-  startAutoSync: () => {
-    syncService.start();
-  },
-
-  stopAutoSync: () => {
-    syncService.stop();
-  },
-
-  forceSync: async () => {
-    return syncService.forcSync();
   },
 
   /** 🔹 Дев-функция сброса прогресса */

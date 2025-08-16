@@ -16,6 +16,12 @@ export default class GameMapPhaserScene extends Scene {
   private mapImage!: Phaser.GameObjects.Image;
   private player!: Phaser.GameObjects.Image;
   private cities: Record<string, City> = {
+    "nsk": {
+      id: "nsk",
+      name: "Новосибирск",
+      x: 1500,
+      y: 1650,
+    },
     "moscow": {
       id: "moscow",
       name: "Москва",
@@ -45,12 +51,6 @@ export default class GameMapPhaserScene extends Scene {
       name: "Екатеринбург",
       x: 950,
       y: 1250,
-    },
-    "nsk": {
-      id: "nsk",
-      name: "Новосибирск",
-      x: 1450,
-      y: 1500,
     },
   };
 
@@ -108,10 +108,10 @@ export default class GameMapPhaserScene extends Scene {
   preload(): void {
     // ✅ Загружаем одну большую карту SVG/PNG
     // this.load.image("map_image", getAssetsPath("images/map.svg"));
-    this.load.svg("map_image", getAssetsPathByType({
+    this.load.image("map_image", getAssetsPathByType({
       type: "images",
       scene: "game-map",
-      filename: "map.svg"
+      filename: "map.jpg"
     }));
 
     this.load.svg("player_marker", getAssetsPathByType({

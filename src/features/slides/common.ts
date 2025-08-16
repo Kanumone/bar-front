@@ -10,59 +10,64 @@ export type Outcome = {
 
 export type Action =
   | {
-      type: "thoughts";
-      text: string;
-      characterName?: string;
-    } & ActionBase
+    type: "thoughts";
+    text: string;
+    characterName?: string;
+  } & ActionBase
   | {
-      type: "speech";
-      text: string;
-      characterName?: string;
-    } & ActionBase
+    type: "speech";
+    text: string;
+    characterName?: string;
+  } & ActionBase
   | ({ type: "message"; text: string }) & ActionBase
   | {
-      type: "button";
-      button: { text: string; sound?: string; action: () => void };
-    } & ActionBase
+    type: "button";
+    button: { text: string; sound?: string; action: () => void };
+  } & ActionBase
   | {
-      // Единый choice с необязательными outcomes
-      type: "choice";
-      text?: string;
-      characterName?: string;
-      options: string[];
-      outcomes?: Record<
-        number,Outcome
-        
-      >;
-    } & ActionBase
+    // Единый choice с необязательными outcomes
+    type: "choice";
+    text?: string;
+    characterName?: string;
+    options: string[];
+    outcomes?: Record<
+      number, Outcome
+
+    >;
+  } & ActionBase
   | {
-      // 2) Выбор правильной картинки из двух (верх/низ)
-      type: "image-pick-2";
-      topImage: string; // filename
-      bottomImage: string; // filename
-      correct: "top" | "bottom";
-      feedback?: { correct?: string; wrong?: string };
-      allowRetry?: boolean;
-      postActions?: { correct?: Action[]; wrong?: Action[] };
-    } & ActionBase
+    // 2) Выбор правильной картинки из двух (верх/низ)
+    type: "image-pick-2";
+    topImage: string; // filename
+    bottomImage: string; // filename
+    correct: "top" | "bottom";
+    feedback?: { correct?: string; wrong?: string };
+    allowRetry?: boolean;
+    postActions?: { correct?: Action[]; wrong?: Action[] };
+  } & ActionBase
   | {
-      // 3) Расстановка сообщений в нужном порядке
-      type: "order-messages";
-      messages: string[]; // правильный порядок
-      allowRetry?: boolean; // по умолчанию true
-      feedback?: { correct?: string; wrong?: string };
-      showSolutionAfterCheck?: boolean;
-      postActions?: { correct?: Action[]; wrong?: Action[] };
-    } & ActionBase
+    // 5) Смена фона
+    type: "switchback";
+    background: string;
+  } & ActionBase
   | {
-      // 4) Мультивыбор как обычный choice, но нужно пройти все options
-      type: "multi-choice";
-      options: string[];
-      outcomes?: Record<string, Outcome>;
-      submitMode?: "auto" | "button";
-      submitButtonText?: string;
-      postActionsOrder?: "bySelection"; // порядок агрегации: по порядку посещения
-    } & ActionBase;
+    // 3) Расстановка сообщений в нужном порядке
+    type: "order-messages";
+    messages: string[]; // правильный порядок
+    allowRetry?: boolean; // по умолчанию true
+    feedback?: { correct?: string; wrong?: string };
+    showSolutionAfterCheck?: boolean;
+    postActions?: { correct?: Action[]; wrong?: Action[] };
+  } & ActionBase
+  | {
+    // 4) Мультивыбор как обычный choice, но нужно пройти все options
+    type: "multi-choice";
+    options: string[];
+    outcomes?: Record<string, Outcome>;
+    submitMode?: "auto" | "button";
+    submitButtonText?: string;
+    postActionsOrder?: "bySelection"; // порядок агрегации: по порядку посещения
+  } & ActionBase;
 
 export interface EpisodeConfig {
   slideIndex: number;
@@ -113,70 +118,104 @@ export class Episode {
     this.positionY = config.positionY ?? 0.5;
 
     this.backgroundSound = config.backgroundSound
-  ? getAssetsPathByType({
-    type: "sounds",
-    scene: this.scene,
-    filename: config.backgroundSound,
-  })
-  : undefined;
+      ? getAssetsPathByType({
+        type: "sounds",
+        scene: this.scene,
+        filename: config.backgroundSound,
+      })
+      : undefined;
 
     this.startSound = config.startSound
-  ? getAssetsPathByType({
-    type: "sounds",
-    scene: this.scene,
-    filename: config.startSound,
-  })
-  : undefined;
+      ? getAssetsPathByType({
+        type: "sounds",
+        scene: this.scene,
+        filename: config.startSound,
+      })
+      : undefined;
 
     // ✅ нормализуем actions и звуки/картинки
-    this.actions = (config.actions ?? []).map((a) => {
-      // onNext.sound
-      const onNext = (a as any).onNext?.sound
-        ? {
-            sound: getAssetsPathByType({
-              type: "sounds",
-              scene: this.scene,
-              filename: (a as any).onNext.sound,
-            }),
-          }
-        : (a as any).onNext;
+    const normalizeAction = (raw: any): Action => {
+      // нормализуем onNext.sound если есть
+      const onNext = raw?.onNext?.sound
+        ? { sound: getAssetsPathByType({ type: "sounds", scene: this.scene, filename: raw.onNext.sound }) }
+        : raw?.onNext;
 
-      if (a.type === "button") {
-        const button = a.button
+      // button
+      if (raw.type === "button") {
+        const button = raw.button
           ? {
-              ...a.button,
-              sound: a.button.sound
-                ? getAssetsPathByType({
-                    type: "sounds",
-                    scene: this.scene,
-                    filename: a.button.sound,
-                  })
-                : undefined,
-            }
-          : a.button;
-        return { ...a, button, onNext } as Action;
+            ...raw.button,
+            sound: raw.button.sound
+              ? getAssetsPathByType({ type: "sounds", scene: this.scene, filename: raw.button.sound })
+              : undefined,
+          }
+          : raw.button;
+        return { ...raw, button, onNext } as Action;
       }
 
-      if (a.type === "image-pick-2") {
-        const topImage = getAssetsPathByType({ type: "images", scene: this.scene, filename: a.topImage });
-        const bottomImage = getAssetsPathByType({ type: "images", scene: this.scene, filename: a.bottomImage });
-        return { ...a, topImage, bottomImage, onNext } as Action;
+      // image-pick-2
+      if (raw.type === "image-pick-2") {
+        const topImage = getAssetsPathByType({ type: "images", scene: this.scene, filename: raw.topImage });
+        const bottomImage = getAssetsPathByType({ type: "images", scene: this.scene, filename: raw.bottomImage });
+        const postActions = raw.postActions
+          ? {
+            correct: raw.postActions.correct ? raw.postActions.correct.map((aa: any) => normalizeAction(aa)) : undefined,
+            wrong: raw.postActions.wrong ? raw.postActions.wrong.map((aa: any) => normalizeAction(aa)) : undefined,
+          }
+          : raw.postActions;
+        return { ...raw, topImage, bottomImage, postActions, onNext } as Action;
       }
 
-      if (a.type === "choice" && a.outcomes) {
+      // choice
+      if (raw.type === "choice" && raw.outcomes) {
         const outcomes: Record<number, { actions?: Action[]; background?: string | null; carryBackgroundToNextSlide?: boolean }> = {};
-        for (const key of Object.keys(a.outcomes)) {
+        for (const key of Object.keys(raw.outcomes)) {
           const idx = Number(key);
-          const o = (a.outcomes as any)[idx] || {};
+          const o = (raw.outcomes as any)[idx] || {};
           const background = typeof o.background === "string"
             ? getAssetsPathByType({ type: "images", scene: this.scene, filename: o.background })
             : o.background; // null | undefined
-          outcomes[idx] = { ...o, background };
+          const actions = o.actions ? (o.actions as any[]).map((aa) => normalizeAction(aa)) : undefined;
+          outcomes[idx] = { ...(o as any), background, actions };
         }
-        return { ...a, outcomes, onNext } as Action;
+        return { ...raw, outcomes, onNext } as Action;
       }
 
-      return { ...(a as any), onNext } as Action;
-    });
+      // order-messages
+      if (raw.type === "order-messages") {
+        const postActions = raw.postActions
+          ? {
+            correct: raw.postActions.correct ? raw.postActions.correct.map((aa: any) => normalizeAction(aa)) : undefined,
+            wrong: raw.postActions.wrong ? raw.postActions.wrong.map((aa: any) => normalizeAction(aa)) : undefined,
+          }
+          : raw.postActions;
+        return { ...raw, postActions, onNext } as Action;
+      }
+
+      // multi-choice
+      if (raw.type === "multi-choice") {
+        const outcomes: Record<string, Outcome> | undefined = raw.outcomes
+          ? Object.keys(raw.outcomes).reduce((acc: any, k) => {
+            const o = (raw.outcomes as any)[k];
+            const background = typeof o.background === "string"
+              ? getAssetsPathByType({ type: "images", scene: this.scene, filename: o.background })
+              : o.background;
+            const actions = o.actions ? (o.actions as any[]).map((aa) => normalizeAction(aa)) : undefined;
+            acc[k] = { ...o, background, actions };
+            return acc;
+          }, {})
+          : undefined;
+        return { ...raw, outcomes, onNext } as Action;
+      }
+      if (raw.type === "switchback") {
+        const background = getAssetsPathByType({ type: "images", scene: this.scene, filename: raw.background });
+        return { ...raw, background, onNext } as Action;
+      }
+
+      // прочие типы — просто отдать с onNext
+      return { ...(raw as any), onNext } as Action;
+    };
+
+    this.actions = (config.actions ?? []).map((a) => normalizeAction(a));
   }
 }

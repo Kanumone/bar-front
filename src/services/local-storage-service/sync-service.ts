@@ -41,9 +41,6 @@ export class SyncService {
     this.isRunning = true;
     console.log("[SyncService]: Starting autosave every", GameConstants.SYNC_INTERVAL / 1000, "seconds");
 
-    // Сразу выполняем первое сохранение
-    this.saveAllStores();
-
     // Устанавливаем интервал для регулярного сохранения
     this.syncIntervalId = setInterval(() => {
       this.saveAllStores();
@@ -66,19 +63,6 @@ export class SyncService {
     }
 
     console.log("[SyncService]: Stopped");
-  }
-
-  /**
-   * Принудительно сохранить все сторы сейчас
-   */
-  async forcSync(): Promise<boolean> {
-    try {
-      this.saveAllStores();
-      return true;
-    } catch (error) {
-      logAppError("SyncService.forceSync", error);
-      return false;
-    }
   }
 
   /**

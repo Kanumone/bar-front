@@ -2503,6 +2503,10 @@ const kazanSlides: EpisodeConfig[] = [
       },
     ],
   },
+  // chats
+
+
+  
   {
     slideIndex: 39,
     filename: "Screen_39.jpg",

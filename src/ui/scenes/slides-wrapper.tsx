@@ -188,7 +188,7 @@ export const SlidesWrapper = ({ config }: { config: SlidesConfig }) => {
                 <div className={styles.choiceMessage}>
                   <Messagebox
                     text={
-                      "Выберите вариант:"
+                      currentAction.text || "Выберите вариант:"
                     }
                   />
                 </div>

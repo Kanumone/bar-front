@@ -17,6 +17,45 @@ const aboutTretiakovka: Outcome = {
 }
 
 const moscowSlides: EpisodeConfig[] = [
+  // {
+  //   slideIndex: 25,
+  //   filename: "chat_sister/sister.jpg",
+  //   actions: [
+  //     {
+  //       type: "choice",
+  //       options: [
+  //         "Дам 3 факта",
+  //         "Записать голосовое со звуком ВДНХ",
+  //         "Челлендж",
+  //       ],
+  //       outcomes: {
+  //         0: {
+  //           actions: [
+  //             {
+  //               type: "switchback",
+  //               background: "chat_sister/sister_1a.jpg",
+  //             },
+  //             {
+  //               type: "switchback",
+  //               background: "chat_sister/sister_1b.jpg",
+  //             },
+  //             {
+  //               type: "switchback",
+  //               background: "chat_sister/sister_1c.jpg",
+  //             }
+  //           ],
+  //           background: "chat_sister/sister_1.jpg",
+  //         },
+  //         1: {
+  //           background: "chat_sister/sister_2.jpg",
+  //         },
+  //         2: {
+  //           background: "chat_sister/sister_3.jpg",
+  //         },
+  //       }
+  //     },
+  //   ],
+  // },
   {
     slideIndex: 1,
     filename: "Screen_1.jpg",
@@ -975,9 +1014,26 @@ const moscowSlides: EpisodeConfig[] = [
         type: "message",
         text: "Павильоны стоят, словно прозрачные шахматы на доске истории, где фигуры давно разбежались, а партия всё ещё идёт. Толпа шумит — её голоса смешиваются в безымянный хор, который гулко резонирует в бетонных рёбрах зданий.",
       }
-
     ],
   },
+  // TODO: chat sister
+  // {
+  //   slideIndex: 25,
+  //   filename: "chat_sister/sister_1.jpg",
+  //   actions: [
+  //     {
+  //       type: "choice",
+  //       options: [
+  //         "Дам 3 факта",
+  //         "Записать голосовое со звуком ВДНХ",
+  //         "Челлендж",
+  //       ],
+  //       outcomes: {
+
+  //       }
+  //     },
+  //   ],
+  // },
   {
     slideIndex: 25,
     filename: "Screen_26.jpg",

@@ -255,7 +255,6 @@ const introConfig: EpisodeConfig[] = [
         characterName: "Алексей",
         text: "У неё стиль — всё сказать шуткой...",
       },
-      // Добавить мысли на каждый вариант ответа
       {
         type: "choice",
         characterName: "Алексей",

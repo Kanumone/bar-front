@@ -32,12 +32,12 @@
   min-width: 200px;
   text-align: center;
   z-index: 1;
-  margin-top: 20%;
+  margin-top: 17%;
 }
 
 .nameTag {
   position: absolute;
-  top: 20%;
+  top: 15%;
   right: 10%;
   z-index: 2;
   width: 100px;
