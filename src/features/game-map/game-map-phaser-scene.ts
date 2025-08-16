@@ -12,6 +12,8 @@ interface City {
   y: number;
 }
 
+const defaultCityId = "nsk";
+
 export default class GameMapPhaserScene extends Scene {
   private mapImage!: Phaser.GameObjects.Image;
   private player!: Phaser.GameObjects.Image;
@@ -26,31 +28,31 @@ export default class GameMapPhaserScene extends Scene {
       id: "moscow",
       name: "Москва",
       x: 400,
-      y: 850,
+      y: 820,
     },
     "kazan": {
       id: "kazan",
       name: "Казань",
       x: 600,
-      y: 1100
-    },
-    "irkutsk": {
-      id: "irkutsk",
-      name: "Иркутск",
-      x: 1800,
-      y: 1400,
-    },
-    "kamchatka": {
-      id: "kamchatka",
-      name: "Камчатка",
-      x: 2500,
-      y: 2500,
+      y: 1050
     },
     "ekb": {
       id: "ekb",
       name: "Екатеринбург",
-      x: 950,
+      x: 1010,
       y: 1250,
+    },
+    "irkutsk": {
+      id: "irkutsk",
+      name: "Иркутск",
+      x: 2180,
+      y: 1890,
+    },
+    "kamchatka": {
+      id: "kamchatka",
+      name: "Камчатка",
+      x: 3770,
+      y: 1180,
     },
   };
 
@@ -102,7 +104,7 @@ export default class GameMapPhaserScene extends Scene {
     }
 
     cityId = cityId ?? sceneKey;
-    return this.cities[cityId] || this.cities["nsk"];
+    return this.cities[cityId] || this.cities[defaultCityId];
   }
 
   preload(): void {
