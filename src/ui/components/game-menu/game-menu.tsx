@@ -134,6 +134,9 @@ export const GameMenu: React.FC<GameMenuProps> = ({
             <div className={styles.item} onClick={() => onSceneSelection("kamchatka")}>✅ Камчатка</div>
             <div className={styles.item} onClick={() => onSceneSelection("final")}>✅ Финал</div>
             <div className={styles.item} onClick={() => onSceneSelection("moscow")}>✅ Москва</div>
+            <div className={styles.item} onClick={() => onSceneSelection("kazan")}>✅ Казань</div>
+            <div className={styles.item} onClick={() => onSceneSelection("kazan-move")}>🕌 Казань: переход</div>
+            <div className={styles.item} onClick={() => onSceneSelection("kazan-village")}>🕌 Казань: деревня</div>
             {/* <div className={styles.item} onClick={() => onSceneSelection("kazan-move")}>🕌 Казань: переход</div>
             <div className={styles.item} onClick={() => onSceneSelection("flight")}>🛩️ Игра полёт</div>
             <div className={styles.item} onClick={() => onSceneSelection("cooking")}>🍳 Игра готовка</div>

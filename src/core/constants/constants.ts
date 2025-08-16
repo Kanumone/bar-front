@@ -30,7 +30,7 @@ export const GameConstants = {
   MAX_RETRY_ATTEMPTS: 3, // Максимальное количество попыток синхронизации при ошибке
   RETRY_DELAY: seconds(5), // Задержка между попытками при ошибке
 
-  DEBUG_MODE: false,
+  DEBUG_MODE: true,
 };
 
 if (GameConstants.DEBUG_MODE) {

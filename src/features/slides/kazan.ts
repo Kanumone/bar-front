@@ -2503,10 +2503,7 @@ const kazanSlides: EpisodeConfig[] = [
       },
     ],
   },
-  // chats
-
-
-  
+  // chats  
   {
     slideIndex: 39,
     filename: "Screen_39.jpg",
@@ -2776,7 +2773,9 @@ const kazanSlides: EpisodeConfig[] = [
       { type: "speech", characterName: "Рустам", text: "Поехали." },
       {type: "button", button: {
         text: "В путь",
-        action: () => { },
+        action: () => { 
+          gameFlowManager.showEkb();
+        },
       }}
     ],
   },

@@ -1016,6 +1016,12 @@ export const ekbConfig: EpisodeConfig[] = [
             { type: "speech", text: "Учту. До связи, Екат.", characterName: "Алексей" },
             { type: "message", text: "Поезд трогается; огни платформы медленно плывут мимо окна." },
             { type: "thoughts", text: "Город-камертон отзвенел. Дальше — вода и тишина, в которой дед оставлял ответы. Если снова увижу «Солнечную» — значит, я на своём пути." },
+            {
+                type: "button", button: {
+                    text: "В путь",
+                    action: () => { gameFlowManager.showIrkutsk() },
+                }
+            }
         ],
     },
 ];

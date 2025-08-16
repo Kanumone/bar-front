@@ -259,7 +259,7 @@ class GameFlowManager {
   showMoveInKazanVillage() {
     if (!this.game) return;
 
-    const sceneData = MoveSceneMapper.createSceneData("MoveInKazanVillage", {});
+    const sceneData = MoveSceneMapper.createSceneData(GameScene.MoveInKazanVillage, {});
 
     useSceneStore.getState().setScene(GameScene.MoveInKazanVillage, sceneData);
     useSceneStore.getState().setBackgroundLayers(sceneData.backgroundLayers);

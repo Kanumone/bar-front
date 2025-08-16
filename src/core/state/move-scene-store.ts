@@ -310,6 +310,8 @@ export const useMoveSceneStore = create<MoveSceneState>((set, get) => ({
       case GameScene.MoveToGallery:
       case GameScene.MoveInKazan:
       case GameScene.MoveInKazanVillage:
+      case GameScene.MoveInEkb:
+      case GameScene.MoveInIrkutsk:
         useSceneStore.getState().backToPrevScene();
         break;
       case GameScene.MoveToKazan:

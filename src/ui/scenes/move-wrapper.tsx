@@ -89,7 +89,7 @@ export const MoveWrapper = () => {
         }
 
         fetch(getAssetsPath(`data/${sceneParams.questionsPath}`))
-            .then((res) => (res.json()))
+            .then((res) => (console.log("QUESTIONS", res), res.json()))
             .then(({ questions }: { questions: QuizItem[] }) => {
                 console.log("questions", questions);
                 setQuestions(questions);
