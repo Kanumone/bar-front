@@ -80,10 +80,9 @@ export const App: React.FC = () => {
       case GameScene.MoveToKazan:
       case GameScene.MoveInKazan:
       case GameScene.MoveInKazanVillage:
-      case GameScene.MoveToEkb:
       case GameScene.MoveInEkb:
-      case GameScene.MoveToIrkutsk:
       case GameScene.MoveInIrkutsk:
+      case GameScene.MoveInKamchatka:
         return <MoveWrapper />;
 
       // others

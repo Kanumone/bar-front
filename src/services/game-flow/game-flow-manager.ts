@@ -35,10 +35,9 @@ class GameFlowManager {
     [GameScene.MoveToKazan]: GameScene.Move,
     [GameScene.MoveInKazan]: GameScene.Move,
     [GameScene.MoveInKazanVillage]: GameScene.Move,
-    [GameScene.MoveToEkb]: GameScene.Move,
     [GameScene.MoveInEkb]: GameScene.Move,
-    [GameScene.MoveToIrkutsk]: GameScene.Move,
     [GameScene.MoveInIrkutsk]: GameScene.Move,
+    [GameScene.MoveInKamchatka]: GameScene.Move,
 
   };
 
@@ -63,10 +62,9 @@ class GameFlowManager {
     [GameScene.MoveToKazan]: this.showMoveToKazan,
     [GameScene.MoveInKazan]: this.showMoveInKazan,
     [GameScene.MoveInKazanVillage]: this.showMoveInKazanVillage,
-    [GameScene.MoveToEkb]: this.showMoveToEkb,
     [GameScene.MoveInEkb]: this.showMoveInEkb,
-    [GameScene.MoveToIrkutsk]: this.showMoveToIrkutsk,
     [GameScene.MoveInIrkutsk]: this.showMoveInIrkutsk,
+    [GameScene.MoveInKamchatka]: this.showMoveInKamchatka,
     
     [GameScene.Intro]: this.showIntro,
     [GameScene.Auth]: this.showAuth,
@@ -268,18 +266,6 @@ class GameFlowManager {
     this.game.scene.start(GameScene.Move, sceneData);
   }
 
-  showMoveToIrkutsk() {
-    if (!this.game) return;
-
-    const sceneData = MoveSceneMapper.createSceneData("MoveToIrkutsk", {});
-
-    useSceneStore.getState().setScene(GameScene.MoveToIrkutsk, sceneData);
-    useSceneStore.getState().setBackgroundLayers(sceneData.backgroundLayers);
-
-    this.stopActiveScenes();
-    this.game.scene.start(GameScene.Move, sceneData);
-  }
-
   showMoveInIrkutsk() {
     if (!this.game) return;
 
@@ -292,7 +278,17 @@ class GameFlowManager {
     this.game.scene.start(GameScene.Move, sceneData);
   }
 
-  showMoveToEkb() {}
+  showMoveInKamchatka() {
+    if (!this.game) return;
+
+    const sceneData = MoveSceneMapper.createSceneData("MoveInKamchatka", {});
+
+    useSceneStore.getState().setScene(GameScene.MoveInKamchatka, sceneData);
+    useSceneStore.getState().setBackgroundLayers(sceneData.backgroundLayers);
+
+    this.stopActiveScenes();
+    this.game.scene.start(GameScene.Move, sceneData);
+  }
 
   showMoveInEkb() {
     if (!this.game) return;

@@ -8,10 +8,9 @@ export type MoveScene =
   | typeof GameScene.MoveToKazan
   | typeof GameScene.MoveInKazan
   | typeof GameScene.MoveInKazanVillage
-  | typeof GameScene.MoveToEkb
   | typeof GameScene.MoveInEkb
-  | typeof GameScene.MoveToIrkutsk
   | typeof GameScene.MoveInIrkutsk
+  | typeof GameScene.MoveInKamchatka
   | typeof GameScene.Move;
 
 export interface MoveSceneData {
@@ -62,10 +61,9 @@ export interface SceneDataMap {
   MoveToKazan: MoveSceneData | null;
   MoveInKazan: MoveSceneData | null;
   MoveInKazanVillage: MoveSceneData | null;
-  MoveToEkb: MoveSceneData | null;
   MoveInEkb: MoveSceneData | null;
-  MoveToIrkutsk: MoveSceneData | null;
   MoveInIrkutsk: MoveSceneData | null;
+  MoveInKamchatka: MoveSceneData | null;
 
   // games
   GameMap: GameMapSceneData;
@@ -108,10 +106,9 @@ export const GameScene = {
   MoveToKazan: "MoveToKazan",
   MoveInKazan: "MoveInKazan",
   MoveInKazanVillage: "MoveInKazanVillage",
-  MoveToEkb: "MoveToEkb",
   MoveInEkb: "MoveInEkb",
-  MoveToIrkutsk: "MoveToIrkutsk",
   MoveInIrkutsk: "MoveInIrkutsk",
+  MoveInKamchatka: "MoveInKamchatka",
 
   // others
   Auth: "Auth",

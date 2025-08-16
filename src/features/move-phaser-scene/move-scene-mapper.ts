@@ -172,7 +172,7 @@ export class MoveSceneMapper {
       playerSpeed: 150,
     },
     // Irkutsk move scenes
-    [GameScene.MoveToIrkutsk]: {
+    [GameScene.MoveInIrkutsk]: {
       backgroundLayers: {
         background: getAssetsPathByType({
           type: "images",
@@ -190,16 +190,16 @@ export class MoveSceneMapper {
       },
       playerSpeed: 150,
     },
-    [GameScene.MoveInIrkutsk]: {
+    [GameScene.MoveInKamchatka]: {
       backgroundLayers: {
         background: getAssetsPathByType({
           type: "images",
-          scene: "irkutsk-move",
+          scene: "kamchatka-move",
           filename: "background.png",
         }),
         preBackground: getAssetsPathByType({
           type: "images",
-          scene: "irkutsk-move",
+          scene: "kamchatka-move",
           filename: "pre-background.png",
         }),
         light: null,

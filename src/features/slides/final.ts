@@ -26,9 +26,9 @@ const finalSlides: EpisodeConfig[] = [
     filename: "Screen_2.jpg",
     backgroundSound: "platform-voices-ambient.mp3",
     actions: [
-      { type: "speech", characterName: "Мама", text: "" },
+      { type: "message", text: "Мама крепко обнимает — без слов." },
       { type: "speech", characterName: "Сестра", text: "Ты пахнешь дымом и ветром." },
-      { type: "speech", characterName: "Отец", text: "Наш дед всегда был такой. Я скучал, сын, как же ты повзрослел.." },
+      { type: "speech", characterName: "Отец", text: "Наш дед всегда был такой. Я скучал, сын, как же ты повзрослел." },
       {
         type: "choice",
         text: "Как он здоровается?",
@@ -73,6 +73,13 @@ const finalSlides: EpisodeConfig[] = [
           0: { actions: [{ type: "message", text: "Алексей медленно нажимает REC и шепчет: ‘Сохраняю названия, даты и тишину.’" }] },
           1: { actions: [{ type: "message", text: "Алексей нажимает REC: ‘Слышу. Возвращаюсь. Спасибо за дорогу.’" }] },
           2: { actions: [{ type: "message", text: "Алексей записывает: ‘Дальше ищу не адреса, а людей.’" }] }
+        }
+      },
+      {
+        type: "button",
+        button: {
+          text: "Записать кассету",
+          action: () => {},
         }
       },
       { type: "message", text: "На корпусе кассеты — подпись от руки: ‘Солнечные. Благодарность’." }

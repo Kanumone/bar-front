@@ -81,10 +81,9 @@ export default class GameMapPhaserScene extends Scene {
       [GameScene.MoveToKazan]: "kazan",
       [GameScene.MoveInKazan]: "kazan",
       [GameScene.MoveInKazanVillage]: "kazan",
-      [GameScene.MoveToEkb]: "ekb",
       [GameScene.MoveInEkb]: "ekb",
-      [GameScene.MoveToIrkutsk]: "irkutsk",
       [GameScene.MoveInIrkutsk]: "irkutsk",
+      [GameScene.MoveInKamchatka]: "kamchatka",
     };
 
     // точное сопоставление

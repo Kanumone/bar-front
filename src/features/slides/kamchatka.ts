@@ -5,7 +5,6 @@ const kamchatkaSlides: EpisodeConfig[] = [
   {
     slideIndex: 1,
     filename: "Screen_1.jpg",
-    startSound: "plane-landing.mp3",
     actions: [
       {
         type: "message",
@@ -234,8 +233,8 @@ const kamchatkaSlides: EpisodeConfig[] = [
   },
 
   {
-    slideIndex: 9,
-    filename: "Screen_9.jpg",
+    slideIndex: 10,
+    filename: "Screen_10.jpg",
     actions: [
       {
         type: "message",
@@ -265,7 +264,6 @@ const kamchatkaSlides: EpisodeConfig[] = [
           2: { actions: [{ type: "speech", characterName: "Лена", text: "Можно перевернуть страницу." }] },
         },
       },
-      { type: "speech", characterName: "Лена", text: "Значит, можно перевернуть страницу." },
     ],
   },
 
@@ -308,7 +306,6 @@ const kamchatkaSlides: EpisodeConfig[] = [
   {
     slideIndex: 12,
     filename: "Screen_12.jpg",
-    backgroundSound: "vehicle-ride.mp3",
     actions: [
       { type: "message", text: "Вездеход медленно гремит по чёрным лавовым полям. Вдалеке белые струи пара поднимаются к небу." },
       { type: "thoughts", characterName: "Алексей", text: "Если Иркутск — зеркало, то Камчатка — пульс. Здесь всё движется, даже скалы." },
