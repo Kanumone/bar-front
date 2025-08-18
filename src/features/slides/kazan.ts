@@ -1,9 +1,210 @@
 import { gameFlowManager } from "$services/game-flow";
-import { Episode, type EpisodeConfig } from "./common";
+import { Episode, type Action, type EpisodeConfig } from "./common";
 
 // Конфигурация слайдов для сцены "Казань"
 // Визуальные имена кадров/звуков — заглушки. Подключим реальные ассеты, когда будут готовы.
 // TODO: Уточнить реальные имена файлов изображений и звуков в `assets/images/scenes/kazan-slides` и `assets/sounds/scenes/kazan-slides`
+
+const chatSisterPart2: Action = {
+  type: "choice",
+  options: [
+    "Поймаю звук рассвета на набережной.",
+    "Сделаю три. Отчёт — эмодзи 🤝🤝🤝.",
+    "Подниму бумажку у воды"
+  ],
+  outcomes: {
+    0: {
+      actions: [
+        {
+          type: "switchback",
+          background: "chat_sister/b_1.jpg",
+        },
+        {
+          type: "switchback",
+          background: "chat_sister/b_11.jpg",
+        }
+      ]
+    },
+    1: {
+      actions: [
+        {
+          type: "switchback",
+          background: "chat_sister/b_2.jpg",
+        },
+        {
+          type: "switchback",
+          background: "chat_sister/b_21.jpg",
+        }
+      ]
+    },
+    2: {
+      actions: [
+        {
+          type: "switchback",
+          background: "chat_sister/b_3.jpg",
+        },
+        {
+          type: "switchback",
+          background: "chat_sister/b_31.jpg",
+        }
+      ]
+    }
+  }
+}
+
+const chatSister: EpisodeConfig = {
+  slideIndex: 37,
+  filename: "chat_sister/main.jpg",
+  startSound: "ux/message.mp3",
+  actions: [
+    {
+      type: "choice",
+      options: [
+        "фото тёмного леса + подпись: «Я: привет-просьба-спасибо — Лес: ладно, проходи»",
+        "В Казанском кремле соседствуют мечеть Кул-Шариф и Благовещенский собор — и это выглядит естественно",
+        "Ночная тишина реально разговаривает — если не свистеть и идти рядом"
+      ],
+      outcomes: {
+        0: {
+          actions: [
+            {
+              type: "switchback",
+              background: "chat_sister/a_1.jpg",
+            },
+            {
+              type: "switchback",
+              background: "chat_sister/a_11.jpg",
+            },
+          ],
+        },
+        1: {
+          actions: [
+            {
+              type: "switchback",
+              background: "chat_sister/a_2.jpg",
+            },
+            {
+              type: "switchback",
+              background: "chat_sister/a_21.jpg",
+            },
+          ],
+        },
+        2: {
+          actions: [
+            {
+              type: "switchback",
+              background: "chat_sister/a_3.jpg",
+            },
+            {
+              type: "switchback",
+              background: "chat_sister/a_31.jpg",
+            },
+          ],
+        },
+      },
+    },
+    chatSisterPart2
+  ],
+}
+
+const chatMom: EpisodeConfig = {
+  slideIndex: 37,
+  filename: "chat_mom/main.jpg",
+  actions: [
+    {
+      type: "choice",
+      options: [
+        "Что соседство возможно. Собор и мечеть рядом — это не спор, а взрослость города.",
+        "Сначала слушать, потом говорить. Тишина правда помогает.",
+        "«Привет → Просьба → Спасибо». Работает и с людьми, и с местами."
+      ],
+      outcomes: {
+        0: {
+          actions: [
+            {
+              type: "switchback",
+              background: "chat_mom/a_1.jpg",
+            },
+            {
+              type: "switchback",
+              background: "chat_mom/a_11.jpg",
+            },
+          ],
+        },
+        1: {
+          actions: [
+            {
+              type: "switchback",
+              background: "chat_mom/a_2.jpg",
+            },
+            {
+              type: "switchback",
+              background: "chat_mom/a_21.jpg",
+            },
+          ],
+        },
+        2: {
+          actions: [
+            {
+              type: "switchback",
+              background: "chat_mom/a_3.jpg",
+            },
+            {
+              type: "switchback",
+              background: "chat_mom/a_31.jpg",
+            },
+          ],
+        },
+      },
+    },
+    {
+      type: "choice",
+      options: [
+        "Рустам накормил эчпочмаками, я влюблён.",
+        "Казань — это «съел — и понял город».",
+        "В деревне помогал делать чак-чак и кыстыбый. Получилось честно.",
+      ],
+      outcomes: {
+        0: {
+          actions: [
+            {
+              type: "switchback",
+              background: "chat_mom/b_1.jpg",
+            },
+            {
+              type: "switchback",
+              background: "chat_mom/b_11.jpg",
+            },
+          ],
+        },
+        1: {
+          actions: [
+            {
+              type: "switchback",
+              background: "chat_mom/b_2.jpg",
+            },
+            {
+              type: "switchback",
+              background: "chat_mom/b_21.jpg",
+            },
+          ],
+        },
+        2: {
+          actions: [
+            {
+              type: "switchback",
+              background: "chat_mom/b_3.jpg",
+            },
+            {
+              type: "switchback",
+              background: "chat_mom/b_31.jpg",
+            },
+          ],
+        },
+      },
+    }
+  ],
+}
 
 const kazanSlides: EpisodeConfig[] = [
   // Screen_1 — Трасса М‑7. Дорога в Казань
@@ -972,7 +1173,7 @@ const kazanSlides: EpisodeConfig[] = [
       },
       {
         type: "speech",
-        characterName: "Алексей", 
+        characterName: "Алексей",
         text: "Шурале… Я видел легенды об этом лесном духе у бабушки в Кошлауче.",
       },
       {
@@ -1029,13 +1230,13 @@ const kazanSlides: EpisodeConfig[] = [
                 text: "У поэта раннее детство было здесь. Дом, сад, печь, рассказы старших — его первый университет. Он учился слышать мир.",
               },
               {
-                type: "speech", 
+                type: "speech",
                 characterName: "Рустам",
                 text: "Шурале пугал и учил одновременно: \"Не свисти в лесу, не ломай ветки без нужды, не смейся над тем, чего не понимаешь\".",
               },
               {
                 type: "speech",
-                characterName: "Рустам", 
+                characterName: "Рустам",
                 text: "А ещё у Тукая был талант называть чувства: то, что мы не умели объяснить, он превращал в строки.",
               },
               {
@@ -2503,7 +2704,8 @@ const kazanSlides: EpisodeConfig[] = [
       },
     ],
   },
-  // chats  
+  chatSister,
+  chatMom,
   {
     slideIndex: 39,
     filename: "Screen_39.jpg",
@@ -2771,15 +2973,17 @@ const kazanSlides: EpisodeConfig[] = [
       },
       { type: "speech", characterName: "Алексей", text: "Урал — значит, новая музыка. Поехали." },
       { type: "speech", characterName: "Рустам", text: "Поехали." },
-      {type: "button", button: {
-        text: "В путь",
-        action: () => { 
-          gameFlowManager.showEkb();
-        },
-      }}
+      {
+        type: "button", button: {
+          text: "В путь",
+          action: () => {
+            gameFlowManager.showEkb();
+          },
+        }
+      }
     ],
   },
-  
+
 ];
 
 export const getKazanSlides = (): Episode[] => {

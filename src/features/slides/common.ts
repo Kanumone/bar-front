@@ -1,4 +1,4 @@
-import { getAssetsPathByType } from "$/utils/get-assets-path";
+import { getAssetsPathByType, type AssetType } from "$/utils/get-assets-path";
 
 type ActionBase = { onNext?: { sound?: string } };
 
@@ -117,105 +117,109 @@ export class Episode {
     this.positionX = config.positionX ?? 0.5;
     this.positionY = config.positionY ?? 0.5;
 
-    this.backgroundSound = config.backgroundSound
-      ? getAssetsPathByType({
-        type: "sounds",
-        scene: this.scene,
-        filename: config.backgroundSound,
-      })
-      : undefined;
-
-    this.startSound = config.startSound
-      ? getAssetsPathByType({
-        type: "sounds",
-        scene: this.scene,
-        filename: config.startSound,
-      })
-      : undefined;
+    this.backgroundSound = this.normalizeSound(config.backgroundSound);
+    this.startSound = this.normalizeSound(config.startSound);
 
     // ✅ нормализуем actions и звуки/картинки
-    const normalizeAction = (raw: any): Action => {
-      // нормализуем onNext.sound если есть
-      const onNext = raw?.onNext?.sound
-        ? { sound: getAssetsPathByType({ type: "sounds", scene: this.scene, filename: raw.onNext.sound }) }
-        : raw?.onNext;
+    this.actions = (config.actions ?? []).map((a) => this.normalizeAction(a));
+  }
 
-      // button
-      if (raw.type === "button") {
-        const button = raw.button
-          ? {
-            ...raw.button,
-            sound: raw.button.sound
-              ? getAssetsPathByType({ type: "sounds", scene: this.scene, filename: raw.button.sound })
-              : undefined,
-          }
-          : raw.button;
-        return { ...raw, button, onNext } as Action;
+  private normalizeSound(path: string | undefined) {
+    console.log("normalizeSound", path);
+    if (!path) {
+      return
+    }
+    const pathParams = {
+      type: "sounds" as AssetType,
+      filename: path,
+      scene: "",
+    }
+    if (!path.startsWith("ux/")) {
+      pathParams.scene = this.scene;
+    }
+    const result = getAssetsPathByType(pathParams)
+    return result;
+  }
+
+  private normalizeAction(raw: any): Action {
+    // нормализуем onNext.sound если есть
+    const onNext = raw?.onNext?.sound
+      ? { sound: getAssetsPathByType({ type: "sounds", scene: this.scene, filename: raw.onNext.sound }) }
+      : raw?.onNext;
+
+    // button
+    if (raw.type === "button") {
+      const button = raw.button
+        ? {
+          ...raw.button,
+          sound: raw.button.sound
+            ? getAssetsPathByType({ type: "sounds", scene: this.scene, filename: raw.button.sound })
+            : undefined,
+        }
+        : raw.button;
+      return { ...raw, button, onNext } as Action;
+    }
+
+    // image-pick-2
+    if (raw.type === "image-pick-2") {
+      const topImage = getAssetsPathByType({ type: "images", scene: this.scene, filename: raw.topImage });
+      const bottomImage = getAssetsPathByType({ type: "images", scene: this.scene, filename: raw.bottomImage });
+      const postActions = raw.postActions
+        ? {
+          correct: raw.postActions.correct ? raw.postActions.correct.map((aa: any) => this.normalizeAction(aa)) : undefined,
+          wrong: raw.postActions.wrong ? raw.postActions.wrong.map((aa: any) => this.normalizeAction(aa)) : undefined,
+        }
+        : raw.postActions;
+      return { ...raw, topImage, bottomImage, postActions, onNext } as Action;
+    }
+
+    // choice
+    if (raw.type === "choice" && raw.outcomes) {
+      const outcomes: Record<number, { actions?: Action[]; background?: string | null; carryBackgroundToNextSlide?: boolean }> = {};
+      for (const key of Object.keys(raw.outcomes)) {
+        const idx = Number(key);
+        const o = (raw.outcomes as any)[idx] || {};
+        const background = typeof o.background === "string"
+          ? getAssetsPathByType({ type: "images", scene: this.scene, filename: o.background })
+          : o.background; // null | undefined
+        const actions = o.actions ? (o.actions as any[]).map((aa) => this.normalizeAction(aa)) : undefined;
+        outcomes[idx] = { ...(o as any), background, actions };
       }
+      return { ...raw, outcomes, onNext } as Action;
+    }
 
-      // image-pick-2
-      if (raw.type === "image-pick-2") {
-        const topImage = getAssetsPathByType({ type: "images", scene: this.scene, filename: raw.topImage });
-        const bottomImage = getAssetsPathByType({ type: "images", scene: this.scene, filename: raw.bottomImage });
-        const postActions = raw.postActions
-          ? {
-            correct: raw.postActions.correct ? raw.postActions.correct.map((aa: any) => normalizeAction(aa)) : undefined,
-            wrong: raw.postActions.wrong ? raw.postActions.wrong.map((aa: any) => normalizeAction(aa)) : undefined,
-          }
-          : raw.postActions;
-        return { ...raw, topImage, bottomImage, postActions, onNext } as Action;
-      }
+    // order-messages
+    if (raw.type === "order-messages") {
+      const postActions = raw.postActions
+        ? {
+          correct: raw.postActions.correct ? raw.postActions.correct.map((aa: any) => this.normalizeAction(aa)) : undefined,
+          wrong: raw.postActions.wrong ? raw.postActions.wrong.map((aa: any) => this.normalizeAction(aa)) : undefined,
+        }
+        : raw.postActions;
+      return { ...raw, postActions, onNext } as Action;
+    }
 
-      // choice
-      if (raw.type === "choice" && raw.outcomes) {
-        const outcomes: Record<number, { actions?: Action[]; background?: string | null; carryBackgroundToNextSlide?: boolean }> = {};
-        for (const key of Object.keys(raw.outcomes)) {
-          const idx = Number(key);
-          const o = (raw.outcomes as any)[idx] || {};
+    // multi-choice
+    if (raw.type === "multi-choice") {
+      const outcomes: Record<string, Outcome> | undefined = raw.outcomes
+        ? Object.keys(raw.outcomes).reduce((acc: any, k) => {
+          const o = (raw.outcomes as any)[k];
           const background = typeof o.background === "string"
             ? getAssetsPathByType({ type: "images", scene: this.scene, filename: o.background })
-            : o.background; // null | undefined
-          const actions = o.actions ? (o.actions as any[]).map((aa) => normalizeAction(aa)) : undefined;
-          outcomes[idx] = { ...(o as any), background, actions };
-        }
-        return { ...raw, outcomes, onNext } as Action;
-      }
+            : o.background;
+          const actions = o.actions ? (o.actions as any[]).map((aa) => this.normalizeAction(aa)) : undefined;
+          acc[k] = { ...o, background, actions };
+          return acc;
+        }, {})
+        : undefined;
+      return { ...raw, outcomes, onNext } as Action;
+    }
+    if (raw.type === "switchback") {
+      const background = getAssetsPathByType({ type: "images", scene: this.scene, filename: raw.background });
+      return { ...raw, background, onNext } as Action;
+    }
 
-      // order-messages
-      if (raw.type === "order-messages") {
-        const postActions = raw.postActions
-          ? {
-            correct: raw.postActions.correct ? raw.postActions.correct.map((aa: any) => normalizeAction(aa)) : undefined,
-            wrong: raw.postActions.wrong ? raw.postActions.wrong.map((aa: any) => normalizeAction(aa)) : undefined,
-          }
-          : raw.postActions;
-        return { ...raw, postActions, onNext } as Action;
-      }
-
-      // multi-choice
-      if (raw.type === "multi-choice") {
-        const outcomes: Record<string, Outcome> | undefined = raw.outcomes
-          ? Object.keys(raw.outcomes).reduce((acc: any, k) => {
-            const o = (raw.outcomes as any)[k];
-            const background = typeof o.background === "string"
-              ? getAssetsPathByType({ type: "images", scene: this.scene, filename: o.background })
-              : o.background;
-            const actions = o.actions ? (o.actions as any[]).map((aa) => normalizeAction(aa)) : undefined;
-            acc[k] = { ...o, background, actions };
-            return acc;
-          }, {})
-          : undefined;
-        return { ...raw, outcomes, onNext } as Action;
-      }
-      if (raw.type === "switchback") {
-        const background = getAssetsPathByType({ type: "images", scene: this.scene, filename: raw.background });
-        return { ...raw, background, onNext } as Action;
-      }
-
-      // прочие типы — просто отдать с onNext
-      return { ...(raw as any), onNext } as Action;
-    };
-
-    this.actions = (config.actions ?? []).map((a) => normalizeAction(a));
-  }
+    // прочие типы — просто отдать с onNext
+    return { ...(raw as any), onNext } as Action;
+  };
 }

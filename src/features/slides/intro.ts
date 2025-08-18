@@ -211,7 +211,7 @@ const introConfig: EpisodeConfig[] = [
   {
     slideIndex: 10,
     filename: "Frame 17.jpg",
-    startSound: "Звук сообщения.mp3",
+    startSound: "ux/message.mp3",
     actions: [
       {
         type: "thoughts",
