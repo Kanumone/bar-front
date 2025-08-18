@@ -17,8 +17,64 @@ const irkutskSlides: EpisodeConfig[] = [
       { type: "thoughts", text: "Наверное, как люди. Их тоже нельзя просто 'понять'." },
     ],
   },
-
-  // TODO: чат с мамой
+  {
+    slideIndex: 1,
+    filename: "chat_mom/main.jpg",
+    startSound: "ux/message.mp3",
+    actions: [
+      {
+        type: "choice",
+        options: [
+          "A) «Иркутск. Жив-цел — чай пью.»",
+          "B) «Да. Доехал, не мёрзну. Шапка на мне.»",
+          "C) «Тут. Байкал зовёт, я отвечаю. Всё ок.»",
+        ],
+        outcomes: {
+          0: {
+            actions: [
+              {
+                type: "switchback",
+                background: "chat_mom/a_1.jpg",
+              },
+            ]
+          },
+          1: {
+            actions: [
+              {
+                type: "switchback",
+                background: "chat_mom/a_2.jpg",
+              },
+            ]
+          },
+          2: {
+            actions: [
+              {
+                type: "switchback",
+                background: "chat_mom/a_3.jpg",
+              },
+            ]
+          },
+        },
+      },
+      {
+        type: "choice",
+        options: [
+          "И я тебя люблю",
+          "Закрыть",
+        ],
+        outcomes: {
+          0: {
+            actions: [
+              {
+                type: "switchback",
+                background: "chat_mom/a_last.jpg",
+              },
+            ]
+          },
+        }
+      },
+    ],
+  },
   {
     slideIndex: 2,
     filename: "Screen_2.jpg",
@@ -126,7 +182,7 @@ const irkutskSlides: EpisodeConfig[] = [
       {
         type: "choice",
         characterName: "Алексей",
-        options: ["Треск камешков по дну.","Отголоски волны и дальний мотор.","Как будто чья-то медленная речь."],
+        options: ["Треск камешков по дну.", "Отголоски волны и дальний мотор.", "Как будто чья-то медленная речь."],
         outcomes: {
           0: { actions: [{ type: "speech", characterName: "Лера", text: "Вижу. Твой дед любил этот момент: 'Тишина — тоже запись'." }] },
           1: { actions: [{ type: "speech", characterName: "Лера", text: "Отголоски — это контекст." }] },
@@ -156,7 +212,7 @@ const irkutskSlides: EpisodeConfig[] = [
       {
         type: "choice",
         characterName: "Алексей",
-        options: ["Перечитаю вслух K13–01…06","Смотрю по журналу: время и инициалы","Сначала визуально: уровни, крышки — потом штрихкод."],
+        options: ["Перечитаю вслух K13–01…06", "Смотрю по журналу: время и инициалы", "Сначала визуально: уровни, крышки — потом штрихкод."],
         outcomes: {
           0: { actions: [{ type: "speech", characterName: "Лера", text: "Совпало. Без контекста цифра — пустая строчка." }] },
           1: { actions: [{ type: "speech", characterName: "Лера", text: "Контекст делает цифру честной." }] },
@@ -174,18 +230,24 @@ const irkutskSlides: EpisodeConfig[] = [
           "Конденсор вниз, диафрагму прикрыть. Есть картинка.",
         ],
         outcomes: {
-          0: { actions: [
-            { type: "speech", characterName: "Лера", text: "Видишь гребки? Циклопы. Красная точка — их 'фонарь'. Их яйца могут спать десятилетиями в донных слоях." },
-            { type: "speech", characterName: "Алексей", text: "У воды — длинная память. Нам бы её не подменять догадками." },
-          ] },
-          1: { actions: [
-            { type: "speech", characterName: "Лера", text: "Видишь гребки? Циклопы. Красная точка — их 'фонарь'. Их яйца могут спать десятилетиями в донных слоях." },
-            { type: "speech", characterName: "Алексей", text: "У воды — длинная память. Нам бы её не подменять догадками." },
-          ] },
-          2: { actions: [
-            { type: "speech", characterName: "Лера", text: "Видишь гребки? Циклопы. Красная точка — их 'фонарь'. Их яйца могут спать десятилетиями в донных слоях." },
-            { type: "speech", characterName: "Алексей", text: "У воды — длинная память. Нам бы её не подменять догадками." },
-          ] },
+          0: {
+            actions: [
+              { type: "speech", characterName: "Лера", text: "Видишь гребки? Циклопы. Красная точка — их 'фонарь'. Их яйца могут спать десятилетиями в донных слоях." },
+              { type: "speech", characterName: "Алексей", text: "У воды — длинная память. Нам бы её не подменять догадками." },
+            ]
+          },
+          1: {
+            actions: [
+              { type: "speech", characterName: "Лера", text: "Видишь гребки? Циклопы. Красная точка — их 'фонарь'. Их яйца могут спать десятилетиями в донных слоях." },
+              { type: "speech", characterName: "Алексей", text: "У воды — длинная память. Нам бы её не подменять догадками." },
+            ]
+          },
+          2: {
+            actions: [
+              { type: "speech", characterName: "Лера", text: "Видишь гребки? Циклопы. Красная точка — их 'фонарь'. Их яйца могут спать десятилетиями в донных слоях." },
+              { type: "speech", characterName: "Алексей", text: "У воды — длинная память. Нам бы её не подменять догадками." },
+            ]
+          },
         },
       },
       { type: "speech", characterName: "Лера", text: "Вернёмся к зубчику мутности. Что проверим в первую очередь?" },
@@ -315,10 +377,12 @@ const irkutskSlides: EpisodeConfig[] = [
         options: ["Записать тишину", "Отметить на карте", "Сделать фото углей"],
         outcomes: {
           0: { actions: [{ type: "speech", characterName: "Лера", text: "Пригодится. Иногда ответ слышен только на повторе." }] },
-          1: { actions: [
-            { type: "message", text: "Алексей отмечает: K13 — 'ровный день'." },
-            { type: "speech", characterName: "Лера", text: "Обожаю ровные дни. Они держат мир." },
-          ] },
+          1: {
+            actions: [
+              { type: "message", text: "Алексей отмечает: K13 — 'ровный день'." },
+              { type: "speech", characterName: "Лера", text: "Обожаю ровные дни. Они держат мир." },
+            ]
+          },
           2: { actions: [{ type: "message", text: "Снимок: угли как созвездия." }] },
         },
       },
@@ -368,7 +432,7 @@ const irkutskSlides: EpisodeConfig[] = [
               { type: "message", text: "Факты: версия с омулём; вкус — про прозрачную воду и ответственность." },
               { type: "speech", characterName: "Алексей", text: "Это как если бы воду можно было съесть." },
               { type: "speech", characterName: "Лера", text: "Да. И у воды отличный характер." },
-              
+
               { type: "message", text: "Заметка: 'Прозрачность как правило: ровный рез — ровное настроение'." },
             ],
           },
@@ -481,18 +545,24 @@ const irkutskSlides: EpisodeConfig[] = [
         text: "Выбор инструмента",
         options: ["Тонкая стамеска", "Полукруг", "Нож‑петля"],
         outcomes: {
-          0: { actions: [
-            { type: "message", text: "Реакция: линия 'травы' мягко тянется по волокну." },
-            { type: "speech", characterName: "Лера", text: "Рука у тебя аккуратная. Без спешки — и линии дышат." },
-          ] },
-          1: { actions: [
-            { type: "message", text: "Реакция: мягкий луч солнца ложится полукругом." },
-            { type: "speech", characterName: "Лера", text: "Ритм пойман. Луч получился тёплый." },
-          ] },
-          2: { actions: [
-            { type: "message", text: "Реакция: выемка под 'птичку' получается чистой." },
-            { type: "speech", characterName: "Лера", text: "Чисто. 'Птичка' сядет легко." },
-          ] },
+          0: {
+            actions: [
+              { type: "message", text: "Реакция: линия 'травы' мягко тянется по волокну." },
+              { type: "speech", characterName: "Лера", text: "Рука у тебя аккуратная. Без спешки — и линии дышат." },
+            ]
+          },
+          1: {
+            actions: [
+              { type: "message", text: "Реакция: мягкий луч солнца ложится полукругом." },
+              { type: "speech", characterName: "Лера", text: "Ритм пойман. Луч получился тёплый." },
+            ]
+          },
+          2: {
+            actions: [
+              { type: "message", text: "Реакция: выемка под 'птичку' получается чистой." },
+              { type: "speech", characterName: "Лера", text: "Чисто. 'Птичка' сядет легко." },
+            ]
+          },
         },
       },
       { type: "speech", characterName: "Лера", text: "Смотри и запомни на память." },

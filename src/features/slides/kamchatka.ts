@@ -1,7 +1,6 @@
 import { gameFlowManager } from "$services/game-flow";
 import { Episode, type EpisodeConfig } from "./common";
 
-// Конфигурация слайдов для сцены "Камчатка"
 const kamchatkaSlides: EpisodeConfig[] = [
   {
     slideIndex: 1,
@@ -157,7 +156,7 @@ const kamchatkaSlides: EpisodeConfig[] = [
         ],
         outcomes: {
           0: { actions: [{ type: "speech", characterName: "Алексей", text: "А если мир другой — будем смотреть внимательнее." }] },
-          1: { actions: [{ type: "speech", characterName: "Лена", text: "(смотрит внимательно) Иногда такие места меняют нас ненавязчиво." }] },
+          1: { actions: [{ type: "speech", characterName: "Лена", text: "Иногда такие места меняют нас ненавязчиво." }] },
           2: { actions: [{ type: "speech", characterName: "Дима", text: "Тогда он знал, куда тебя отправить." }] },
         },
       },
@@ -165,6 +164,11 @@ const kamchatkaSlides: EpisodeConfig[] = [
         type: "thoughts",
         characterName: "Алексей",
         text: "Смешно… Я шёл за ответами, а нашёл место, где вопросы стали важнее.",
+      },
+      {
+        type: "speech",
+        characterName: "Лена",
+        text: "Запомни запах этой ночи. Потом, где бы ты ни был, он вернёт тебя сюда.",
       },
     ],
   },
@@ -187,49 +191,68 @@ const kamchatkaSlides: EpisodeConfig[] = [
         characterName: "Дима",
         text: "Уха тройная. Сначала головы, потом мясо, потом — лучший кусок в самом конце.",
       },
-      {
-        type: "message",
-        text: "(Прим.: в игре можно показать короткие карточки с фактами о местной кухне: юкола, кирилка и протокол приготовления ухи.)",
-      },
+      // todo: прикол факты
     ],
   },
 
   {
     slideIndex: 8,
-    filename: "Screen_8.jpg",
+    filename: "chat_sister/main.jpg",
     actions: [
       {
-        type: "message",
-        text: "Чат с сестрой и Дашей: забавные статусы о вулкане и еде. Это даёт лёгкую ноту домашней связи — напоминание, что дом на связи.",
-      },
-      {
         type: "choice",
-        text: "Ответить сестре",
         options: [
           "Сижу у вулкана, ем уху тройного выкипания. Если закиплю — убавь огонь мысленно.",
           "Здесь медведи вместо светофоров. Перехожу дорогу только на рычание.",
           "Юкола — это вяленый ветер. Да, съедобный. Да, вкусно.",
         ],
         outcomes: {
-          0: { actions: [{ type: "message", text: "Сестра: Ок, супергерой. Привези сувенир или себя. Лучше себя. И фотку!" }] },
-          1: { actions: [{ type: "message", text: "Сестра: Ок, супергерой. Привези сувенир или себя. Лучше себя. И фотку!" }] },
-          2: { actions: [{ type: "message", text: "Сестра: Ок, супергерой. Привези сувенир или себя. Лучше себя. И фотку!" }] },
+          0: {
+            actions: [
+              { type: "switchback", background: "chat_sister/a_1.jpg" },
+            ]
+          },
+          1: {
+            actions: [
+              { type: "switchback", background: "chat_sister/a_2.jpg" },
+            ]
+          },
+          2: {
+            actions: [
+              { type: "switchback", background: "chat_sister/a_3.jpg" },
+            ]
+          },
         },
       },
       {
+        type: "switchback",
+        background: "chat_disha/main.jpg",
+      },
+      {
         type: "choice",
-        text: "Ответить Даше",
         options: [
           "Нормально: ветер — в ля-камчатка, котёл — в соль-диез, я — в мажоре.",
           "Не перепутал термобокс с ухой. Прогресс — 100%.",
           "Гейзер даёт аптайм 99,9%, но иногда рестартит меня.",
         ],
         outcomes: {
-          0: { actions: [{ type: "message", text: "Даша: Зачёт. Вернёшься — сведём трек ‘Тишина × Вулкан’." }] },
-          1: { actions: [{ type: "message", text: "Даша: Зачёт. Вернёшься — сведём трек ‘Тишина × Вулкан’." }] },
-          2: { actions: [{ type: "message", text: "Даша: Зачёт. Вернёшься — сведём трек ‘Тишина × Вулкан’." }] },
+          0: {
+            actions: [
+              { type: "switchback", background: "chat_disha/a_1.jpg" },
+            ]
+          },
+          1: {
+            actions: [
+              { type: "switchback", background: "chat_disha/a_2.jpg" },
+            ]
+          },
+          2: {
+            actions: [
+              { type: "switchback", background: "chat_disha/a_3.jpg" },
+            ]
+          },
         },
-      },
+      }
     ],
   },
 
@@ -478,10 +501,6 @@ const kamchatkaSlides: EpisodeConfig[] = [
       { type: "button", button: { text: "Дальше", action: () => { } } },
     ],
   },
-];
-
-// Screen_19..Screen_21 — финальная часть главы
-kamchatkaSlides.push(
   {
     slideIndex: 19,
     filename: "Screen_19.jpg",
@@ -508,19 +527,32 @@ kamchatkaSlides.push(
         },
       },
       { type: "speech", characterName: "Алексей", text: "Прощай — это не конец. Это честное 'я был здесь'." },
-      { type: "message", text: "Звук: лёгкий порыв ветра; где-то звякает подвешенная рыбья кость-оберег." },
-      { type: "button", button: { text: "Дальше", action: () => { } } },
     ],
+  },
+  {
+    slideIndex: 19,
+    startSound: "ux/message.mp3",
+    filename: "chat_mom/main.jpg",
+    actions: [
+      {
+        type: "choice",
+        options: [
+          "Спасибо, мам. Возьми не трать — поеду поездом. Хочу дорогу дослушать.",
+          "Самолёт слишком быстро. Нужен ещё один длинный вопрос на рельсах.",
+          "Поезд — мой плейлист: Урал, Байкал, Камчатка. Хочу попрощаться с дорогой.",
+        ],
+        outcomes: {
+          0: { actions: [{ type: "switchback", background: "chat_mom/a_1.jpg" }] },
+          1: { actions: [{ type: "switchback", background: "chat_mom/a_2.jpg" }] },
+          2: { actions: [{ type: "switchback", background: "chat_mom/a_3.jpg" }] },
+        },
+      }
+    ]
   },
   {
     slideIndex: 20,
     filename: "Screen_20.jpg",
     actions: [
-      { type: "message", text: "Одинокий холм-спина на фоне неба; камера смотрит снизу-вверх. Алексей — тёмный силуэт в контровом свете заката." },
-      { type: "message", text: "Визуал: охра и медь по горизонту, холодный серо-синий в тенях; жёсткая трава, чёрные базальтовые камни, пятна мха; тонкая дорожка-серпантин к вершине." },
-      { type: "message", text: "Детали: ветер поднимает пепел как золотую пыль, срывает капюшон; на запястье — тонкая верёвка-метка; в кармане — маленькая 'птица'/болтик (согласно выбору ранее)." },
-      { type: "message", text: "Звук: далёкое низкое 'дыхание' земли, свист ветра в ушах, шелест пепла по ткани, редкие крики птиц. Шаги по камню — сухие, уверенные." },
-      { type: "message", text: "Анимация входа: он поднимается последние метры, останавливается на гребне. Ветер рвёт капюшон назад. Алексей прикрывает глаза — и улыбается." },
       { type: "thoughts", characterName: "Алексей", text: "Я искал ответы. Нашёл — людей. И себя. Кажется, это и был клад." },
       {
         type: "choice",
@@ -630,7 +662,7 @@ kamchatkaSlides.push(
       { type: "button", button: { text: "К вокзалу", action: () => { gameFlowManager.showMoveInKamchatka() } } },
     ],
   }
-);
+];
 
 export const getKamchatkaSlides = (): Episode[] => {
   const episodes: Episode[] = [];
