@@ -17,45 +17,6 @@ const aboutTretiakovka: Outcome = {
 }
 
 const moscowSlides: EpisodeConfig[] = [
-  // {
-  //   slideIndex: 25,
-  //   filename: "chat_sister/sister.jpg",
-  //   actions: [
-  //     {
-  //       type: "choice",
-  //       options: [
-  //         "Дам 3 факта",
-  //         "Записать голосовое со звуком ВДНХ",
-  //         "Челлендж",
-  //       ],
-  //       outcomes: {
-  //         0: {
-  //           actions: [
-  //             {
-  //               type: "switchback",
-  //               background: "chat_sister/sister_1a.jpg",
-  //             },
-  //             {
-  //               type: "switchback",
-  //               background: "chat_sister/sister_1b.jpg",
-  //             },
-  //             {
-  //               type: "switchback",
-  //               background: "chat_sister/sister_1c.jpg",
-  //             }
-  //           ],
-  //           background: "chat_sister/sister_1.jpg",
-  //         },
-  //         1: {
-  //           background: "chat_sister/sister_2.jpg",
-  //         },
-  //         2: {
-  //           background: "chat_sister/sister_3.jpg",
-  //         },
-  //       }
-  //     },
-  //   ],
-  // },
   {
     slideIndex: 1,
     filename: "Screen_1.jpg",
@@ -541,6 +502,157 @@ const moscowSlides: EpisodeConfig[] = [
   },
   {
     slideIndex: 14,
+    filename: "Screen_15.jpg",
+    actions: [
+      {
+        type: "switchback",
+        background: "chat_mom/mom.jpg",
+      },
+      {
+        type: "choice",
+        options: [
+          "Кажется, город меня ждал. У Михаила уютно, будто к двоюродному дяде приехал, хотя до конца не понимаю кто он.",
+          "Я жив, цел, накормлен и подружился с люстрами. Москва — это подземный дворец и батареи, которые шипят как драконы.",
+          "На месте. Устал, но ок. Сейчас — поел. Расскажу по порядку.",
+        ],
+        outcomes: {
+          0: {
+            actions: [
+              {
+                type: "switchback",
+                background: "chat_mom/mom_1.jpg",
+              },
+              {
+                type: "switchback",
+                background: "chat_mom/mom_1a.jpg",
+              },
+              {
+                type: "choice",
+                characterName: "Алексей",
+                options: [
+                  "А ты помнишь свой первый раз в Москве? Как вернусь Расскажи мне одну деталь — звук, запах, цвет",
+                  "Завтра куплю калач “за ручку” — первый московский тост для семьи"
+                ],
+                outcomes: {
+                  0: {
+                    actions: [
+                      {
+                        type: "switchback",
+                        background: "chat_mom/mom_1a_1.jpg",
+                      },
+                    ],
+                  },
+                  1: {
+                    actions: [
+                      {
+                        type: "switchback",
+                        background: "chat_mom/mom_1a_2.jpg",
+                      },
+                    ],
+                  },
+                },
+              },
+            ],
+          },
+
+          1: {
+            actions: [
+              {
+                type: "switchback",
+                background: "chat_mom/mom_2.jpg",
+              },
+              {
+                type: "switchback",
+                background: "chat_mom/mom_2a.jpg",
+              },
+              {
+                type: "choice",
+                options: [
+                  "Прислать Селфи в шапке с подписью «Я — огонь и свет».",
+                  "Окей, серьёзно: сегодня — план по карте деда. Я не просто гуляю, я ищу.",
+                  "Скажи один приём, как не потеряться в большом городе — твой авторский.",
+                ],
+                outcomes: {
+                  0: {
+                    actions: [
+                      {
+                        type: "switchback",
+                        background: "chat_mom/mom_2a_1.jpg",
+                      },
+                    ],
+                  },
+                  1: {
+                    actions: [
+                      {
+                        type: "switchback",
+                        background: "chat_mom/mom_2a_2.jpg",
+                      },
+                    ],
+                  },
+                  2: {
+                    actions: [
+                      {
+                        type: "switchback",
+                        background: "chat_mom/mom_2a_3.jpg",
+                      },
+                    ],
+                  }
+                },
+              }
+            ],
+          },
+          2: {
+            actions: [
+              {
+                type: "switchback",
+                background: "chat_mom/mom_3.jpg",
+              },
+              {
+                type: "switchback",
+                background: "chat_mom/mom_3a.jpg",
+              },
+              {
+                type: "choice",
+                options: [
+                  "Да, поставил ярлык — «один тап — и ты здесь».",
+                  "Готов прислать сообщение в любой час — «коротко, чтобы ты услышала голос и я — твой».",
+                  "Точка — «Обнимай виртуально. Пойду в путешествие и сон. Завтра — отчёт».",
+                ],
+                outcomes: {
+                  0: {
+                    actions: [
+                      {
+                        type: "switchback",
+                        background: "chat_mom/mom_3a_1.jpg",
+                      },
+                    ],
+                  },
+                  1: {
+                    actions: [
+                      {
+                        type: "switchback",
+                        background: "chat_mom/mom_3a_2.jpg",
+                      },
+                    ],
+                  },
+                  2: {
+                    actions: [
+                      {
+                        type: "switchback",
+                        background: "chat_mom/mom_3a_3.jpg",
+                      },
+                    ],
+                  }
+                },
+              }
+            ],
+          },
+        },
+      },
+    ],
+  },
+  {
+    slideIndex: 14,
     filename: "Screen_16.jpg",
     actions: [
       {
@@ -1016,24 +1128,45 @@ const moscowSlides: EpisodeConfig[] = [
       }
     ],
   },
-  // TODO: chat sister
-  // {
-  //   slideIndex: 25,
-  //   filename: "chat_sister/sister_1.jpg",
-  //   actions: [
-  //     {
-  //       type: "choice",
-  //       options: [
-  //         "Дам 3 факта",
-  //         "Записать голосовое со звуком ВДНХ",
-  //         "Челлендж",
-  //       ],
-  //       outcomes: {
-
-  //       }
-  //     },
-  //   ],
-  // },
+  {
+    slideIndex: 25,
+    filename: "chat_sister/sister.jpg",
+    actions: [
+      {
+        type: "choice",
+        options: [
+          "Дам 3 факта",
+          "Записать голосовое со звуком ВДНХ",
+          "Челлендж",
+        ],
+        outcomes: {
+          0: {
+            actions: [
+              {
+                type: "switchback",
+                background: "chat_sister/sister_1a.jpg",
+              },
+              {
+                type: "switchback",
+                background: "chat_sister/sister_1b.jpg",
+              },
+              {
+                type: "switchback",
+                background: "chat_sister/sister_1c.jpg",
+              }
+            ],
+            background: "chat_sister/sister_1.jpg",
+          },
+          1: {
+            background: "chat_sister/sister_2.jpg",
+          },
+          2: {
+            background: "chat_sister/sister_3.jpg",
+          },
+        }
+      },
+    ],
+  },
   {
     slideIndex: 25,
     filename: "Screen_26.jpg",

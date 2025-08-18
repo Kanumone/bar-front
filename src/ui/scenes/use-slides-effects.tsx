@@ -30,6 +30,7 @@ export function useSlideEffects({
 
   // ✅ таймер для кнопки Skip с настраиваемой задержкой
   useEffect(() => {
+    console.log("showSkipButton", showSkipButton);
     if (showSkipButton) {
       const canSkipDelay = config?.canSkipDelay ?? 1000;
       const timeout = currentActions.length === 0 ? canSkipDelay : GameConstants.SLIDE_TIMEOUT;

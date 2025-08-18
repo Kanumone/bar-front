@@ -12,6 +12,7 @@ import { useSlidesNavigation } from "./use-slides-navigation";
 import styles from "./slides-wrapper.module.css";
 import { useSlideEffects } from "./use-slides-effects";
 import { useSlideSounds } from "./use-slides-sounds";
+import { useSettingsStore } from "$core/state";
 import type { SlidesConfig } from "$core/types/common-types";
 import { useStoryStore } from "$core/state";
 
@@ -24,6 +25,7 @@ export const SlidesWrapper = ({ config }: { config: SlidesConfig }) => {
 
   // ✅ Хук звуков — передаем первый слайд (или undefined, если пусто)
   const { playSceneSound, setCurrentSlide } = useSlideSounds();
+  const isSoundEnabled = useSettingsStore((s) => s.isSoundEnabled);
 
   // ✅ Хук навигации
   const {
@@ -57,12 +59,16 @@ export const SlidesWrapper = ({ config }: { config: SlidesConfig }) => {
   }, [currentSlide, setCurrentSlide]);
 
   // ✅ Фоновая музыка из конфигурации
+  // Отключаем сценовую BGM, если у текущего слайда есть собственный backgroundSound,
+  // чтобы избежать наложения звуковых дорожек.
+  const sceneBgEnabled = isSoundEnabled && !currentSlide?.backgroundSound;
   useBackgroundMusic({
     filename: config.sceneConfig.backgroundMusic || "rain-on-window-29298.mp3",
     scene: config.sceneConfig.scene || "intro",
+    enabled: sceneBgEnabled,
   });
 
-  const showSkipButton = currentAction?.type === "message" || currentAction?.type === "speech" || currentAction?.type === "thoughts" || actionIndex === -1;
+  const showSkipButton = currentAction?.type === "message" || currentAction?.type === "speech" || currentAction?.type === "thoughts" || currentAction?.type === "switchback" || actionIndex === -1;
 
   // ✅ Эффекты (canSkip и т.д.) с настройками из конфигурации
   useSlideEffects({

@@ -158,12 +158,14 @@ export const useStoryStore = create<StoryState>((set, get) => ({
   goNext: (playSceneSound) => {
     console.log("goNext");
     const { canSkip, processUpdate } = get();
+    console.log("canSkip", canSkip);
     if (!canSkip) return;
     set({ canSkip: false });
     processUpdate(playSceneSound);
   },
 
   handleSwitchBack: () => {
+    console.log("handleSwitchBack");
     const { currentActions, actionIndex } = get();
     if (currentActions.length > actionIndex + 1) {
       const nextAction = currentActions[actionIndex + 1];

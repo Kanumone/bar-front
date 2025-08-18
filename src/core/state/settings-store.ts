@@ -10,7 +10,7 @@ export const useSettingsStore = create<SettingsState>((set) => {
   const initial = localStorage.getItem("isSoundEnabled");
 
   return {
-    isSoundEnabled: initial !== null ? Boolean(initial) : true,
+    isSoundEnabled: initial === null ? true : initial === "true",
     toggleSound: () => set((state) => {
       const next = !state.isSoundEnabled;
       localStorage.setItem("isSoundEnabled", String(next));

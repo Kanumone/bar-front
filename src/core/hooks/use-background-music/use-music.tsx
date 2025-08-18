@@ -3,15 +3,18 @@ import { getAssetsPathByType } from "../../../utils";
 import { useSettingsStore } from "../../state";
 
 interface HookProps{
-  filename: string,
-  scene: string
+  filename: string;
+  scene: string;
+  enabled?: boolean;
 }
 
-export const useBackgroundMusic = ({ filename, scene }: HookProps) => {
+export const useBackgroundMusic = ({ filename, scene, enabled = true }: HookProps) => {
 
   const isSoundEnabled = useSettingsStore((s) => s.isSoundEnabled);
 
   useEffect(() => {
+    // если фон отключен на уровне сцены/обертки — ничего не создаем
+    if (!enabled) return;
     const audio = new Audio(getAssetsPathByType({
       type: "sounds",
       scene,
@@ -29,7 +32,7 @@ export const useBackgroundMusic = ({ filename, scene }: HookProps) => {
       audio.pause();
       audio.currentTime = 0;
     };
-  }, [filename, isSoundEnabled, scene]);
+  }, [filename, isSoundEnabled, scene, enabled]);
 
 };
 
