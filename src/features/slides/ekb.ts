@@ -1,7 +1,6 @@
 import { gameFlowManager } from "$services/game-flow/game-flow-manager.ts";
 import { type EpisodeConfig, Episode } from "./common.ts";
 
-
 export const ekbConfig: EpisodeConfig[] = [
     {
         slideIndex: 1,
@@ -135,8 +134,49 @@ export const ekbConfig: EpisodeConfig[] = [
             { type: "speech", text: "Вот он. Только будь осторожна — это не просто здание, а… инструмент. У башни своё звучание. Она резонирует с тем, кто к ней подходит не ради «селфи», а ради смысла.", characterName: "Папа Даши" },
             { type: "speech", text: "Угу. Алексей — настроен.", characterName: "Даша" },
             { type: "speech", text: "Посмотрим.", characterName: "Папа" },
-            // TODO: Чат: «Москва пингует Урал»
         ],
+    },
+    {
+        slideIndex: 4,
+        filename: "chat_misha.jpg",
+        startSound: "ux/message.mp3",
+        actions: [
+            {
+                type: "choice",
+                options: [
+                    "Уже в Екатеринбурге. Начинается уральский маршрут: башни, заводы и посекунчики 🔧🥟»",
+                    "В столице конструктивизма. Настраиваю городской камертон — слушаю, как он звучит.",
+                    "На Урале. Здесь даже стекло “говорит”. Проверю, не показалось.",
+                    "Екатеринбург. Старое имя “Исеть” на небоскрёбе — преемственность без бронзы.",
+                ],
+                outcomes: {
+                    0: {
+                        actions: [
+                            { type: "switchback", background: "chat_misha/a_1.jpg" },
+                            { type: "switchback", background: "chat_misha/a_2_last.jpg" },
+                        ]
+                    },
+                    1: {
+                        actions: [
+                            { type: "switchback", background: "chat_misha/a_2.jpg" },
+                            { type: "switchback", background: "chat_misha/a_2_last.jpg" },
+                        ]
+                    },
+                    2: {
+                        actions: [
+                            { type: "switchback", background: "chat_misha/a_3.jpg" },
+                            { type: "switchback", background: "chat_misha/a_3_last.jpg" },
+                        ]
+                    },
+                    3: {
+                        actions: [
+                            { type: "switchback", background: "chat_misha/a_4.jpg" },
+                            { type: "switchback", background: "chat_misha/a_4_last.jpg" },
+                        ]
+                    },
+                }
+            }
+        ]
     },
 
     // Screen_5 — Белая Башня. «Красота пользы»
@@ -422,7 +462,6 @@ export const ekbConfig: EpisodeConfig[] = [
     },
 
     // Screen_12 — Волонтёры и события
-    // TODO: вставить графити
     {
         slideIndex: 12,
         filename: "Screen_12.jpg",
@@ -766,8 +805,39 @@ export const ekbConfig: EpisodeConfig[] = [
                     action: () => { },
                 }
             },
-            // TODO: Чат с сестрой
-
+        ],
+    },
+    {
+        slideIndex: 21,
+        filename: "chat_sister/main.jpg",
+        startSound: "ux/message.mp3",
+        actions: [
+            {
+                type: "choice",
+                options: [
+                    "В Екатеринбурге. Тут город-камертон: заводы поют, а меня настраивают.",
+                    "В ЕКБ. Географический центр России — если потеряюсь, меня магнитом обратно притянет.",
+                    "В Екатеринбурге. Осваиваю посикунчики так, чтобы не устроить фонтан из сока.",
+                ],
+                outcomes: {
+                    0: {
+                        actions: [
+                            { type: "switchback", background: "chat_sister/a_1.jpg" },
+                            { type: "switchback", background: "chat_sister/a_1_last.jpg" },
+                        ]
+                    },
+                    1: {
+                        actions: [
+                            { type: "switchback", background: "chat_sister/a_2.jpg" },
+                        ]
+                    },
+                    2: {
+                        actions: [
+                            { type: "switchback", background: "chat_sister/a_3.jpg" },
+                        ]
+                    }
+                },
+            },
             { type: "thoughts", text: "Забавно: Урал настраивает меня как камертон, а дома — свой ритм. Хорошо, когда и шум завода, и сообщения сестры звучат в один такт." },
         ],
     },
